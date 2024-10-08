@@ -1,19 +1,48 @@
-# Base URL used when generating links to your pages
-# Set to the URL for your site
-baseURL = "https://dev.odgn.net"
-
-# Basic metadata configuration for your blog.
-title = 'ODGN Dev'
-author = "Alex Veenendaal"
-copyright = "Copyright © 2024, Alex Veenendaal."
+baseurl = "/"
+title = "ODGN Dev"
+copyright = "Copyright (c) 2024, all rights reserved."
+canonifyurls = true
 languageCode = "en-US"
+paginate = 3
+theme = "hugo-dusk"
 
+googleAnalytics = ""
+disqusShortname = ""
 
-theme = 'hugo-bearblog'
+[params.author]
+  name = "Alex Veenendaal"
 
+SectionPagesMenu = "main"
+
+# Configure syntax highlight
+[markup]
+  [markup.highlight]
+    style = "gruvbox"  # dark themes: monokai, api, fruity, native, rrt, swapoff ... https://xyproto.github.io/splash/docs/longer/all.html
+  [markup.goldmark]
+  [markup.goldmark.renderer]
+unsafe= true
+    [markup.goldmark.renderHooks]
+      [markup.goldmark.renderHooks.image]
+        enableDefault = true
+
+[[menu.main]]
+  name = "Posts"
+  weight = -120
+  identifier = "post"
+  url = "/post/"
+
+[[menu.main]]
+  name = "Tags"
+  weight = -110
+  identifier = "tag"
+  url = "/tags/"
+
+[params.meta]
+  keywords = "blog, tech"
+  description = "Dev blog."
 
 [params]
-
-    # This theme will, by default, inject a made-with-line at the bottom of the page.
-    # You can turn it off, but we would really appreciate if you don’t :-).
-    hideMadeWithLine = true
+  github = "odogono"
+  twitter = "odogono"
+  email = "alex@opendoorgonorth.com"
+  theme_colors = "default-dark" # uses color css file under static/css/default-dark.css

@@ -1,0 +1,76 @@
+{{ $allowOpen := .Get "allowOpen" | default true }}
+{{ $process := .Get "process" | default "crop" }}
+{{ $width := .Get "width" | default "640" }}
+{{ $height := .Get "height" | default "400" }}
+
+{{ $image := .Page.Resources.GetMatch (.Get "src") }}
+{{ $thumbnail := .Page.Resources.GetMatch (.Get "src") }}
+
+
+ 
+
+
+    
+{{ if eq $process "fill" }}
+
+{{ if gt $image.Height $height }}
+    {{ $thumbnail = $thumbnail.Fill (printf "%sx%s center" $width $height) }}
+{{ end }}
+
+{{/*  {{ $thumbnail := $image.Crop (printf "%sx%s" $width $height) }}  */}}
+{{/*  {{ $thumbnail := $image.Crop "640x200 center webp q23 lanczos" }}  */}}
+{{/*  {{ $thumbnail := $image.Fill "300x200 center" }}  */}}
+{{/*  {{ $thumbnail := $thumbnail.Filter (images.GaussianBlur 4) (images.Pixelate 8) }}  */}}
+
+{{ else }}
+{{ $thumbnail := $image.Fit (printf "%sx%s" $width $height) }}
+{{ end }}
+
+
+
+<img src="{{ $thumbnail.RelPermalink }}" 
+     alt="{{ .Get "alt" }}" 
+     class="thumbnail" 
+     data-full-image="{{ $image.RelPermalink }}"
+     style="{{ if eq $allowOpen true }}cursor: pointer;{{ end }} padding-bottom: 20px; height: {{ $height }}px; width: {{ $width}}px;" />
+
+{{ if eq $allowOpen true }}
+<script>
+    
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if the script has already run
+    if (window.thumbnailListenersAdded) return;
+    
+    document.querySelectorAll('.thumbnail').forEach(img => {
+        img.addEventListener('click', function() {
+            const fullImg = new Image();
+            fullImg.src = this.dataset.fullImage;
+            fullImg.style.maxWidth = '100%';
+            fullImg.style.height = 'auto';
+            
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '1000';
+            
+            overlay.appendChild(fullImg);
+            document.body.appendChild(overlay);
+            
+            overlay.addEventListener('click', function() {
+                document.body.removeChild(overlay);
+            });
+        });
+    });
+    
+    // Mark that the script has run
+    window.thumbnailListenersAdded = true;
+});
+</script>
+{{ end }}
