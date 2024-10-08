@@ -10,3 +10,4 @@ node_modules
 dist
 tmp
 .vscode
+.env

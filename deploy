@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# Load environment variables from .env file
+if [ -f .env ]; then
+    export $(grep -v '^#' .env | xargs)
+else
+    echo ".env file not found"
+    exit 1
+fi
+
+# Check if required variables are set
+if [ -z "$USER" ] || [ -z "$HOST" ] || [ -z "$DIR" ]; then
+    echo "Error: USER, HOST, and DIR must be set in the .env file"
+    exit 1
+fi
+
+hugo && rsync -avz --delete public/ ${USER}@${HOST}:~/${DIR}
+
+exit 0
