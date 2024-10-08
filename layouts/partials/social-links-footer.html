@@ -1,0 +1,9 @@
+<div class="social-links-footer">
+
+  <div class="social-link">
+  {{ with .OutputFormats.Get "rss" -}}
+    <a href="{{ .RelPermalink }}"><i class="fas fa-rss fa-lg"></i> RSS</a>
+  {{ end }}
+  </div>
+
+</div>

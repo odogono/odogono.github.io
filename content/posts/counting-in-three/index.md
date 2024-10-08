@@ -4,10 +4,9 @@ date = 2024-10-07T18:40:31+01:00
 draft = false
 weather = '14°C Partly Cloudy'
 location = '50.79°N, 3.65°W'
-tags = ['threejs', 'react', 'typescript', 'shaders']
+tags = ['react-three-fiber', 'react', 'shaders']
 +++
 
-## Introduction
 
 {{< image-cropped src="img/final.jpg" 
   alt="Strips of digits, all in a row" 
@@ -22,7 +21,6 @@ tags = ['threejs', 'react', 'typescript', 'shaders']
 Because you can use html on top of react-three-fiber just fine, the temptation is to go the easy route and use the DOM, but what would be the fun in that.
 
 So instead, I chose to bring this into the land of [Three](https://threejs.org).
-
 
 ## First attempt
 
