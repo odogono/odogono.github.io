@@ -31,7 +31,11 @@ What follows is some notes on the implementation, and some of the things I learn
 
 To begin with, here is a video of the app in action:
 
-{{< youtube i9X41tQZbgc >}}
+{{< youtube id="i9X41tQZbgc" >}}
+
+The source code for the app is [here](https://github.com/odogono/tile-army).
+
+
 
 ## What is happening
 
