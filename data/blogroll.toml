@@ -1,5 +1,9 @@
 # inspired by https://discourse.gohugo.io/t/blogroll-list/14021/2?u=odogono
 
+[whilstinarrakis]
+  author="Rodolfo Rossini"
+  site="https://whilstinarrakis.wordpress.com"
+
 [theboundingbox]
   author="The Bounding Box"
   site="https://blog.tobiasrevell.com"
