@@ -33,7 +33,6 @@ To begin with, here is a video of the app in action:
 
 {{< youtube id="i9X41tQZbgc" >}}
 
-The source code for the app is [here](https://github.com/odogono/tile-army).
 
 
 
@@ -115,7 +114,7 @@ RBush also helps with the efficient rendering of tiles. A world bounding box is 
   allowOpen=true
 >}}
 
-The [TileContainer](https://github.com/odogono/tile-army/blob/main/src/components/TileContainer.tsx) component is responsible for rendering visible tiles onto the screen.
+The [TileContainer](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileContainer.tsx) component is responsible for rendering visible tiles onto the screen.
 
 It return is comprised of each of the visible tiles wrapped in a Skia Group component, whichtakes as an argument the calculated view matrix.
 
@@ -149,14 +148,14 @@ The other event which triggers the re-render is when a tile is being highlighted
 
 ## Such a drag
 
-The deck itself is a FlatList, with each item being the same component rendered on the main canvas. Additionally though, each tile is wrapped with a [DraggableTile](https://github.com/odogono/tile-army/blob/main/src/components/TileDeck/Draggable.tsx) component, which handles the drag (pan) gesture.
+The deck itself is a FlatList, with each item being the same component rendered on the main canvas. Additionally though, each tile is wrapped with a [DraggableTile](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/Draggable.tsx) component, which handles the drag (pan) gesture.
 If a drag is occuring, the DraggableTile component will hide its child Tile - using opacity so as not to cause the list to lose the slot.
 
-At this point, the TileDeck [renders another tile](https://github.com/odogono/tile-army/blob/main/src/components/TileDeck/TileDeck.tsx#L165), which is visible during the drag operation.
+At this point, the TileDeck [renders another tile](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L165), which is visible during the drag operation.
 
 This dragging tile is positioned using the dragPosition mutable value, which the original DraggableTile is updating via the pan gesture.
 
-The determination of whether the dragging tile has hit an option tile is done in the [useDragTileCheck](https://github.com/odogono/tile-army/blob/main/src/components/TileDeck/useDragTileCheck.ts) hook.
+The determination of whether the dragging tile has hit an option tile is done in the [useDragTileCheck](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/useDragTileCheck.ts) hook.
 
 It uses a useAnimatedReaction hook to listen to the dragPosition and the isDragging state. With some additional checking for actual position change, this means the intersection check only runs if the drag position actually changes.
 
@@ -164,11 +163,11 @@ The drag position is converted from screen space into world space (using the inv
 
 The animated reaction runs on the UI thread, but the intersection has to be run on the JS thread, this is because it uses functions that are defined in JS.
 
-The determination of the state of the drag operation occurs in another useAnimationReaction hook inside the TileDeck [here](https://github.com/odogono/tile-army/blob/main/src/components/TileDeck/TileDeck.tsx#L110).
+The determination of the state of the drag operation occurs in another useAnimationReaction hook inside the TileDeck [here](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L110).
 It achieves this by reacting to the values of the dragTile and the dragTargetTile (potentially the option tile), and fires off events for drag start and drag end.
 In many ways this is shadowing what the pan gesture handler does, but it has access to better context about the app state. This is nicer because it means the DraggableTile pan gesture handler is only concerned with updating its own slice of state.
 
-The handleDragEnd function [is also defined](https://github.com/odogono/tile-army/blob/main/src/components/TileDeck/TileDeck.tsx#L79) in the TileDeck. It concerns itself with handling whether the operation was successful or not, and animating the dragged tile back to the deck or to its new home in the world.
+The handleDragEnd function [is also defined](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L79) in the TileDeck. It concerns itself with handling whether the operation was successful or not, and animating the dragged tile back to the deck or to its new home in the world.
 
 
 ## So Stateful
@@ -207,7 +206,7 @@ However this does limit the scope of the shared value to the component.
 
 To get around this, I turned to using [mutable values](https://docs.swmansion.com/react-native-reanimated/docs/advanced/makeMutable/). It's doc page comes with a warning that it is internal functionality, and so may change in future. My use case was indeed more global, as noted, so this was a workable solution.
 
-The store is wrapped into a [context provider](https://github.com/odogono/tile-army/blob/main/src/model/useTileMapStore/Provider.tsx), and then employed from the root of the app, and then accessed by components which need it via a number of hooks.
+The store is wrapped into a [context provider](https://github.com/odogono/skia-tile-test/blob/main/src/model/useTileMapStore/Provider.tsx), and then employed from the root of the app, and then accessed by components which need it via a number of hooks.
 
 
 ## Context Skia
@@ -217,7 +216,7 @@ One thing which caught me slightly out, was that the main context didn't seem to
 Because Skia is using a different renderer, it is unable to use a React context defined outside of its hierarchy.
 
 To get around this, a hook from the package ['its-fine'](https://github.com/pmndrs/its-fine) is used, called [useContextBridge](https://github.com/pmndrs/its-fine#useContextBridge). 
-Used as a child of the Skia Canvas component, it allows the context further up the hierarchy to be used. You can see it in use [here](https://github.com/odogono/tile-army/blob/main/src/components/WorldCanvas/WorldCanvas.tsx#L38). 
+Used as a child of the Skia Canvas component, it allows the context further up the hierarchy to be used. You can see it in use [here](https://github.com/odogono/skia-tile-test/blob/main/src/components/WorldCanvas/WorldCanvas.tsx#L38). 
 
 
 ## Updating Mutable Values
@@ -261,3 +260,4 @@ I'm not too big of a fan of how you have to cast to address other bits of state 
 There is the seed of an actual game here, but that is something I am still pondering. The mechanic of placing tiles is quite nice by itself, as is being able to see a world or path gradually built up. I'd like to explore hexagonal tiles as well in this context.
 
 
+Oh, and the source code for the app is [here](https://github.com/odogono/skia-tile-test).
