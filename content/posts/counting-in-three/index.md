@@ -5,6 +5,7 @@ draft = false
 weather = '14°C Partly Cloudy'
 location = '50.79°N, 3.65°W'
 tags = ['react-three-fiber', 'react', 'shaders']
+description = 'Creating a shader based animated counter in React Three Fiber'
 +++
 
 

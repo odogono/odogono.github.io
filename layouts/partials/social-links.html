@@ -13,6 +13,10 @@
   <a href="https://gitlab.com/{{.}}" target="_blank" alt="GitLab"><div class="social-link"><i class="fab fa-gitlab fa-lg"></i></div></a>
   {{end}}
 
+  {{with .Site.Params.bluesky}}
+  <a href="https://bsky.app/profile/alex.veenenda.al" target="_blank" alt="Bluesky"><div class="social-link"><i class="fa-brands fa-bluesky fa-lg"></i></div></a>
+  {{end}}
+
   {{with .Site.Params.twitter}}
   <a href="https://twitter.com/{{.}}" target="_blank" alt="Twitter"><div class="social-link"><i class="fab fa-twitter fa-lg"></i></div></a>
   {{end}}

@@ -1,47 +1,49 @@
 baseurl = "/"
-title = "ODGN Dev"
-copyright = "Copyright (c) 2024, all rights reserved."
 canonifyurls = true
+copyright = "Copyright (c) 2024, all rights reserved."
 languageCode = "en-US"
-paginate = 3
+paginate = 10
 theme = "hugo-dusk"
+title = "ODGN Dev"
 
-googleAnalytics = ""
 disqusShortname = ""
+googleAnalytics = ""
 
 [params.author]
-  name = "Alex Veenendaal"
+name = "Alex Veenendaal"
 
 SectionPagesMenu = "main"
 
 # Configure syntax highlight
 [markup]
-  [markup.highlight]
-    style = "gruvbox"  # dark themes: monokai, api, fruity, native, rrt, swapoff ... https://xyproto.github.io/splash/docs/longer/all.html
-  [markup.goldmark]
-  [markup.goldmark.renderer]
-    unsafe= true
-    [markup.goldmark.renderHooks]
-      [markup.goldmark.renderHooks.image]
-        enableDefault = true
+[markup.highlight]
+style = "gruvbox"
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
+[markup.goldmark.renderHooks]
+[markup.goldmark.renderHooks.image]
+enableDefault = true
 
 [[menu.main]]
-  name = "Posts"
-  weight = -120
-  identifier = "post"
-  url = "/posts/"
+identifier = "post"
+name = "Posts"
+url = "/posts/"
+weight = -120
 
 [[menu.main]]
-  name = "Tags"
-  weight = -110
-  identifier = "tag"
-  url = "/tags/"
+identifier = "tag"
+name = "Tags"
+url = "/tags/"
+weight = -110
 
 [params.meta]
-  keywords = "blog, tech"
-  description = "Dev blog."
+description = "Dev blog."
+keywords = "blog, tech"
 
 [params]
-  github = "odogono"
-  linkedin = "alexanderveenendaal"
-  theme_colors = "default-dark" # uses color css file under static/css/default-dark.css
+bluesky = "https://bsky.app/profile/alex.veenenda.al" 
+github = "odogono" 
+linkedin = "alexanderveenendaal" 
+theme_colors = "default-dark" # uses color css file under static/css/default-dark.css
+twitter = "odogono"

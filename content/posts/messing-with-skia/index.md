@@ -6,6 +6,7 @@ weather = '14°C Windy'
 location = '50.79°N, 3.65°W'
 tags = ['react-native', 'react', 'zustand', 'react-native-reanimated']
 customcss = 'custom.css'
+description = 'An exploration into using Skia in a React Native app'
 +++
 
 

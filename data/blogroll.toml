@@ -1,82 +1,89 @@
 # inspired by https://discourse.gohugo.io/t/blogroll-list/14021/2?u=odogono
 
+[littlethings]
+author = "Little Things"
+site = "https://abhisaha.com/blog"
+
+[steveklabnik]
+author = "Steve Klabnik"
+site = "https://steveklabnik.com/writing"
+
 [whilstinarrakis]
-  author="Rodolfo Rossini"
-  site="https://whilstinarrakis.wordpress.com"
+author = "Rodolfo Rossini"
+site = "https://whilstinarrakis.wordpress.com"
 
 [theboundingbox]
-  author="The Bounding Box"
-  site="https://blog.tobiasrevell.com"
+author = "The Bounding Box"
+site = "https://blog.tobiasrevell.com"
 
 [kevinlipe]
-  author="Kevin Lipe"
-  site="https://systemstack.dev"
+author = "Kevin Lipe"
+site = "https://systemstack.dev"
 
 [piperhaywood]
-  author="Piper Haywood"
-  site="https://piperhaywood.com"
+author = "Piper Haywood"
+site = "https://piperhaywood.com"
 
 [tristanhume]
-  author="Tristan Hume"
-  site="https://thume.ca"
+author = "Tristan Hume"
+site = "https://thume.ca"
 
 [nikitatonsky]
-  author="Nikita Tonsky"
-  site="https://tonsky.me"
+author = "Nikita Tonsky"
+site = "https://tonsky.me"
 
 [danielbrowns]
-  author="Daniel Browns"
-  site="http://danielbrowns.com"
+author = "Daniel Browns"
+site = "http://danielbrowns.com"
 
 [revdancatt]
-  author="Rev Dan Catt"
-  site="https://revdancatt.com"
+author = "Rev Dan Catt"
+site = "https://revdancatt.com"
 
 [tomarmitage]
-  author="Tom Armitage"
-  site="https://tomarmitage.com/projects/"
+author = "Tom Armitage"
+site = "https://tomarmitage.com/projects/"
 
 [rasmusandersson]
-  author="Rasmus Andersson"
-  site="https://rsms.me/"
+author = "Rasmus Andersson"
+site = "https://rsms.me/"
 
 [tommacwright]
-  author="Tom MacWright"
-  site="https://macwright.com"
+author = "Tom MacWright"
+site = "https://macwright.com"
 
 [andrewhealey]
-  author="Andrew Healey"
-  site="https://healeycodes.com"
+author = "Andrew Healey"
+site = "https://healeycodes.com"
 
 [terenceeden]
-  author="Terence Eden"
-  site="https://shkspr.mobi/blog/"
+author = "Terence Eden"
+site = "https://shkspr.mobi/blog/"
 
 [doriantaylor]
-  author="Dorian Taylor"
-  site="https://doriantaylor.com"
+author = "Dorian Taylor"
+site = "https://doriantaylor.com"
 
 [ongoingbytimbray]
-  author="Tim Bray"
-  site="https://www.tbray.org/ongoing/"
+author = "Tim Bray"
+site = "https://www.tbray.org/ongoing/"
 
 [philgyford]
-  author="Phil Gyford"
-  site="https://www.gyford.com/phil/writing/"
+author = "Phil Gyford"
+site = "https://www.gyford.com/phil/writing/"
 
 [mattwebb]
-  author="Matt Webb"
-  site="http://interconnected.org/home/"
+author = "Matt Webb"
+site = "http://interconnected.org/home/"
 
 [gossipsweb]
-  author="Gossips Web"
-  site="https://gossipsweb.net"
+author = "Gossips Web"
+site = "https://gossipsweb.net"
 
 [joshwcomeau]
-  author="Josh W. Comeau"
-  site="https://www.joshwcomeau.com/react/"
+author = "Josh W. Comeau"
+site = "https://www.joshwcomeau.com/react/"
 
 [ryanflorence]
-  author="Ryan Florence"
-  site="https://ryanflorence.com/blog/"
-
+author = "Ryan Florence"
+site = "https://ryanflorence.com/blog/"

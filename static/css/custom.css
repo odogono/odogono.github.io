@@ -1,9 +1,9 @@
 /* Misc styles which have yet to find a home */
 
 .image-row {
-  display: flex;
-  flex-direction: row;
-  gap: 4em;
+  display        : flex;
+  flex-direction : row;
+  gap            : 4em;
   justify-content: center;
 }
 
