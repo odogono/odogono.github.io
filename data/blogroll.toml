@@ -1,5 +1,9 @@
 # inspired by https://discourse.gohugo.io/t/blogroll-list/14021/2?u=odogono
 
+[manuelmoreale]
+author = "Manuel Moreale"
+site = "https://manuelmoreale.com"
+
 [littlethings]
 author = "Little Things"
 site = "https://abhisaha.com/blog"
