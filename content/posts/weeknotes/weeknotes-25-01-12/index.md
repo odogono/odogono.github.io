@@ -1,6 +1,6 @@
 +++
 title = 'Weeknotes 001'
-date = 2025-01-12T10:12:00+01:00
+date = 2025-01-12T10:12:00+00:00
 draft = false
 weather = '5°C Mostly Clear'
 location = '50.79°N, 3.65°W'
