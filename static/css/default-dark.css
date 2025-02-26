@@ -3,21 +3,25 @@
  * */
 
 :root {
-    --main-bg-color: #010b0f;
+    --main-bg-color     : #010b0f;
     --secondary-bg-color: #01131c;
-    --main-text: #e3dada;
-    --main-sec: #dbdedf;
+    --main-text         : #e3dada;
+    --main-sec          : #dfdfdb;
+
+    --main-header  : #FFC822;
+    --main-header-2: #d1a00e;
+    --main-header-3: #a47d07;
     /* main secondary color for the site */
     --code-quote-bg: #1d1f21;
     /* background color for quotes and code blocks */
-    --copyright: #808080;
+    --copyright    : #808080;
     /* copyright text color */
-    --border-color: #000000;
+    --border-color : #000000;
 }
 
 body {
     background: var(--main-bg-color);
-    color: var(--main-text);
+    color     : var(--main-text);
 }
 
 a {
@@ -33,18 +37,18 @@ a {
 }
 
 .__h_instagram .card-header {
-    color: var(--main-bg-color);
+    color           : var(--main-bg-color);
     background-color: #101010;
 }
 
 .__h_instagram .card-body {
-    color: var(--main-bg-color);
+    color           : var(--main-bg-color);
     background-color: #101010;
 }
 
 pre {
-    background: var(--main-bg-color);
-    border: 1px solid var(--border-color);
+    background   : var(--main-bg-color);
+    border       : 1px solid var(--border-color);
     border-radius: 5px;
 }
 
@@ -61,12 +65,12 @@ code {
 }
 
 blockquote {
-    background: var(--main-bg-color);
+    background : var(--main-bg-color);
     border-left: 3px solid var(--main-sec);
 }
 
 table {
-    margin: 1em auto;
+    margin         : 1em auto;
     border-collapse: collapse;
 }
 
@@ -89,12 +93,12 @@ th {
 }
 
 .post {
-    background: var(--secondary-bg-color);
-    border-left: 1px solid var(--border-color);
-    border-right: 1px solid var(--border-color);
-    border-top: 1px solid var(--border-color);
+    background   : var(--secondary-bg-color);
+    border-left  : 1px solid var(--border-color);
+    border-right : 1px solid var(--border-color);
+    border-top   : 1px solid var(--border-color);
     border-radius: 0.2em;
-    box-shadow:
+    box-shadow   :
         0 1px 2px 0 #000000,
         0 2px 5px 0 #000000;
 }
@@ -108,11 +112,11 @@ th {
 }
 
 .post .content h2 {
-    color: var(--main-sec);
+    color: var(--main-header-2);
 }
 
 .post .content h3 {
-    color: var(--main-sec);
+    color: var(--main-header-3);
 }
 
 .post .content h4 {
@@ -165,7 +169,7 @@ th {
 
 .post-footer-data {
     background-color: var(--main-bg-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom   : 1px solid var(--border-color);
 }
 
 .post-footer hr {
@@ -177,13 +181,13 @@ th {
 }
 
 .content-item {
-    border: 1px solid var(--border-color);
+    border       : 1px solid var(--border-color);
     border-radius: 0.2em;
 }
 
 .content-item a:hover {
     text-decoration: underline;
-    color: var(--main-sec);
+    color          : var(--main-sec);
 }
 
 .post-list .title {
@@ -196,7 +200,7 @@ th {
 
 .rmore a {
     background: var(--main-bg-color);
-    border: 1px solid var(--border-color);
+    border    : 1px solid var(--border-color);
 }
 
 .rmore a:hover {
@@ -205,7 +209,7 @@ th {
 
 .terms {
     background: var(--secondary-bg-color);
-    border: 1px solid var(--border-color);
+    border    : 1px solid var(--border-color);
     box-shadow:
         0 1px 2px 0 #000000,
         0 2px 5px 0 #000000;
@@ -217,22 +221,22 @@ th {
 
 .term a:hover {
     text-decoration: underline;
-    color: var(--main-sec);
+    color          : var(--main-sec);
 }
 
 .err-404 {
-    border: 1px solid var(--border-color);
+    border       : 1px solid var(--border-color);
     border-radius: 0.2em;
-    background: var(--secondary-bg-color);
-    box-shadow:
+    background   : var(--secondary-bg-color);
+    box-shadow   :
         0 1px 2px 0 #000000,
         0 2px 5px 0 #000000;
 }
 
 .article-link {
     text-decoration: none;
-    color: inherit;
-    display: block;
+    color          : inherit;
+    display        : block;
 }
 
 .post-preview {
@@ -241,5 +245,5 @@ th {
 
 .post-preview:hover {
     background-color: rgba(255, 255, 255, 0.05);
-    border-color: var(--main-sec);
+    border-color    : var(--main-sec);
 }
