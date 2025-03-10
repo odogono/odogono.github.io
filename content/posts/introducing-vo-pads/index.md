@@ -6,7 +6,7 @@ weather = '8°C Cloudy'
 location = '50.79°N, 3.65°W'
 tags = ['react', 'vo-pads']
 customcss = 'custom.css'
-description = 'I done built a thing'
+description = 'The experiment that snow-balled'
 +++
 
 This week I finally [got my project](https://vo.odgn.net) into a state where I could show the outside world and talk about it a little.
@@ -21,7 +21,7 @@ This week I finally [got my project](https://vo.odgn.net) into a state where I c
 
 [VO Pads](https://vo.odgn.net) (or Video Operator Pads), is not a feminine hygiene product, but a Video Player. A video player with pretensions of being something like an [Akai MPC](https://en.wikipedia.org/wiki/Akai_MPC).
 
-It allows you to import videos using an interface consisting of a grid of 16 pads, much like an MPC. Once loaded, the video can be played by pressing on the pad. By default, when you let go, the video stops playing. 
+It allows you to import videos using an interface consisting of a grid of 16 pads, much like an MPC. Once loaded, the video can be played by pressing on the pad. By default, when you let go, the video stops playing.
 
 It supports local mp4 files, and probably more appealing, YouTube videos - which are presented as embedded players.
 
@@ -40,19 +40,19 @@ Triggering the Pad/Video can be achieved using touch/mouse by tapping on the pad
 
 In order to allow some degree of composition, there are two(!) types of sequencer.
 
-The first is a [Step Sequencer](https://en.wikipedia.org/wiki/Music_sequencer#Step_sequencer_(step_recording_mode), which allows you to punch in patterns of when a pad should play on a grid. 
+The first is a [Step Sequencer](https://en.wikipedia.org/wiki/Music_sequencer#Step_sequencer_(step_recording_mode), which allows you to punch in patterns of when a pad should play on a grid.
 
 The second is a time sequencer, which resembles something you would find in traditional video editing software.
 
 
-Projects can have a name and an image (which shows when idle) assigned to them, and they can be shared by copying a URL link, which contains the entire project data. 
+Projects can have a name and an image (which shows when idle) assigned to them, and they can be shared by copying a URL link, which contains the entire project data.
 This means that nothing is stored on the server, it is all local to the browser.
 
 
 
 ## How it came to be
 
-My original itch was that I wanted a better way to play tutorial videos. 
+My original itch was that I wanted a better way to play tutorial videos.
 
 I was learning [how to scratch](https://www.youtube.com/watch?v=3IEpb2vh4Ws), and like many things it's mostly a learn by copy exercise. The tutorial would explain a technique, and then show how it was done, maybe a couple of times, and then move on to the next thing.
 
@@ -66,7 +66,7 @@ Over xmas, i spent a considerable amount of time fiddling with [Koala Sampler](h
 
 Seriously, its like £5, [go get](https://apps.apple.com/app/apple-store/id1449584007?pt=278965&ct=homepage&mt=8) [it](https://play.google.com/store/apps/details?id=com.elf.koalasampler).
 
-So I thought, 'well, what if this... but video!?'. 
+So I thought, 'well, what if this... but video!?'.
 
 And there my path of madness started.
 
@@ -83,7 +83,7 @@ Encouraged by this, the rest of the development was pretty straightforward. Help
 
 ### Having an Existing Inspiration
 
-Most work is built on the shoulders of giants, and in the case of [Koala Sampler](https://www.koalasampler.com), that gave me great uplift. 
+Most work is built on the shoulders of giants, and in the case of [Koala Sampler](https://www.koalasampler.com), that gave me great uplift.
 
 It meant that I didn't have to think about interface too hard, at least initially, and when I got stuck I had something tangible to compare to.
 
@@ -92,14 +92,14 @@ Of course, as work progressed, it started diverging in ways that made sense. Thi
 
 ### Local first
 
-The decision not to make this server based happened early on. It wasn't a hard call really - most instruments/players are by definition 'offline'. 
+The decision not to make this server based happened early on. It wasn't a hard call really - most instruments/players are by definition 'offline'.
 
 There was always that temptation that adding certain server features might make things nicer, but I managed to resist. At least for this first version.
 
 
 ### Libraries
 
-This is my first major React web app in quite a while (I'm normally a React Native kind of guy). So I was expecting some bumps along the way. 
+This is my first major React web app in quite a while (I'm normally a React Native kind of guy). So I was expecting some bumps along the way.
 I picked [HeroUI](https://www.heroui.com) early on, and it quickly made a difference in terms of polish. It was only towards the end when I came to applying custom styles that I started experiencing issues. I think these are mostly down to my own lack of knowledge.
 
 [NextJS](https://nextjs.org) was a similar story. The static export is exactly what i needed. Took a while to get used to the server/client split for React.
@@ -114,7 +114,7 @@ Initially, I went with a Step Sequencer implementation, as it seemed to be the q
 
 But that didn't seem to work well with playing 5/10 second video clips, so I dropped it in favour of a Time based sequencer.
 
-You can probably tell by the current state of it, that timeline interfaces can be... nontrivial. But I managed to get something minimum and viable working. 
+You can probably tell by the current state of it, that timeline interfaces can be... nontrivial. But I managed to get something minimum and viable working.
 
 But, then, almost at the last moment, i had a change of heart and wanted to sequence short video clips (like drums) easily, so the Step Sequencer came back.
 
@@ -141,7 +141,7 @@ I would have liked nothing better than to have this work well on an iPhone, but 
 
 This was my first proper use of [TanStack Query](https://tanstack.com/query/latest) after hearing nothing but good things. It didn't disappoint. It took a while to get my head around the right way to structure keys and cache, but it soon clicked into place. Love it.
 
-I'm a long term [Zustand] user, so I thought I'd give [Xstate/Store](https://stately.ai/docs/xstate-store) a spin. Generally worked out well. Was easier to structure my actions. 
+I'm a long term [Zustand] user, so I thought I'd give [Xstate/Store](https://stately.ai/docs/xstate-store) a spin. Generally worked out well. Was easier to structure my actions.
 I didn't like that I couldn't call events within events. And the terminology I'm still not convinced with. Not sure I would go with it again.
 
 The nature of this app meant that I had to use a fair amount of Event driven behaviour, which is kind of against the React philosophy. I remember the bad old days before React when event driven was the way, and it was easy to get into a mess.
@@ -185,5 +185,3 @@ Ok, it went a little over my time budget of one month, but I got far more featur
 In terms of what's next, that does depend to an extent on whether others find value in it, and what aspects are more popular - drum machine or video player.
 
 As an app, it's never going to be Koala Sampler or Final Cut Pro, but I do believe it has an element of fun that will keep, if not anyone else, me amused finding that perfect loop for some time.
-
-

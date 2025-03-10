@@ -6,7 +6,7 @@ weather = '5°C Mostly Clear'
 location = '50.79°N, 3.65°W'
 tags = ['weeknotes']
 customcss = 'custom.css'
-description = 'Week notes for the week ending 12th January 02025'
+description = 'Week notes for the 2nd week of 02025'
 +++
 
 
