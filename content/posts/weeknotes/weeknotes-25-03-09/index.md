@@ -1,7 +1,7 @@
 +++
 title = 'Weeknotes 004'
 date = 2025-03-09T19:29:00+00:00
-draft = true
+draft = false
 weather = '10°C Cloudy'
 location = '50.79°N, 3.65°W'
 tags = ['weeknotes']
