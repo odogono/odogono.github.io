@@ -1,19 +1,26 @@
-+++
-title = 'Introducing VO Pads'
-date = 2025-02-26T13:18:00+00:00
-draft = false
-weather = '8°C Cloudy'
-location = '50.79°N, 3.65°W'
-tags = ['react', 'vo-pads']
-customcss = 'custom.css'
-description = 'The experiment that snow-balled'
-+++
+---
+title: 'Introducing VO Pads'
+pubDate: 'February 26 2025'
+draft: false
+weather: '8°C Cloudy'
+location: '50.79°N, 3.65°W'
+tags: ['react', 'vo-pads']
+customcss: 'custom.css'
+description: 'The experiment that snow-balled'
+heroImage: './img/vopads-screen.jpg'
+---
+
+import { Image } from 'astro:assets';
+
+import Youtube from '@components/youtube.astro';
+
+import imageScreen from './img/vopads-screen.jpg';
 
 This week I finally [got my project](https://vo.odgn.net) into a state where I could show the outside world and talk about it a little.
 
 
 
-{{< youtube id="R0DIJ43FIp0" >}}
+<Youtube id="R0DIJ43FIp0" title="VO Pads - Assembling Get Away" />
 
 
 
@@ -25,7 +32,7 @@ It allows you to import videos using an interface consisting of a grid of 16 pad
 
 It supports local mp4 files, and probably more appealing, YouTube videos - which are presented as embedded players.
 
-{{< image-cropped src="img/vopads-screen.jpg" alt="Strips of digits, all in a row" process="fill" width="640" height="200" >}}
+<Image src={imageScreen} alt="Strips of digits, all in a row" width={640} height={200} />
 
 Multiple (well, up to 16) videos can be loaded and played at the same time.
 
@@ -184,4 +191,4 @@ Ok, it went a little over my time budget of one month, but I got far more featur
 
 In terms of what's next, that does depend to an extent on whether others find value in it, and what aspects are more popular - drum machine or video player.
 
-As an app, it's never going to be Koala Sampler or Final Cut Pro, but I do believe it has an element of fun that will keep, if not anyone else, me amused finding that perfect loop for some time.
+As an app, it's never going to be Koala Sampler or Final Cut Pro, but I do believe it has an element of fun that will keep, if not anyone else, me amused finding that perfect loop for some time. 

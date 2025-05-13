@@ -15,6 +15,9 @@
       "@/*": [
         "./src/*"
       ],
+      "@constants": [
+        "./src/constants.ts"
+      ],
       "@layouts/*": [
         "./src/layouts/*"
       ],
