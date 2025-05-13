@@ -22,6 +22,7 @@
     "@astrojs/rss": "^4.0.11",
     "@astrojs/sitemap": "^3.4.0",
     "@tailwindcss/vite": "^4.1.6",
+    "accessible-astro-components": "^4.1.1",
     "astro": "^5.7.12",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

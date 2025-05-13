@@ -10,7 +10,7 @@ export const GET = async context => {
     description: SITE_DESCRIPTION,
     items: posts.map(post => ({
       ...post.data,
-      link: `/blog/${post.id}/`
+      link: `/posts/${post.id}/`
     })),
     site: context.site,
     title: SITE_TITLE

@@ -7,14 +7,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    mdx({
-      components: {
-        YouTube: '@components/youtube.astro'
-      }
-    }),
-    react()
-  ],
+  integrations: [mdx(), react()],
 
   site: 'https://dev.odgn.net',
 
