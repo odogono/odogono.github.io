@@ -16,8 +16,15 @@ const blog = defineCollection({
       // Allow imports in MDX files
       imports: z.record(z.string()).optional(),
 
+      // Whether the post is a draft
+      isDraft: z.boolean().optional(),
+
       // Transform string to Date object
       pubDate: z.coerce.date(),
+
+      // by default the title is used to produce a slug for
+      // the post url, but it can be overriden with a custom slug
+      slug: z.string().optional(),
 
       tags: z.array(z.string()).optional(),
 

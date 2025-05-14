@@ -33,6 +33,9 @@
       "@pages/*": [
         "./src/pages/*"
       ],
+      "@types": [
+        "./src/types.ts"
+      ],
       "@ui/*": [
         "./src/components/ui/*"
       ]
