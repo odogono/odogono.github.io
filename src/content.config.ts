@@ -10,6 +10,9 @@ const blog = defineCollection({
 
       heroImage: image().optional(),
 
+      // Doesn't show the hero image on the page itself
+      hidePageHeroImage: z.boolean().optional(),
+
       // Allow imports in MDX files
       imports: z.record(z.string()).optional(),
 
