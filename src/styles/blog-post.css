@@ -1,102 +1,105 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin     : 0 0 0.5rem 0;
-  color      : rgb(var(--black));
-  line-height: 1.2;
-}
+article {
 
-h1 {
-  font-size: 3.052em;
-}
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin     : 0 0 0.5rem 0;
+    color      : rgb(var(--black));
+    line-height: 1.2;
+  }
 
-h2 {
-  font-size: 2.441em;
-}
+  h1 {
+    font-size: 3.052em;
+  }
 
-h3 {
-  font-size: 1.953em;
-}
+  h2 {
+    font-size: 2.441em;
+  }
 
-h4 {
-  font-size: 1.563em;
-}
+  h3 {
+    font-size: 1.953em;
+  }
 
-h5 {
-  font-size: 1.25em;
-}
+  h4 {
+    font-size: 1.563em;
+  }
 
-strong,
-b {
-  font-weight: 700;
-}
+  h5 {
+    font-size: 1.25em;
+  }
 
-a {
-  color          : var(--accent);
-  text-decoration: underline;
-}
+  strong,
+  b {
+    font-weight: 700;
+  }
 
-a:hover {
-  color: var(--accent);
-}
+  a {
+    color          : var(--accent);
+    text-decoration: underline;
+  }
 
-p {
-  margin-bottom: 1em;
-}
+  a:hover {
+    color: var(--accent);
+  }
 
-.prose {
-  line-height: 2em;
-}
+  p {
+    margin-bottom: 1em;
+  }
 
-.prose p {
-  margin-bottom: 2em;
-}
+  .prose {
+    line-height: 2em;
+  }
 
-textarea {
-  width    : 100%;
-  font-size: 16px;
-}
+  .prose p {
+    margin-bottom: 2em;
+  }
 
-input {
-  font-size: 16px;
-}
+  textarea {
+    width    : 100%;
+    font-size: 16px;
+  }
 
-table {
-  width: 100%;
-}
+  input {
+    font-size: 16px;
+  }
 
-img {
-  max-width    : 100%;
-  height       : auto;
-  border-radius: 8px;
-}
+  table {
+    width: 100%;
+  }
 
-code {
-  padding         : 2px 5px;
-  background-color: rgb(var(--gray-light));
-  border-radius   : 2px;
-}
+  img {
+    max-width    : 100%;
+    height       : auto;
+    border-radius: 8px;
+  }
 
-pre {
-  padding      : 1.5em;
-  border-radius: 8px;
-}
+  code {
+    padding         : 2px 5px;
+    background-color: rgb(var(--gray-light));
+    border-radius   : 2px;
+  }
 
-pre>code {
-  all: unset;
-}
+  pre {
+    padding      : 1.5em;
+    border-radius: 8px;
+  }
 
-blockquote {
-  border-left: 4px solid var(--accent);
-  padding    : 0 0 0 20px;
-  margin     : 0px;
-  font-size  : 1.333em;
-}
+  pre>code {
+    all: unset;
+  }
 
-hr {
-  border    : none;
-  border-top: 1px solid rgb(var(--gray-light));
+  blockquote {
+    border-left: 4px solid var(--accent);
+    padding    : 0 0 0 20px;
+    margin     : 0px;
+    font-size  : 1.333em;
+  }
+
+  hr {
+    border    : none;
+    border-top: 1px solid rgb(var(--gray-light));
+  }
 }

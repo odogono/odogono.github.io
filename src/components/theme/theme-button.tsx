@@ -9,13 +9,13 @@ export const ThemeButton = () => {
   return (
     <button
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      className="dark:bg-opacity-20 dark:hover:bg-opacity-30 rounded-full bg-gray-900 p-2 text-black transition-colors hover:bg-gray-700 dark:text-white dark:backdrop-blur-sm"
+      className="hover:bg-opacity-30 rounded-full bg-gray-900 p-2 text-white transition-colors hover:bg-gray-700 dark:bg-white dark:text-black dark:backdrop-blur-sm"
       onClick={toggleTheme}
     >
       {theme === 'light' ? (
         // Moon icon for light mode
         <svg
-          className="h-6 w-6"
+          className="h-4 w-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -31,7 +31,7 @@ export const ThemeButton = () => {
       ) : (
         // Sun icon for dark mode
         <svg
-          className="h-6 w-6"
+          className="h-4 w-4"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
