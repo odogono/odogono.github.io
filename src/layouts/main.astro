@@ -4,6 +4,7 @@ import Footer from '@components/layout/footer.astro';
 import Header from '@components/layout/header.astro';
 import ThemeInit from '@components/theme/theme-init.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '@constants';
+import Tracker from '@helpers/tracker.astro';
 ---
 
 <html lang="en">
@@ -11,23 +12,11 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '@constants';
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
     <ThemeInit />
   </head>
-  <body>
+  <body class="min-h-screen flex flex-col">
     <Header />
-    <main>
+    <main class="flex justify-center items-start max-w-full m-4 flex-grow">
       <slot />
     </main>
     <Footer />
-  </body><script
-    data-goatcounter="https://com-odgn.goatcounter.com/count"
-    async
-    src="//gc.zgo.at/count.js"></script>
+  </body><Tracker />
 </html>
-
-<style>
-  html,
-  body {
-    width: calc(100% - 2em);
-    max-width: 100%;
-    margin: 0;
-  }
-</style>

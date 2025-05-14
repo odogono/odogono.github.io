@@ -19,9 +19,9 @@ export const setDocumentTheme = (theme: Theme) => {
   }
 };
 
-const storedThemeAtom = atom<Theme>(systemTheme);
+const themeAtom = atom<Theme>(systemTheme);
 
-storedThemeAtom.onMount = setAtom => {
+themeAtom.onMount = setAtom => {
   const isBrowser = typeof window !== 'undefined';
 
   if (!isBrowser) {
@@ -61,21 +61,16 @@ storedThemeAtom.onMount = setAtom => {
 };
 
 const toggleThemeAtom = atom(null, (get, set) => {
-  const currentTheme = get(storedThemeAtom);
+  const currentTheme = get(themeAtom);
   const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  set(storedThemeAtom, newTheme);
+  set(themeAtom, newTheme);
   setDocumentTheme(newTheme);
   localStorage.setItem('theme', newTheme);
 });
 
 export const useTheme = () => {
-  const theme = useAtomValue(storedThemeAtom);
+  const theme = useAtomValue(themeAtom);
   const toggleTheme = useSetAtom(toggleThemeAtom);
-
-  log.debug('[useTheme] theme', theme);
-  // useEffect(() => {
-  //   setDocumentTheme(theme);
-  // }, [theme]);
 
   return { theme, toggleTheme } as const;
 };

@@ -8,6 +8,7 @@ import FormattedDate from '@components/layout/formatted-date.astro';
 import Header from '@components/layout/header.astro';
 import ThemeInit from '@components/theme/theme-init.astro';
 import { createLog } from '@helpers/log';
+import Tracker from '@helpers/tracker.astro';
 
 // type Props = CollectionEntry<'blog'>['data'];
 
@@ -22,9 +23,9 @@ const log = createLog('layouts/blog-post');
     <ThemeInit />
   </head>
 
-  <body>
+  <body class="min-h-screen flex flex-col">
     <Header />
-    <main class="flex justify-center items-start max-w-full m-4">
+    <main class="flex justify-center items-start max-w-full m-4 flex-grow">
       <aside class="hidden lg:block w-1/3">
         <slot name="sidebar-left" />
       </aside>
@@ -38,5 +39,6 @@ const log = createLog('layouts/blog-post');
       </aside>
     </main>
     <Footer />
+    <Tracker />
   </body>
 </html>
