@@ -1,0 +1,22 @@
+---
+import { Tag } from 'lucide-react';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+<div class="tags flex flex-wrap gap-8 text-sm text-tags/80">
+  {
+    tags.map(tag => (
+      <a
+        href={`/tags/${tag}`}
+        class="decoration-none flex items-center gap-1 hover:text-tags">
+        <Tag size={16} />
+        {tag}
+      </a>
+    ))
+  }
+</div>

@@ -1,16 +1,16 @@
 ---
 import { Image } from 'astro:assets';
-import type { CollectionEntry } from 'astro:content';
 
 import '@styles/blog-post.css';
 
 import FormattedDate from '@components/layout/formatted-date.astro';
+import Tags from '@components/layout/tags.astro';
 
 import ThreeBodyLayout from './three-body.astro';
 
-type Props = CollectionEntry<'blog'>['data'];
+// type Props = CollectionEntry<'posts'>['data'];
 
-const { title, pubDate, updatedDate, heroImage, hidePageHeroImage } =
+const { title, pubDate, updatedDate, heroImage, hidePageHeroImage, tags } =
   Astro.props;
 ---
 
@@ -40,6 +40,9 @@ const { title, pubDate, updatedDate, heroImage, hidePageHeroImage } =
       <hr />
     </div>
     <slot />
+  </div>
+  <div slot="article-footer">
+    <Tags tags={tags} />
   </div>
   <slot name="sidebar-left" slot="sidebar-left" />
   <slot name="sidebar-right" slot="sidebar-right" />
