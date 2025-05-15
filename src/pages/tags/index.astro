@@ -1,44 +1,29 @@
 ---
 import '@styles/global.css';
 
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
+import { Tag } from 'lucide-react';
 
-import FormattedDate from '@components/layout/formatted-date.astro';
-import { createLog } from '@helpers/log';
-import Layout from '@layouts/main.astro';
+import { getPublishedPosts, getTagsSummaries } from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
 
-const log = createLog('pages/posts');
+const posts = await getPublishedPosts();
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-
-const tags = posts.flatMap(post => post.data.tags);
-const uniqueTags = [...new Set(tags)];
-
-log.debug('tags', tags);
-log.debug('uniqueTags', uniqueTags);
+const summaries = getTagsSummaries(posts);
 ---
-
-<style>
-  main {
-    width: 720px;
-    max-width: calc(100% - 2em);
-    margin: auto;
-    padding: 1em;
-    color: rgb(var(--gray-dark));
-  }
-</style>
 
 <Layout>
   <main>
-    <h1>Tags</h1>
+    <h1 class="text-4xl text-ring font-['Nohemi'] font-light my-12">Tags</h1>
     <ul>
       {
-        uniqueTags.map(tag => (
+        summaries.map(({ count, href, tag }) => (
           <li>
-            <a href={`/tags/${tag}/`}>{tag}</a>
+            <a
+              href={href}
+              class="text-2xl text-ring font-['Nohemi'] font-light my-12 flex items-center gap-2 hover:text-tags">
+              <Tag size={16} />
+              {tag} ({count})
+            </a>
           </li>
         ))
       }

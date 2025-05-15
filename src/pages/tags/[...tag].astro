@@ -5,69 +5,54 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
 import FormattedDate from '@components/layout/formatted-date.astro';
+import PostSummary from '@components/layout/post-summary.astro';
 import { createLog } from '@helpers/log';
-import Layout from '@layouts/main.astro';
+import {
+  getPostsSummary,
+  getPostsTags,
+  getPublishedPosts
+} from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
 
 const log = createLog('pages/tags/[...tag]');
 
-export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+export const getStaticPaths = async () => {
+  const posts = await getPublishedPosts();
 
-  const tags = posts.flatMap(post => post.data.tags);
-  const uniqueTags = [...new Set(tags)];
+  const tags = getPostsTags(posts);
 
-  return uniqueTags.map(tag => ({
+  return tags.map(tag => ({
     params: { tag },
     props: tag
   }));
-}
+};
 
-const postsWithTag = (await getCollection('posts')).filter(post =>
+const posts = await getPublishedPosts();
+
+const postsWithTag = posts.filter(post =>
   post.data.tags?.includes(Astro.params.tag ?? '')
 );
 
-const posts = postsWithTag.toSorted(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const summaries = getPostsSummary(postsWithTag);
 
-const tags = posts.flatMap(post => post.data.tags);
-const uniqueTags = [...new Set(tags)];
+// const tags = posts.flatMap(post => post.data.tags);
+// const uniqueTags = [...new Set(tags)];
 
 // log.debug('tags', tags);
 // log.debug('uniqueTags', uniqueTags);
 ---
 
-<style>
-  main {
-    width: 720px;
-    max-width: calc(100% - 2em);
-    margin: auto;
-    padding: 1em;
-    color: rgb(var(--gray-dark));
-  }
-</style>
-
 <Layout>
   <main>
-    <h1>Tag: {Astro.params.tag}</h1>
+    <h1 class="text-4xl text-ring font-['Nohemi'] font-light my-12">
+      tag : <span class="font-medium">{Astro.params.tag}</span>
+    </h1>
     <section>
       <ul>
         {
-          posts.map(post => (
+          summaries.map(summary => (
             <li>
-              <a href={`/posts/${post.id}/`}>
-                <Image
-                  width={720}
-                  height={360}
-                  src={post.data.heroImage}
-                  alt=""
-                  fit="cover"
-                />
-                <h4 class="title">{post.data.title}</h4>
-                <p class="date">
-                  <FormattedDate date={post.data.pubDate} />
-                </p>
-              </a>
+              <PostSummary summary={summary} />
             </li>
           ))
         }

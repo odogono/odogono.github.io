@@ -8,3 +8,10 @@ export type PostImage = {
   src: string;
   width: number;
 };
+
+export type PostSummary = {
+  heroImage: PostImage | string;
+  href: string;
+  pubDate: Date;
+  title: string;
+};

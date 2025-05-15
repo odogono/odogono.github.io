@@ -1,14 +1,10 @@
 ---
 import '@styles/global.css';
 
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-
-import FormattedDate from '@components/layout/formatted-date.astro';
+import PostSummary from '@components/layout/post-summary.astro';
 import { createLog } from '@helpers/log';
 import {
   getPostsSummary,
-  getPostsTags,
   getPublishedPosts,
   sortPostsByDate
 } from '@helpers/posts';
@@ -35,19 +31,7 @@ const summaries = getPostsSummary(sortedPosts);
       {
         summaries.map(summary => (
           <li>
-            <a href={summary.href}>
-              <Image
-                width={720}
-                height={360}
-                src={summary.heroImage}
-                alt=""
-                fit="cover"
-              />
-              <h4 class="title font-['Nohemi']">{summary.title}</h4>
-              <p class="date">
-                <FormattedDate date={summary.pubDate} />
-              </p>
-            </a>
+            <PostSummary summary={summary} />
           </li>
         ))
       }
