@@ -11,7 +11,7 @@ import Layout from '@layouts/main.astro';
 const log = createLog('pages/tags/[...tag]');
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getCollection('posts');
 
   const tags = posts.flatMap(post => post.data.tags);
   const uniqueTags = [...new Set(tags)];
@@ -22,7 +22,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const postsWithTag = (await getCollection('blog')).filter(post =>
+const postsWithTag = (await getCollection('posts')).filter(post =>
   post.data.tags?.includes(Astro.params.tag ?? '')
 );
 

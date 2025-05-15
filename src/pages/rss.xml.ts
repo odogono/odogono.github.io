@@ -5,7 +5,7 @@ import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../constants';
 
 export const GET = async context => {
-  const posts = await getCollection('blog');
+  const posts = await getCollection('posts');
   return rss({
     description: SITE_DESCRIPTION,
     items: posts.map(post => ({

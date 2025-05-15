@@ -14,19 +14,19 @@ import {
 } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
 
-const log = createLog('pages/posts');
+// const log = createLog('pages/posts');
 
-log.debug('building posts');
+// log.debug('building posts');
 
 const posts = await getPublishedPosts();
 
 const sortedPosts = sortPostsByDate(posts);
 
-const tags = getPostsTags(posts);
+// const tags = getPostsTags(posts);
 
 const summaries = getPostsSummary(sortedPosts);
 
-log.debug('tags', tags);
+// log.debug('tags', tags);
 ---
 
 <Layout>

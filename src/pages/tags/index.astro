@@ -10,7 +10,7 @@ import Layout from '@layouts/main.astro';
 
 const log = createLog('pages/posts');
 
-const posts = (await getCollection('blog')).sort(
+const posts = (await getCollection('posts')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
