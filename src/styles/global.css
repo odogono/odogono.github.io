@@ -3,6 +3,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+html {
+  overflow-y     : scroll;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) var(--background);
+}
+
+/* For Webkit browsers (Chrome, Safari, etc.) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--border);
+  border-radius   : 4px;
+}
+
 /* Register your custom font family and tell the browser where to find it. */
 @font-face {
   font-family : 'Nohemi';
