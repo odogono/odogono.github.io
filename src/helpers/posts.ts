@@ -70,14 +70,16 @@ export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
   posts.map(post => {
     const { data } = post;
 
-    const { heroImage, pubDate, title } = data;
+    const { description, heroImage, pubDate, tags, title } = data;
 
     const href = getEntryUrl(post);
 
     return {
+      description,
       heroImage: heroImage || '/posts/placeholder-1.jpg',
       href,
       pubDate,
+      tags,
       title
     };
   });

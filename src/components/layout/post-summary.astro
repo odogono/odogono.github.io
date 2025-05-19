@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 
 import FormattedDate from '@components/layout/formatted-date.astro';
+import Tags from '@components/layout/tags.astro';
 import type { PostSummary } from '@types';
 
 interface Props {
@@ -9,12 +10,31 @@ interface Props {
 }
 
 const { summary } = Astro.props;
+
+console.debug('summary', summary);
 ---
 
-<a href={summary.href}>
-  <Image width={720} height={360} src={summary.heroImage} alt="" fit="cover" />
-  <h4 class="title font-['Nohemi']">{summary.title}</h4>
-  <p class="date">
-    <FormattedDate date={summary.pubDate} />
-  </p>
-</a>
+<div
+  class="post-summary border border-gray-300 hover:border-gray-700 rounded-lg">
+  <div class="flex flex-row m-6 justify-between">
+    <div class="flex flex-col justify-between">
+      <div class="flex flex-col justify-between gap-4">
+        <h2 class="title font-['Nohemi'] text-2xl">{summary.title}</h2>
+        <p class="description text-lg">{summary.description}</p>
+        <p class="date text-sm text-gray-500">
+          <FormattedDate date={summary.pubDate} />
+        </p>
+      </div>
+      {summary.tags && <Tags tags={summary.tags} />}
+    </div>
+    <div class="w-52 h-52">
+      <Image
+        width={200}
+        height={200}
+        src={summary.heroImage}
+        alt=""
+        fit="fill"
+      />
+    </div>
+  </div>
+</div>
