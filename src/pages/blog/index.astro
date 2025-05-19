@@ -11,20 +11,22 @@ import {
   getPublishedNotes,
   isDateEntry,
   isNoteEntry,
+  isPostEntry,
   sortEntriesByDate
 } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
+import type { PostSummary as PostSummaryType } from '@types';
 
 const entries = await getPaginatedNotes();
 ---
 
 <Layout title="ODGN Blog" description="A collection of posts and notes">
-  <section>
+  <ul class="blog-list">
     {
       entries.map(entry => {
         if (isDateEntry(entry)) {
           return (
-            <div class="date text-lg font-bold mb-4">
+            <div class="date text-lg font-bold mb-4 ml-[-2rem]">
               {toShortDate(entry.date)}
             </div>
           );
@@ -34,8 +36,12 @@ const entries = await getPaginatedNotes();
           return <Note note={entry} url={entry.url} />;
         }
 
+        if (isPostEntry(entry)) {
+          return <PostSummary summary={entry.data as PostSummaryType} />;
+        }
+
         return null;
       })
     }
-  </section>
+  </ul>
 </Layout>

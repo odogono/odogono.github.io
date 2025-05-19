@@ -167,8 +167,9 @@ export const getNoteUrl = (note: NoteEntry) => {
 
 export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
   const notes = await getPublishedNotes();
+  const posts = await getPublishedPosts();
 
-  const sortedNotes = sortEntriesByDate(notes);
+  const sortedNotes = sortEntriesByDate([...notes, ...posts]);
 
   const [, entries] = sortedNotes.reduce<[Date, NotesPageEntry[]]>(
     ([currentDate, acc], note) => {
