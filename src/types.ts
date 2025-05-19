@@ -23,4 +23,8 @@ export interface DateEntry {
   date: string;
 }
 
-export type NotesPageEntry = DateEntry | Entry;
+export type NotesPageEntry =
+  | DateEntry
+  | (Entry & {
+      url: string;
+    });

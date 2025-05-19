@@ -15,13 +15,13 @@ import { isSameDay } from './date';
 
 const log = createLog('helpers/posts');
 
-export const isPostEntry = (entry: NotesPageEntry): entry is PostEntry =>
+export const isPostEntry = (entry: Entry): entry is PostEntry =>
   'data' in entry && !!entry.data.isPost;
 
-export const isNoteEntry = (entry: NotesPageEntry): entry is NoteEntry =>
+export const isNoteEntry = (entry: Entry): entry is NoteEntry =>
   'data' in entry && !!entry.data.isNote;
 
-export const isDateEntry = (entry: NotesPageEntry): entry is DateEntry =>
+export const isDateEntry = (entry: object): entry is DateEntry =>
   'date' in entry;
 
 export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
@@ -68,13 +68,11 @@ export const getPublishedPostsPaths = async () => {
 
 export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
   posts.map(post => {
-    const postSlug = getPostSlug(post);
+    const { data } = post;
 
-    const { data, id } = post;
+    const { heroImage, pubDate, title } = data;
 
-    const { heroImage, pubDate, slug, title } = data;
-
-    const href = `/posts/${postSlug}/`;
+    const href = getEntryUrl(post);
 
     return {
       heroImage: heroImage || '/posts/placeholder-1.jpg',
@@ -84,15 +82,33 @@ export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
     };
   });
 
-export const getPostSlug = (post: PostEntry) => {
+export const getPostSlug = (post: Entry) => {
   const { data, id } = post;
-  const { slug, title } = data;
+  const { pubDate, slug, title } = data;
 
   if (slug) {
     return slug;
   }
 
-  return githubSlug(title);
+  if (isNoteEntry(post)) {
+    const year = pubDate.getFullYear();
+    const month = pubDate.getMonth() + 1;
+    const day = pubDate.getDate();
+
+    return `${year}/${month}/${day}/${githubSlug(title ?? id)}`;
+  }
+
+  return githubSlug(title ?? id);
+};
+
+export const getEntryUrl = (entry: Entry) => {
+  const slug = getPostSlug(entry);
+
+  if (isNoteEntry(entry)) {
+    return `/blog/${slug}/`;
+  }
+
+  return `/posts/${slug}/`;
 };
 
 interface TagSummary {
@@ -137,6 +153,16 @@ export const getTagsSummaries = (posts: PostEntry[]): TagSummary[] => {
   // });
 };
 
+export const getNoteUrl = (note: NoteEntry) => {
+  const { pubDate, title } = note.data;
+
+  const year = pubDate.getFullYear();
+  const month = pubDate.getMonth() + 1;
+  const day = pubDate.getDate();
+
+  return `${year}/${month}/${day}/${title ?? 'unknown'}`;
+};
+
 export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
   const notes = await getPublishedNotes();
 
@@ -150,7 +176,9 @@ export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
         acc.push({ date: date.toISOString() });
       }
 
-      acc.push(note);
+      const url = getEntryUrl(note);
+
+      acc.push({ ...note, url });
 
       return [date, acc];
     },
@@ -158,4 +186,15 @@ export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
   );
 
   return entries;
+};
+
+export const getNotesPaths = async () => {
+  const notes = await getPublishedNotes();
+
+  const sortedNotes = sortEntriesByDate(notes);
+
+  return sortedNotes.map(note => ({
+    params: { slug: getPostSlug(note) },
+    props: note
+  }));
 };

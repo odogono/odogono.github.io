@@ -119,4 +119,9 @@ article {
     border    : none;
     border-top: 1px solid rgb(var(--gray-light));
   }
+
+  /* A little hacky, but remove the margin-top of the first pre tag after a paragraph */
+  p+pre {
+    margin-top: -2rem;
+  }
 }

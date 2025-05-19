@@ -1,0 +1,27 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+import Note from '@components/layout/note.astro';
+import { toShortDate } from '@helpers/date';
+import { getEntryUrl, getNotesPaths } from '@helpers/posts';
+import BlogPost from '@layouts/blog-post.astro';
+import NoteLayout from '@layouts/note.astro';
+import type { NoteEntry } from '@types';
+
+export const getStaticPaths = async () => {
+  return getNotesPaths();
+};
+
+// interface Props {
+//   data: NoteEntry;
+// }
+// type Props = CollectionEntry<'blog'>;
+
+const note = Astro.props;
+
+const url = getEntryUrl(note);
+---
+
+<NoteLayout {...note.data} url={url}>
+  <Note note={note as NoteEntry} />
+</NoteLayout>

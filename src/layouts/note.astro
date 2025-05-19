@@ -1,0 +1,40 @@
+---
+import { Image } from 'astro:assets';
+
+import '@styles/blog-post.css';
+
+import FormattedDate from '@components/layout/formatted-date.astro';
+import Tags from '@components/layout/tags.astro';
+import { toShortDate } from '@helpers/date';
+import type { NoteEntry } from '@types';
+
+import { getEntryUrl } from '../helpers/posts';
+import ThreeBodyLayout from './three-body.astro';
+
+// type Props = CollectionEntry<'posts'>['data'];
+// type Props = NoteEntry['data'];
+
+interface Props {
+  pubDate: Date;
+  tags?: string[];
+  title: string;
+  url?: string;
+}
+
+const { title, pubDate, tags, url } = Astro.props;
+---
+
+<ThreeBodyLayout {...Astro.props}>
+  <div class="date text-lg font-bold mb-4">
+    {toShortDate(pubDate)}
+  </div>
+  <div class="prose mt-8">
+    <slot />
+  </div>
+  <div slot="article-footer" class="flex space-x-4">
+    <a href={url}>#</a>
+    {tags && <Tags tags={tags} />}
+  </div>
+  <slot name="sidebar-left" slot="sidebar-left" />
+  <slot name="sidebar-right" slot="sidebar-right" />
+</ThreeBodyLayout>

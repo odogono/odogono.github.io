@@ -3,17 +3,29 @@ import { render } from 'astro:content';
 
 import '@styles/notes.css';
 
+import Tags from '@components/layout/tags.astro';
 import type { NoteEntry } from '@types';
 
 interface Props {
   note: NoteEntry;
+  url?: string;
 }
 
-const { note } = Astro.props;
+const { note, url } = Astro.props;
 const { Content } = await render(note);
+
+const { tags } = note.data;
 ---
 
 <article>
   <h2>{note.data.title}</h2>
   <Content />
+  {
+    url && (
+      <div class="links flex space-x-4">
+        <a href={url}>#</a>
+        {tags && <Tags tags={tags} />}
+      </div>
+    )
+  }
 </article>

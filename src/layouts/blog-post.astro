@@ -42,13 +42,7 @@ const { title, pubDate, updatedDate, heroImage, hidePageHeroImage, tags } =
     <slot />
   </div>
   <div slot="article-footer">
-    {
-      tags && (
-        <div class="tags">
-          <Tags tags={tags} />
-        </div>
-      )
-    }
+    {tags && <Tags tags={tags} />}
   </div>
   <slot name="sidebar-left" slot="sidebar-left" />
   <slot name="sidebar-right" slot="sidebar-right" />
