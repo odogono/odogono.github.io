@@ -2,17 +2,52 @@ import { getCollection } from 'astro:content';
 import { slug as githubSlug } from 'github-slugger';
 
 import { createLog } from '@helpers/log';
-import type { PostEntry, PostSummary } from '@types';
+import type {
+  DateEntry,
+  Entry,
+  NoteEntry,
+  NotesPageEntry,
+  PostEntry,
+  PostSummary
+} from '@types';
+
+import { isSameDay } from './date';
 
 const log = createLog('helpers/posts');
 
-export const getPublishedPosts = async (): Promise<PostEntry[]> => {
-  const posts: PostEntry[] = await getCollection('posts');
-  return posts.filter(post => !post.data.isDraft);
+export const isPostEntry = (entry: NotesPageEntry): entry is PostEntry =>
+  'data' in entry && !!entry.data.isPost;
+
+export const isNoteEntry = (entry: NotesPageEntry): entry is NoteEntry =>
+  'data' in entry && !!entry.data.isNote;
+
+export const isDateEntry = (entry: NotesPageEntry): entry is DateEntry =>
+  'date' in entry;
+
+export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
+  const notes: NoteEntry[] = await getCollection('notes');
+  return notes
+    .filter(note => !note.data.isDraft)
+    .map(note => {
+      note.data.isNote = true;
+      return note;
+    });
 };
 
-export const sortPostsByDate = (posts: PostEntry[]): PostEntry[] =>
-  posts.toSorted((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+export const getPublishedPosts = async (): Promise<PostEntry[]> => {
+  const posts: PostEntry[] = await getCollection('posts');
+  return posts
+    .filter(post => !post.data.isDraft)
+    .map(post => {
+      post.data.isPost = true;
+      return post;
+    });
+};
+
+export const sortEntriesByDate = (entries: Entry[]): Entry[] =>
+  entries.toSorted(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
 
 export const getPostsTags = (posts: PostEntry[]): string[] => {
   const tags = posts.flatMap(post => post.data.tags ?? []);
@@ -60,11 +95,11 @@ export const getPostSlug = (post: PostEntry) => {
   return githubSlug(title);
 };
 
-type TagSummary = {
+interface TagSummary {
   count: number;
   href: string;
   tag: string;
-};
+}
 
 export const getTagsSummaries = (posts: PostEntry[]): TagSummary[] => {
   const tags = posts.flatMap(post => post.data.tags ?? []);
@@ -100,4 +135,27 @@ export const getTagsSummaries = (posts: PostEntry[]): TagSummary[] => {
   //     title: tag
   //   };
   // });
+};
+
+export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
+  const notes = await getPublishedNotes();
+
+  const sortedNotes = sortEntriesByDate(notes);
+
+  const [, entries] = sortedNotes.reduce<[Date, NotesPageEntry[]]>(
+    ([currentDate, acc], note) => {
+      const date = note.data.pubDate;
+
+      if (!isSameDay(date, currentDate)) {
+        acc.push({ date: date.toISOString() });
+      }
+
+      acc.push(note);
+
+      return [date, acc];
+    },
+    [new Date(0), [] as NotesPageEntry[]]
+  );
+
+  return entries;
 };

@@ -9,7 +9,7 @@ export default [
   ...nkzw,
   {
     rules: {
-      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
+      '@typescript-eslint/consistent-type-definitions': ['error', 'interface'],
       'arrow-body-style': ['error', 'as-needed'],
       'arrow-parens': ['error', 'as-needed'],
       'arrow-spacing': ['error', { after: true, before: true }],

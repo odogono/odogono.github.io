@@ -1,0 +1,58 @@
+---
+import '@styles/global.css';
+
+import { Content } from 'astro:content';
+
+import Note from '@components/layout/note.astro';
+import PostSummary from '@components/layout/post-summary.astro';
+import { toShortDate } from '@helpers/date';
+import { createLog } from '@helpers/log';
+import {
+  getPaginatedNotes,
+  getPostsSummary,
+  getPublishedNotes,
+  isDateEntry,
+  isNoteEntry,
+  sortEntriesByDate
+} from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
+import type { NoteEntry } from '@types';
+
+// const log = createLog('pages/posts');
+
+// log.debug('building posts');
+
+// const notes = await getPublishedNotes();
+
+// const sortedNotes = sortEntriesByDate(notes) as NoteEntry[];
+
+// const tags = getPostsTags(posts);
+
+// const summaries = getPostsSummary(sortedNotes);
+
+// log.debug('tags', tags);
+
+const entries = await getPaginatedNotes();
+---
+
+<Layout title="ODGN Blog" description="A collection of posts and notes">
+  <section>
+    {
+      entries.map(entry => {
+        if (isDateEntry(entry)) {
+          return (
+            <div class="date text-lg font-bold mb-4">
+              {toShortDate(entry.date)}
+            </div>
+          );
+        }
+
+        if (isNoteEntry(entry)) {
+          return <Note note={entry} />;
+        }
+
+        return null;
+      })
+    }
+  </section>
+</Layout>

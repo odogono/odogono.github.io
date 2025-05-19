@@ -1,0 +1,19 @@
+---
+import { render } from 'astro:content';
+
+import '@styles/notes.css';
+
+import type { NoteEntry } from '@types';
+
+interface Props {
+  note: NoteEntry;
+}
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+---
+
+<article>
+  <h2>{note.data.title}</h2>
+  <Content />
+</article>

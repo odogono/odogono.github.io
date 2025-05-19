@@ -6,9 +6,10 @@ import { createLog } from '@helpers/log';
 import {
   getPostsSummary,
   getPublishedPosts,
-  sortPostsByDate
+  sortEntriesByDate
 } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
+import type { PostEntry } from '@types';
 
 // const log = createLog('pages/posts');
 
@@ -16,7 +17,7 @@ import Layout from '@layouts/three-body.astro';
 
 const posts = await getPublishedPosts();
 
-const sortedPosts = sortPostsByDate(posts);
+const sortedPosts = sortEntriesByDate(posts) as PostEntry[];
 
 // const tags = getPostsTags(posts);
 
