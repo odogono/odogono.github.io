@@ -8,7 +8,7 @@ type ImageDialogProps = {
 
 const ImageDialog = ({ alt, children, src }: ImageDialogProps) => (
   <Dialog>
-    <DialogTrigger className="w-full cursor-pointer border-0 bg-transparent p-0">
+    <DialogTrigger className="cursor-pointer border-0 bg-transparent p-0">
       {children}
     </DialogTrigger>
     <DialogContent className="!max-w-fit p-1">

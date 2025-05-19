@@ -9,6 +9,16 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   integrations: [mdx(), react()],
 
+  markdown: {
+    shikiConfig: {
+      themes: {
+        dark: 'github-dark',
+        light: 'github-light'
+      },
+      wrap: true
+    }
+  },
+
   site: 'https://dev.odgn.net',
 
   vite: {
