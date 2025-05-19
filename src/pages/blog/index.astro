@@ -37,7 +37,11 @@ const entries = await getPaginatedNotes();
         }
 
         if (isPostEntry(entry)) {
-          return <PostSummary summary={entry.data as PostSummaryType} />;
+          return (
+            <PostSummary
+              summary={{ ...entry.data, url: entry.url } as PostSummaryType}
+            />
+          );
         }
 
         return null;

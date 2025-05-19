@@ -2,10 +2,10 @@
 title: 'Weeknotes 006'
 pubDate: 2025-03-23T20:41:00+00:00
 isDraft: true
+isNote: true
 weather: '12°C Clear'
 location: '50.79°N, 3.65°W'
 tags: ['weeknotes']
-customcss: 'custom.css'
 description: 'Week notes for the 12th week of 02025'
 ---
 

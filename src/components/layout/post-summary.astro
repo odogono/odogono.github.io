@@ -11,15 +11,17 @@ interface Props {
 
 const { summary } = Astro.props;
 
-const { title, description, pubDate, tags, heroImage, href } = summary;
+const { title, description, pubDate, tags, heroImage, url } = summary;
 
 const heroImageSrc = heroImage || '/posts/placeholder-2.jpg';
+
+console.debug('summary', summary);
 ---
 
 <div
-  class="post-summary border border-gray-300 hover:border-gray-700 rounded-lg cursor-pointer relative">
+  class="post-summary border hover:border-accent rounded-lg cursor-pointer relative">
   <a
-    href={href}
+    href={url}
     style="display: inline-block; width: 100%; height: 100%; position: absolute; top: 0; left: 0;"
   ></a>
   <div class="flex flex-row m-6 justify-between">
@@ -39,7 +41,7 @@ const heroImageSrc = heroImage || '/posts/placeholder-2.jpg';
         )
       }
     </div>
-    <div class="w-52 h-52">
+    <div class="w-52 h-52 min-w-52 min-h-52">
       {
         typeof heroImageSrc === 'string' ? (
           <img

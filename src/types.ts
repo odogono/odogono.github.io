@@ -15,10 +15,10 @@ export interface PostImage {
 export interface PostSummary {
   description?: string;
   heroImage: PostImage | string;
-  href: string;
   pubDate: Date;
   tags?: string[];
   title: string;
+  url: string;
 }
 
 export interface DateEntry {

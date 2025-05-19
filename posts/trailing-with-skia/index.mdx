@@ -6,24 +6,32 @@ isPost: true
 weather: '10°C Windy'
 location: '50.79°N, 3.65°W'
 tags: ['react-native', 'skia', 'react']
-customcss: 'custom.css'
+
 description: 'A dive into creating animated gradient trails in React Native Skia'
+heroImage: './img/path.boids.png'
 ---
 
+import ImageModal from '@components/image-modal.astro';
+import Youtube from '@components/youtube.astro';
+import imageAppleMaps from './img/apple.maps.path.anim.jpg';
+import imagePathDivisions4 from './img/path.divisions.4.png';
+import imagePathDivisions10 from './img/path.divisions.10.png';
+import imagePathDivisions30 from './img/path.divisions.30.png';
+import imagePathTrail from './img/path.trail.png';
+import imagePathBoids from './img/path.boids.png';
 
-{{< youtube id="24fjKn87tmk" >}}
+
+<Youtube id="24fjKn87tmk" title="React Native Skia Gradient Paths Demo" />
 
 
 ## Introduction
 
 I came across this delightful animation recently after upgrading to macos sequoia in the maps app. Used to introduce custom routes, it features a path which  animates along a loop. Since I am currently working on a maps project, I thought I wouldn't mind a piece of that action.
 
-{{< image-cropped src="img/apple.maps.path.anim.jpg" 
-  alt="Apple Maps Introducing Custom Routes" 
-  allowOpen=true
-  width="317"
-  height="350"
->}}
+<div class="flex justify-center m-16">
+<ImageModal src={imageAppleMaps} alt="Apple Maps Introducing Custom Routes" width={317} height={350} fit="cover" />
+</div>
+
 
 This excellent video by [William Candillon](https://github.com/wcandillon) - [Gradient along a path with React Native Skia](https://www.youtube.com/watch?v=7SCzL-XnfUU), was an excellent starting point for my exploration. Although now clearly outdated, it shows what is possible.
 
@@ -99,10 +107,11 @@ All of the calculations for the section start and end values are [done in the UI
 
 The following images show the effect of increasing the number of sections. At 30 sections, the gradient is quite smooth.
 
-{{< figure src="img/path.divisions.4.png" caption="3 sections" alt="path made up of three sections" >}}
-{{< figure src="img/path.divisions.10.png" caption="10 sections" alt="path made up of ten sections" >}}
-{{< figure src="img/path.divisions.30.png" caption="30 sections" alt="path made up of thirty sections" >}}
-
+<div class="flex justify-center my-8 gap-4">
+<ImageModal src={imagePathDivisions4} alt="path made up of three sections" width={317} height={350} fit="cover" />
+<ImageModal src={imagePathDivisions10} alt="path made up of ten sections" width={317} height={350} fit="cover" />
+<ImageModal src={imagePathDivisions30} alt="path made up of thirty sections" width={317} height={350} fit="cover" />
+</div>
 
 The head of the trail is controlled by using a withTiming/withRepeat hook, but the tail and also the section calculations are placed into a useFrameCallback hook. This is a hook which runs once per frame, so can probably be quite energy intensive. 
 
@@ -121,8 +130,9 @@ I set up a useDerivedValue hook to react to the head position. Inside of this, I
 
 And with all of that, I have my first demo of a looping trail.
 
-{{< figure src="img/path.trail.png" caption="Path with gradient trail. And a bit of glow" alt="path with gradient trail" >}}
-
+<div class="flex justify-center my-8 gap-4">
+<ImageModal src={imagePathTrail} alt="Path with gradient trail. And a bit of glow" width={317} height={350} fit="cover" />
+</div>
 
 
 ## Everyone loves a Boid
@@ -146,7 +156,9 @@ It calls the start, update, and end functions by using a primitive state machine
 
 As a bonus, it was also easy to pass in the path functions to a gesture handler, so that a trail can be drawn at the same time.
 
-{{< figure src="img/path.boids.png" caption="Trails flocking around" alt="multiple trails flocking around" height="300" >}}
+<div class="flex justify-center my-8 gap-4">
+<ImageModal src={imagePathBoids} alt="Trails flocking around" width={317} height={350} fit="cover" />
+</div>
 
 
 

@@ -34,10 +34,19 @@ export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
     });
 };
 
-export const getPublishedPosts = async (): Promise<PostEntry[]> => {
+export const getPublishedPosts = async (
+  includeNotes = false
+): Promise<PostEntry[]> => {
   const posts: PostEntry[] = await getCollection('posts');
   return posts
     .filter(post => !post.data.isDraft)
+    .filter(post => {
+      if (post.data.isNote && !includeNotes) {
+        return false;
+      }
+
+      return true;
+    })
     .map(post => {
       post.data.isPost = true;
       return post;
@@ -72,15 +81,15 @@ export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
 
     const { description, heroImage, pubDate, tags, title } = data;
 
-    const href = getEntryUrl(post);
+    const url = getEntryUrl(post);
 
     return {
       description,
       heroImage: heroImage || '/posts/placeholder-1.jpg',
-      href,
       pubDate,
       tags,
-      title
+      title,
+      url
     };
   });
 
@@ -167,7 +176,7 @@ export const getNoteUrl = (note: NoteEntry) => {
 
 export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
   const notes = await getPublishedNotes();
-  const posts = await getPublishedPosts();
+  const posts = await getPublishedPosts(true);
 
   const sortedNotes = sortEntriesByDate([...notes, ...posts]);
 
@@ -180,6 +189,8 @@ export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
       }
 
       const url = getEntryUrl(note);
+
+      console.debug('note', note.id, url);
 
       acc.push({ ...note, url });
 

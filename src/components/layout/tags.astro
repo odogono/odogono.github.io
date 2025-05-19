@@ -6,11 +6,13 @@ interface Props {
 }
 
 const { tags } = Astro.props;
+
+const sortedTags = tags.toSorted((a, b) => a.localeCompare(b));
 ---
 
 <div class="tags flex flex-wrap text-sm text-tags/80">
   {
-    tags.map(tag => (
+    sortedTags.map(tag => (
       <a
         href={`/tags/${tag}`}
         class="decoration-none flex items-center gap-1 hover:text-tags mr-4">

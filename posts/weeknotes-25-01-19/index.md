@@ -2,10 +2,10 @@
 title: 'Weeknotes 002'
 pubDate: 2025-01-19T11:03:00+00:00
 isDraft: false
+isNote: true
 weather: '4°C Cloudy'
 location: '50.79°N, 3.65°W'
 tags: ['weeknotes']
-customcss: 'custom.css'
 description: 'Week notes for the 3rd week of January 02025'
 ---
 

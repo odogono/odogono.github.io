@@ -1,4 +1,6 @@
-article {
+.prose {
+
+  line-height: 2em;
 
   h1,
   h2,
@@ -6,25 +8,25 @@ article {
   h4,
   h5,
   h6 {
-    margin     : 0 0 0.5rem 0;
+    margin     : 0 0 1rem 0;
     color      : var(--header);
     line-height: 1.2;
   }
 
   h1 {
-    font-size: 3.052em;
+    font-size: 2.5em;
   }
 
   h2 {
-    font-size: 2.441em;
+    font-size: 1.8em;
   }
 
   h3 {
-    font-size: 1.953em;
+    font-size: 1.2em;
   }
 
   h4 {
-    font-size: 1.563em;
+    font-size: 1.1em;
   }
 
   h5 {
@@ -46,14 +48,6 @@ article {
   }
 
   p {
-    margin-bottom: 1em;
-  }
-
-  .prose {
-    line-height: 2em;
-  }
-
-  .prose p {
     margin-bottom: 2em;
   }
 
@@ -123,5 +117,9 @@ article {
   /* A little hacky, but remove the margin-top of the first pre tag after a paragraph */
   p+pre {
     margin-top: -2rem;
+  }
+
+  iframe {
+    margin-bottom: 2rem;
   }
 }

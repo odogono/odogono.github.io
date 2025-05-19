@@ -7,16 +7,16 @@ weather: '14°C Partly Cloudy'
 location: '50.79°N, 3.65°W'
 tags: ['react-three-fiber', 'react', 'shaders']
 description: 'Creating a shader based animated counter in React Three Fiber'
+heroImage: './img/final.jpg'
+hidePageHeroImage: true
 ---
 
 
-{{< image-cropped src="img/final.jpg" 
-  alt="Strips of digits, all in a row" 
-  process="crop" 
-  width="640" 
-  height="400"
-  allowOpen=false
->}}
+import ImageModal from '@components/image-modal.astro';
+import imageFinal from './img/final.jpg';
+import imageDigitStrips from './img/digitstrips.png';
+
+<ImageModal src={imageFinal} alt="Strips of digits, all in a row" width={640} height={400} />
 
 [This tutorial](https://www.youtube.com/watch?v=Rv91NdVtnsw) on creating an animated counter in react native is neat. I would very much like to have that for my score display in the little game I’m currently side-project’ing.
 
@@ -26,7 +26,7 @@ So instead, I chose to bring this into the land of [Three](https://threejs.org).
 
 ## First attempt
 
-{{< image-cropped src="img/digitstrips.png" alt="Strips of digits, all in a row" process="fill" width="640" height="200" >}}
+<ImageModal src={imageDigitStrips} alt="Strips of digits, all in a row" width={640} height={200} fit="cover" />
 
 First stab at the implementation was pretty simple. A bunch of plane geometries, each with their own UVs, grouped together into a strip, textured, and clipped (more on that later).
 
@@ -140,7 +140,7 @@ In the first iteration when I was just using regular planes to render, clipping 
 But shaders don’t naturally have an idea of what a clipping plane is, so we have to add some includes so they are handled correctly.
 
 
-{{< highlight go "linenos=table,hl_lines=6 15" >}}
+```typescript
 vertexShader: `
   uniform float uCount;
   attribute float aIndex;
@@ -157,7 +157,7 @@ vertexShader: `
     #include <project_vertex>
     #include <clipping_planes_vertex>
   }
-{{< / highlight >}}
+```
 
 
 

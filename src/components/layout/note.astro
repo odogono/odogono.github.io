@@ -18,8 +18,10 @@ const { tags } = note.data;
 ---
 
 <article>
-  <h2>{note.data.title}</h2>
-  <Content />
+  <div class="prose mt-8">
+    <h2>{note.data.title}</h2>
+    <Content />
+  </div>
   {
     url && (
       <div class="links flex space-x-4">
