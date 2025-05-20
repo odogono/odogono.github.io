@@ -1,0 +1,41 @@
+---
+import '@styles/global.css';
+
+import EntriesList from '@components/layout/entries-list.astro';
+import { createLog } from '@helpers/log';
+import {
+  applyDateEntries,
+  filterEntriesByTag,
+  getPostsTags,
+  getPublishedContent
+} from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
+
+const log = createLog('pages/tags/[...tag]');
+
+export const getStaticPaths = async () => {
+  const tags = await getPostsTags();
+
+  return tags.map(tag => ({
+    params: { tag },
+    props: tag
+  }));
+};
+
+const entries = await getPublishedContent(true);
+const entriesWithTag = filterEntriesByTag(entries, Astro.params.tag);
+const entriesWithDates = applyDateEntries(entriesWithTag);
+---
+
+<Layout title={`Tag: ${Astro.params.tag} - ODGN`}>
+  <main>
+    <h1 class="text-4xl text-ring/80 font-['Nohemi'] font-light my-12">
+      <a href="/tags" class="hover:underline hover:text-tags">tag</a> : <span
+        class="font-medium">{Astro.params.tag}</span
+      >
+    </h1>
+    <section>
+      <EntriesList entries={entriesWithDates} />
+    </section>
+  </main>
+</Layout>

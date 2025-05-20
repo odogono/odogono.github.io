@@ -1,0 +1,33 @@
+---
+import { render } from 'astro:content';
+
+import '@styles/blog-post.css';
+
+import Tags from '@components/layout/tags.astro';
+import type { NoteEntry } from '@types';
+
+interface Props {
+  note: NoteEntry;
+  url?: string;
+}
+
+const { note, url } = Astro.props;
+const { Content } = await render(note);
+
+const { tags } = note.data;
+---
+
+<article>
+  <div class="prose mt-8">
+    <h2>{note.data.title}</h2>
+    <Content />
+  </div>
+  {
+    url && (
+      <div class="links flex space-x-4">
+        <a href={url}>#</a>
+        {tags && <Tags tags={tags} />}
+      </div>
+    )
+  }
+</article>

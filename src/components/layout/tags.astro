@@ -1,0 +1,24 @@
+---
+import { Tag } from 'lucide-react';
+
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+
+const sortedTags = tags.toSorted((a, b) => a.localeCompare(b));
+---
+
+<div class="tags flex flex-wrap text-sm text-tags/80">
+  {
+    sortedTags.map(tag => (
+      <a
+        href={`/tags/${tag}`}
+        class="decoration-none flex items-center gap-1 hover:text-tags mr-4">
+        <Tag size={16} />
+        {tag}
+      </a>
+    ))
+  }
+</div>

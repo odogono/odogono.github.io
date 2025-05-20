@@ -91,3 +91,11 @@ site = "https://www.joshwcomeau.com/react/"
 [ryanflorence]
 author = "Ryan Florence"
 site = "https://ryanflorence.com/blog/"
+
+[simonwillison]
+author = "Simon Willison"
+site = "https://simonwillison.net/"
+
+[petafloptimism]
+author = "Matt Jones"
+site = "https://petafloptimism.com/"

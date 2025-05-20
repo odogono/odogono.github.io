@@ -1,0 +1,22 @@
+---
+import BaseHead from '@components/layout/base-head.astro';
+import Footer from '@components/layout/footer.astro';
+import Header from '@components/layout/header.astro';
+import ThemeInit from '@components/theme/theme-init.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '@constants';
+import Tracker from '@helpers/tracker.astro';
+---
+
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    <ThemeInit />
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex justify-center items-start m-4 flex-grow">
+      <slot />
+    </main>
+    <Footer />
+  </body><Tracker />
+</html>

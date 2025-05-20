@@ -1,0 +1,41 @@
+---
+import '@styles/global.css';
+
+import PostSummary from '@components/layout/post-summary.astro';
+import { createLog } from '@helpers/log';
+import {
+  getPostsSummary,
+  getPublishedPosts,
+  sortEntriesByDate
+} from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
+import type { PostEntry } from '@types';
+
+// const log = createLog('pages/posts');
+
+// log.debug('building posts');
+
+const posts = await getPublishedPosts();
+
+const sortedPosts = sortEntriesByDate(posts) as PostEntry[];
+
+// const tags = getPostsTags(posts);
+
+const summaries = getPostsSummary(sortedPosts);
+
+// log.debug('tags', tags);
+---
+
+<Layout>
+  <section>
+    <ul>
+      {
+        summaries.map(summary => (
+          <li class="mb-8">
+            <PostSummary summary={summary} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

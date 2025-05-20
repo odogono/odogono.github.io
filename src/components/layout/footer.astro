@@ -1,0 +1,18 @@
+---
+import { Bluesky } from '@components/social/bluesky';
+import { Github } from '@components/social/github';
+import { LinkedIn } from '@components/social/linkedin';
+import { Twitter } from '@components/social/twitter';
+
+const today = new Date();
+---
+
+<footer class="py-8 px-4 pb-24 text-xs text-center text-gray-600">
+  &copy; {today.getFullYear()} Alexander Veenendaal
+  <div class="social-links flex justify-center gap-4 mt-4">
+    <Bluesky />
+    <Github />
+    <LinkedIn />
+    <Twitter />
+  </div>
+</footer>

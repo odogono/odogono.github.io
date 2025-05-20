@@ -1,0 +1,17 @@
+---
+import Note from '@components/layout/note.astro';
+import { getEntryUrl, getNotesPaths } from '@helpers/posts';
+import NoteLayout from '@layouts/note.astro';
+import type { NoteEntry } from '@types';
+
+export const getStaticPaths = async () => {
+  return getNotesPaths();
+};
+
+const note = Astro.props;
+const url = getEntryUrl(note);
+---
+
+<NoteLayout {...note.data} url={url}>
+  <Note note={note as NoteEntry} />
+</NoteLayout>

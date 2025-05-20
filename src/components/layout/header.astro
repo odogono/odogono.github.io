@@ -1,0 +1,31 @@
+---
+import { Bluesky } from '@components/social/bluesky';
+import { Github } from '@components/social/github';
+import { LinkedIn } from '@components/social/linkedin';
+import { Twitter } from '@components/social/twitter';
+import { ThemeButton } from '@components/theme/theme-button';
+import { SITE_TITLE } from '@constants';
+
+import HeaderLink from './header-link.astro';
+---
+
+<header class="m-0 px-4 shadow-[0_2px_8px_rgba(var(--black),0.05)]">
+  <nav class="flex items-center justify-between">
+    <h2 class="m-0 text-base">
+      <a href="/" class="no-underline">{SITE_TITLE}</a>
+    </h2>
+    <div class="internal-links">
+      <HeaderLink href="/">Home</HeaderLink>
+      <HeaderLink href="/blog">Blog</HeaderLink>
+      <HeaderLink href="/posts">Posts</HeaderLink>
+      <HeaderLink href="/about">About</HeaderLink>
+    </div>
+    <div class="social-links hidden md:flex gap-2">
+      <!-- <Bluesky />
+      <Github />
+      <LinkedIn />
+      <Twitter /> -->
+      <ThemeButton client:load />
+    </div>
+  </nav>
+</header>

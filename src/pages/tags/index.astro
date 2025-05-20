@@ -1,0 +1,30 @@
+---
+import '@styles/global.css';
+
+import { Tag } from 'lucide-react';
+
+import { getPublishedPosts, getTagsSummaries } from '@helpers/posts';
+import Layout from '@layouts/three-body.astro';
+
+const summaries = await getTagsSummaries();
+---
+
+<Layout>
+  <main>
+    <h1 class="text-4xl text-ring font-['Nohemi'] font-light my-12">Tags</h1>
+    <ul>
+      {
+        summaries.map(({ count, href, tag }) => (
+          <li>
+            <a
+              href={href}
+              class="text-2xl text-ring font-['Nohemi'] font-light my-12 flex items-center gap-2 hover:text-tags">
+              <Tag size={16} />
+              {tag} ({count})
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>

@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+
+import { ImageDialog } from './image-dialog';
+
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  width?: number;
+  height?: number;
+  fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+}
+
+const { src, alt, width, height, fit } = Astro.props;
+---
+
+<ImageDialog src={src.src} alt={alt} client:load>
+  <Image
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    fit={fit}
+    class="transition-transform duration-200 ease-in-out hover:scale-102"
+  />
+</ImageDialog>

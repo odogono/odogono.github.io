@@ -1,0 +1,266 @@
+---
+title:  'Messing with Skia'
+pubDate: 2024-10-25T18:40:31+01:00
+isDraft:  false
+isPost: true
+weather:  '14°C Windy'
+location:  '50.79°N, 3.65°W'
+tags:  ['react-native', 'react', 'zustand', 'react-native-reanimated']
+description:  'An exploration into using Skia in a React Native app'
+heroImage: './img/ta.a.jpg'
+---
+
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+import Youtube from '@components/youtube.astro';
+
+import imageA from './img/ta.a.jpg';
+import imageB from './img/ta.b.jpg';
+import imageUpdatingReact from './img/updating-react.png';
+
+
+<div class="image-row flex flex-row justify-around m-32" style="margin: 32px 0;">
+<ImageModal src={imageA} alt="Tile A" width={150} height={328} fit="" />
+<ImageModal src={imageB} alt="Tile B" width={150} height={328} fit="cover" />
+</div>
+
+
+
+To get a better sense of React Native [Skia](https://shopify.github.io/react-native-skia/), I decided to implement a simple app to figure out how it can integrate with some other libraries in a non-trivial scenario.
+
+What follows is some notes on the implementation, and some of the things I learned.
+
+To begin with, here is a video of the app in action:
+
+
+<Youtube id="i9X41tQZbgc" title="VO Pads - Assembling Get Away" />
+
+
+## What is happening
+
+The app itself is about placing tiles into a world - sort of a game, but not quite. Although there is something calming about placing tiles.
+
+To begin, a single tile presents itself at the center of the screen, surrounded by three option tiles (with dashed borders). Dragging a tile onto one of the option tiles places it in the world, and the process begins again with the placed tile as the focus.
+
+The entire screen is filled with a Skia canvas, onto which is rendered the tiles. Using Reanimated to handle touches, the view can be moved around by dragging the screen, zoomed in and out with map style buttons, and the tiles can be selected with a tap.
+
+At the bottom of the screen, there is a horizontal list of candidate tiles which can be dragged and dropped onto one of the option areas that appear.
+
+Behind the scenes, a [Zustand](https://github.com/pmndrs/zustand) store manages all of the state of the view, tiles, the dragging and the dropping, and houses various actions which affect the state.
+
+
+
+## Transforming the world
+
+Much like the HTML canvas, Skia also uses the concept of view transformations to position elements on the screen.
+
+In the app a view position is maintained - much like a camera. When ever a drag event occurs on the screen or when a zoom operation is requested, the view changes as expected. The position and the current scale is applied to a Matrix, which is fed to a Skia Group component which then affects all of its children.
+
+The composition of the view matrix happens here:
+
+```typescript
+ mViewMatrix.modify((m) => {
+  m.identity();
+
+  // Translate to the center of the screen
+  m.translate(viewWidth / 2, viewHeight / 2);
+
+  // apply the view position
+  m.translate(-x, -y);
+
+  // Apply scale around the current position
+  m.scale(scale, scale);
+
+  return m;
+});
+```
+
+This is placed inside a useAnimatedReaction hook, so that everytime the view position or scale changes, the matrix is recomputed.
+
+[Skia is a rendering engine](https://github.com/Shopify/react-native-skia/issues/513#issuecomment-1290126304), and as such the 'components' it renders are missing one key element from typical React Views - user interaction handlers.
+
+So instead handling of touches has to be done manually. 
+
+This involves converting the touch from 'screen space' into 'world space'. And then performing intersection testing on elements that are visible on screen.
+
+The converstion from local to world is achieved using an inverse of the same matrix we supply to the Group to transform all the Tiles in the first place.
+
+```typescript
+mViewInverseMatrix.modify((m) => {
+  m.identity();
+
+  // Invert the operations in reverse order
+  m.scale(1 / scale, 1 / scale);
+
+  m.translate(x, y);
+
+  m.translate(-viewWidth / 2, -viewHeight / 2);
+
+  return m;
+});
+```
+
+Detection of intersections is achieved using the [RBush](https://github.com/mourner/rbush) library. In many ways this library is slightly overkill for the task, but it does make it straightforward. When new tiles are created, they are added to the RBush data structure. Querying by point or by rect is then simple.
+
+RBush also helps with the efficient rendering of tiles. A world bounding box is calculated whenever the view changes, and then passed to RBush to find all the tiles which intersect.
+
+
+
+
+## Updating the React tree
+
+
+<ImageModal src={imageUpdatingReact} alt="converting the UI thread position into visible Tile components" fit="cover" />
+
+{/* {{< image-cropped src="img/updating-react.png" 
+  alt="converting the UI thread position into visible Tile components" 
+  allowOpen=true
+>}} */}
+
+The [TileContainer](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileContainer.tsx) component is responsible for rendering visible tiles onto the screen.
+
+It return is comprised of each of the visible tiles wrapped in a Skia Group component, whichtakes as an argument the calculated view matrix.
+
+```typescript
+<Group matrix={mViewMatrix}>
+  {visibleTiles.map((tile) => (
+    <TileComponent
+      key={`${tile.id}-${tile.type}`}
+      {...tile}
+      isAnimated
+      hasShadow
+    />
+  ))}
+</Group>
+```
+
+
+The determination of which tiles are visible is done in the updateVisibleTiles function. This takes a bounding box argument, and then uses RBush to find all the tiles which intersect.
+
+This is the point where the shared values for the view come into contact with the React tree.
+
+As well as calculating the array of visible tiles, it also calculates an id string which represents the visible tiles.
+
+So when the view bounding box changes, this id string is recalculated, and if it changes (because different tiles are visible), then the component is re-rendered.
+
+Only if the id string has changed, will the visible tiles state be updated.
+
+The other event which triggers the re-render is when a tile is being highlighted as a drag target. If a visible tile is intersecting the drag tile, then the id string reflects this.
+
+
+
+## Such a drag
+
+The deck itself is a FlatList, with each item being the same component rendered on the main canvas. Additionally though, each tile is wrapped with a [DraggableTile](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/Draggable.tsx) component, which handles the drag (pan) gesture.
+If a drag is occuring, the DraggableTile component will hide its child Tile - using opacity so as not to cause the list to lose the slot.
+
+At this point, the TileDeck [renders another tile](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L165), which is visible during the drag operation.
+
+This dragging tile is positioned using the dragPosition mutable value, which the original DraggableTile is updating via the pan gesture.
+
+The determination of whether the dragging tile has hit an option tile is done in the [useDragTileCheck](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/useDragTileCheck.ts) hook.
+
+It uses a useAnimatedReaction hook to listen to the dragPosition and the isDragging state. With some additional checking for actual position change, this means the intersection check only runs if the drag position actually changes.
+
+The drag position is converted from screen space into world space (using the inverse view matrix) and then the intersection is checked using the RBush spatial index.
+
+The animated reaction runs on the UI thread, but the intersection has to be run on the JS thread, this is because it uses functions that are defined in JS.
+
+The determination of the state of the drag operation occurs in another useAnimationReaction hook inside the TileDeck [here](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L110).
+It achieves this by reacting to the values of the dragTile and the dragTargetTile (potentially the option tile), and fires off events for drag start and drag end.
+In many ways this is shadowing what the pan gesture handler does, but it has access to better context about the app state. This is nicer because it means the DraggableTile pan gesture handler is only concerned with updating its own slice of state.
+
+The handleDragEnd function [is also defined](https://github.com/odogono/skia-tile-test/blob/main/src/components/TileDeck/TileDeck.tsx#L79) in the TileDeck. It concerns itself with handling whether the operation was successful or not, and animating the dragged tile back to the deck or to its new home in the world.
+
+
+## So Stateful
+
+The Zustand store is split into several slices, each with a single concern. 
+
+```typescript
+export const createTileMapStore = (
+  initialState: Partial<TileMapStoreProps>,
+) => {
+  return createStore<TileMapState>()((...args) => ({
+    ...createTileSlice(...args),
+
+    ...createGameSlice(...args),
+
+    ...createViewSlice(...args),
+
+    ...createDeckSlice(...args),
+
+    ...initialState,
+  }));
+};
+```
+
+- the tile slice is about the world and the tiles within. Most of its actions are to do with adding and querying tiles.
+- the view slice is effectively describing the camera into the world. It contains mostly mutable values.
+- the deck slice handles the contents of the deck, and values relating to the drag and drop.
+- the game slice is at a higher level than the others, and at this point is mostly actions relating to setting up the world, as well as the main authority for whether a drag operation is successful or not.
+
+
+
+I conciously placed as much state as I could into a single Zustand store, including 'transient' state used by the UI thread.
+
+Typically, when you use shared values, you use them from a hook inside a component. This makes the lifecycle of the shared value straightforward.
+However this does limit the scope of the shared value to the component.
+
+To get around this, I turned to using [mutable values](https://docs.swmansion.com/react-native-reanimated/docs/advanced/makeMutable/). It's doc page comes with a warning that it is internal functionality, and so may change in future. My use case was indeed more global, as noted, so this was a workable solution.
+
+The store is wrapped into a [context provider](https://github.com/odogono/skia-tile-test/blob/main/src/model/useTileMapStore/Provider.tsx), and then employed from the root of the app, and then accessed by components which need it via a number of hooks.
+
+
+## Context Skia
+
+One thing which caught me slightly out, was that the main context didn't seem to reach anything below the Skia Canvas component.
+
+Because Skia is using a different renderer, it is unable to use a React context defined outside of its hierarchy.
+
+To get around this, a hook from the package ['its-fine'](https://github.com/pmndrs/its-fine) is used, called [useContextBridge](https://github.com/pmndrs/its-fine#useContextBridge). 
+Used as a child of the Skia Canvas component, it allows the context further up the hierarchy to be used. You can see it in use [here](https://github.com/odogono/skia-tile-test/blob/main/src/components/WorldCanvas/WorldCanvas.tsx#L38). 
+
+
+## Updating Mutable Values
+
+One thing I fell foul of was updating mutable values. Because matrix is a complex value, I was initially updating it directly.
+
+```typescript
+mViewMatrix.identity();
+mViewMatrix.translate(x, y);
+...
+```
+
+However none of the operations would trigger the values reactivity.
+
+The documentation reminded me that shared values have to be either assigned a new value, or the modify function can be used.
+
+So instead, the answer was to:
+
+```typescript
+mViewMatrix.modify((m) => {
+  m.identity();
+  m.translate(x, y);
+  ...
+  return m;
+});
+```
+
+
+
+## Final thoughts and Future Directions
+
+Overall, I was fairly pleased with how this turned out. Getting all the state centralised worked better than I expected, even with the UI thread concerns which occasionally in the past have had to be treated carefully.
+
+I was unsure whether using Skia for this type of app/game would be a good fit. Typically it used for special graphics effects. Some of it's libraries are a little immature. I would have preferred to have access to an inverse matrix function rather than writing my own, for example.
+
+I also have the suspicion that this would be better developed using [React Native WGPU](https://github.com/wcandillon/react-native-webgpu), but at the time of writing this was still not production ready.
+
+Zustand continues to be impressive to work with. It's a simple enough API, but already I like the way it can be divided up into slices. I'm still figuring out how best to work with the actions within it. It seems like core logic fits quite well within it. 
+I'm not too big of a fan of how you have to cast to address other bits of state in different slices, but perhaps that is a sign that the state could be better organised.
+
+There is the seed of an actual game here, but that is something I am still pondering. The mechanic of placing tiles is quite nice by itself, as is being able to see a world or path gradually built up. I'd like to explore hexagonal tiles as well in this context.
+
+
+Oh, and the source code for the app is [here](https://github.com/odogono/skia-tile-test).
