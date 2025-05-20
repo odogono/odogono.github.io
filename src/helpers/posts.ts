@@ -190,8 +190,6 @@ export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
 
       const url = getEntryUrl(note);
 
-      console.debug('note', note.id, url);
-
       acc.push({ ...note, url });
 
       return [date, acc];
