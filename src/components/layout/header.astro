@@ -1,4 +1,8 @@
 ---
+import { Bluesky } from '@components/social/bluesky';
+import { Github } from '@components/social/github';
+import { LinkedIn } from '@components/social/linkedin';
+import { Twitter } from '@components/social/twitter';
 import { ThemeButton } from '@components/theme/theme-button';
 import { SITE_TITLE } from '@constants';
 
@@ -17,6 +21,10 @@ import HeaderLink from './header-link.astro';
       <HeaderLink href="/about">About</HeaderLink>
     </div>
     <div class="social-links hidden md:flex gap-2">
+      <!-- <Bluesky />
+      <Github />
+      <LinkedIn />
+      <Twitter /> -->
       <ThemeButton client:load />
     </div>
   </nav>
