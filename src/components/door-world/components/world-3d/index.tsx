@@ -1,4 +1,3 @@
-// import './index.css';
 import { useCallback, useRef } from 'react';
 
 import { useDungeon } from '@door-world/contexts/dungeon/use-dungeon';
@@ -15,7 +14,11 @@ import {
 
 const log = createLog('World3D');
 
-export const World3D = () => {
+interface World3DProps {
+  showMiniMap: boolean;
+}
+
+export const World3D = ({ showMiniMap }: World3DProps) => {
   const cameraRef = useRef<IsometricCameraRef>(null);
 
   const handleMoveCameraTo = useCallback(
@@ -26,7 +29,7 @@ export const World3D = () => {
   );
 
   return (
-    <div className="h-full w-full">
+    <>
       <Canvas gl={{ localClippingEnabled: true }}>
         <IsometricCamera
           initialPosition={[0, 0, -2]}
@@ -48,8 +51,8 @@ export const World3D = () => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={2} position={[10, 10, 5]} />
       </Canvas>
-      <DungeonMiniMap />
-    </div>
+      {showMiniMap && <DungeonMiniMap />}
+    </>
   );
 };
 
