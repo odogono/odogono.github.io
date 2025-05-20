@@ -23,6 +23,29 @@ export default defineConfig({
   site: 'https://dev.odgn.net',
 
   vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: id => {
+            if (id.includes('three-') || id.includes('react-three')) {
+              return 'rthree';
+            }
+            // console.debug('🔥', id, id.includes('three-'));
+            return null;
+          }
+          // manualChunks: {
+          //   rthree: [
+          //     '@react-three/drei',
+          //     '@react-three/fiber',
+          //     '@react-spring/three'
+          //   ],
+          //   state: ['jotai'],
+          //   three: ['three'],
+          //   vendor: ['react', 'react-dom']
+          // }
+        }
+      }
+    },
     plugins: [tailwindcss()]
   }
 });

@@ -1,11 +1,17 @@
 ---
 import '@styles/global.css';
 
+import { DoorWorld } from '@components/door-world';
 import Layout from '@layouts/three-body.astro';
 ---
 
 <Layout>
   <div class="flex flex-col items-center justify-center h-220">
     <h1 class="text-4xl font-thin font-['Nohemi']">Open Door Go North</h1>
+    <DoorWorld client:only="react">
+      <div slot="fallback">
+        <h4 class="text-2xl font-thin font-['Nohemi']">Loading</h4>
+      </div>
+    </DoorWorld>
   </div>
 </Layout>

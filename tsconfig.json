@@ -10,6 +10,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "jsxImportSource": "react",
+    "module": "ESNext",
     "baseUrl": ".",
     "paths": {
       "@/*": [
@@ -26,6 +27,9 @@
       ],
       "@contexts/*": [
         "./src/contexts/*"
+      ],
+      "@door-world/*": [
+        "./src/components/door-world/*"
       ],
       "@helpers/*": [
         "./src/helpers/*"

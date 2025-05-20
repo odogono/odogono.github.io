@@ -4,7 +4,7 @@ import { createLog } from '@helpers/log';
 
 const log = createLog('helpers/theme');
 
-type Theme = 'light' | 'dark';
+export type Theme = 'light' | 'dark';
 
 export const systemTheme: Theme =
   typeof window !== 'undefined' &&
