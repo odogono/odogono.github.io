@@ -1,10 +1,20 @@
-// Add this helper function to get computed CSS values
+import Chroma from 'chroma-js';
+
+/**
+ * Returns the computed value of a CSS variable
+ * as a hex string
+ *
+ * @param varName
+ * @returns
+ */
 export const getComputedColor = (varName: string) => {
   // Remove var() wrapper if it exists
   const cleanVarName = varName.replace(/^var\((.*)\)$/, '$1').trim();
 
   const style = getComputedStyle(document.documentElement);
-  return style.getPropertyValue(cleanVarName).trim();
+  const value = style.getPropertyValue(cleanVarName).trim();
+
+  return Chroma(value).hex();
 };
 
 // Convert hex to RGB

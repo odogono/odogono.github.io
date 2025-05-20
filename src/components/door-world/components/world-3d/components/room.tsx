@@ -3,8 +3,13 @@ import { useMemo, useRef, type Ref } from 'react';
 import { Vector3 } from 'three';
 
 import { useDungeon } from '@door-world/contexts/dungeon/use-dungeon';
-import type { Room as RoomModel } from '@door-world/model/dungeon';
-import { darkenColor } from '@helpers/colour';
+import { useTheme } from '@door-world/contexts/theme/context';
+import { FloorType, type Room as RoomModel } from '@door-world/model/dungeon';
+import {
+  darkenColor,
+  getComputedColor,
+  getContrastColor
+} from '@helpers/colour';
 import { createLog } from '@helpers/log';
 import { animated } from '@react-spring/three';
 import { Plane } from '@react-three/drei';
@@ -85,19 +90,16 @@ export const Room = ({
     }
   };
 
+  const { groundColor, groundOpacity, textColor } = useRoomColors(room);
+
   if (!room || !position) {
     return null;
   }
 
-  const baseColor = '#e0e0e0';
-  const depth = room.depth || 0;
-  const colourIncrement = 1 / (dungeon?.maxDepth ?? 1);
-  const color = darkenColor(baseColor, depth * colourIncrement);
+  const { area, floorText, id } = room;
 
-  const groundColor = room.isCentral ? '#4a9eff' : color;
-  const text = room.isCentral ? 'Open Door Go North' : `Room ${room.id}`;
+  const text = floorText ?? `Room ${id}`;
 
-  const { area } = room;
   const [width, height] = [area.width, area.height];
 
   return (
@@ -111,11 +113,12 @@ export const Room = ({
       >
         <animated.meshStandardMaterial
           color={groundColor}
-          opacity={springs.opacity}
+          opacity={groundOpacity}
           transparent
         />
       </Plane>
       <GroundText
+        color={textColor}
         mountDuration={200}
         position={position}
         ref={textRef}
@@ -123,4 +126,41 @@ export const Room = ({
       />
     </group>
   );
+};
+
+const useRoomColors = (room: RoomModel | undefined) => {
+  const { dungeon } = useDungeon();
+  const { theme } = useTheme();
+  const { maxDepth } = dungeon ?? { maxDepth: 1 };
+  const roomDepth = room?.depth ?? 1;
+  const floorType = room?.floorType ?? FloorType.SOLID;
+  // const { depth: roomDepth, floorType } = room;
+
+  const groundOpacity = floorType === FloorType.TRANSPARENT ? 0 : undefined;
+
+  const groundColor = useMemo(() => {
+    if (floorType === FloorType.TRANSPARENT) {
+      return getComputedColor('--background');
+    }
+    const baseColor = theme === 'dark' ? '#e0e0e0' : '#8A8782';
+    const depth = roomDepth || 0;
+    const colourIncrement = 1 / maxDepth;
+    return darkenColor(baseColor, depth * colourIncrement);
+  }, [floorType, roomDepth, maxDepth, theme]);
+
+  const textColor = useMemo(() => {
+    if (floorType === FloorType.TRANSPARENT) {
+      const fgColor = getComputedColor('--foreground');
+      return fgColor;
+    }
+
+    const contrastColor = getContrastColor(groundColor);
+    return contrastColor;
+  }, [groundColor, floorType]);
+
+  return {
+    groundColor,
+    groundOpacity,
+    textColor
+  };
 };

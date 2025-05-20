@@ -5,6 +5,7 @@ import { createDungeon } from './helpers';
 import { generateRoomAround, getMaxRoomDepth } from './room';
 import { createStrategy } from './strategies';
 import {
+  FloorType,
   RoomType,
   type DungeonData,
   type Room,
@@ -41,6 +42,8 @@ export const generateDungeon = async (
       allowedEdges: ['NORTH'],
       area: { height: 100, width: 100, x: -50, y: -50 },
       depth: 0,
+      floorText: 'Open Door Go North',
+      floorType: FloorType.TRANSPARENT,
       id: 1,
       isCentral: true,
       type: RoomType.NORMAL

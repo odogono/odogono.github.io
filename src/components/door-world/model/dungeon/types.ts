@@ -33,14 +33,13 @@ export interface Room {
   area: Area;
   // Reference to parent room
   depth?: number;
-  // height: number;
+  // text to display on the ground
+  floorText?: string;
+  floorType: FloorType;
   id: number;
   isCentral?: boolean;
   parent?: Room;
   type: RoomType;
-  // width: number;
-  // x: number;
-  // y: number; // Distance from central room
 }
 
 export interface Door {
@@ -57,6 +56,13 @@ export enum RoomType {
   NORMAL = 'normal',
   SMALL = 'small'
 }
+
+export const FloorType = {
+  SOLID: 'solid',
+  TRANSPARENT: 'transparent'
+} as const;
+
+export type FloorType = (typeof FloorType)[keyof typeof FloorType];
 
 export type RoomSizeRange = [number, number];
 

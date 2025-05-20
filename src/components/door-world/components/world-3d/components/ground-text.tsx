@@ -11,6 +11,7 @@ import { type EntityRef } from './types';
 export type GroundTextRef = EntityRef;
 
 interface GroundTextProps {
+  color?: string;
   // Path to the font file relative to the public directory
   font?: string;
   mountDuration?: number;
@@ -22,6 +23,7 @@ interface GroundTextProps {
 
 // GroundText component to display text aligned with the ground
 export const GroundText = ({
+  color = '#555',
   font = '/fonts/Nohemi-Light-BF6438cc5702321.woff',
   mountDuration = 500,
   position,
@@ -63,7 +65,7 @@ export const GroundText = ({
       <Text
         anchorX="center"
         anchorY="middle"
-        color="#555"
+        color={color}
         font={font}
         fontSize={0.5}
         maxWidth={3}
@@ -72,7 +74,10 @@ export const GroundText = ({
         textAlign="center"
       >
         {text}
-        <animated.meshStandardMaterial color="#555" opacity={springs.opacity} />
+        <animated.meshStandardMaterial
+          color={color}
+          opacity={springs.opacity}
+        />
       </Text>
     </Suspense>
   );

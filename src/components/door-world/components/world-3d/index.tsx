@@ -23,7 +23,6 @@ export const World3D = ({ showMiniMap }: World3DProps) => {
 
   const handleMoveCameraTo = useCallback(
     async (props: IsometricCameraMoveToProps) => {
-      log.debug('handleMoveCameraTo', props);
       await cameraRef.current?.moveTo(props);
     },
     []
