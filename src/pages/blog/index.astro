@@ -1,51 +1,13 @@
 ---
-import '@styles/global.css';
-
-import Note from '@components/layout/note.astro';
-import PostSummary from '@components/layout/post-summary.astro';
-import { toShortDate } from '@helpers/date';
-import { createLog } from '@helpers/log';
-import {
-  getPaginatedNotes,
-  getPostsSummary,
-  getPublishedNotes,
-  isDateEntry,
-  isNoteEntry,
-  isPostEntry,
-  sortEntriesByDate
-} from '@helpers/posts';
+import EntriesList from '@components/layout/entries-list.astro';
+import { applyDateEntries, getPublishedContent } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
-import type { PostSummary as PostSummaryType } from '@types';
 
-const entries = await getPaginatedNotes();
+const entries = await getPublishedContent(true);
+
+const entriesWithDates = applyDateEntries(entries);
 ---
 
 <Layout title="ODGN Blog" description="A collection of posts and notes">
-  <ul class="blog-list">
-    {
-      entries.map(entry => {
-        if (isDateEntry(entry)) {
-          return (
-            <div class="date text-lg font-bold mb-4 ml-[-2rem]">
-              {toShortDate(entry.date)}
-            </div>
-          );
-        }
-
-        if (isNoteEntry(entry)) {
-          return <Note note={entry} url={entry.url} />;
-        }
-
-        if (isPostEntry(entry)) {
-          return (
-            <PostSummary
-              summary={{ ...entry.data, url: entry.url } as PostSummaryType}
-            />
-          );
-        }
-
-        return null;
-      })
-    }
-  </ul>
+  <EntriesList entries={entriesWithDates} />
 </Layout>

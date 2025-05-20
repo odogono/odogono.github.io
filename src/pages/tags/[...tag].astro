@@ -1,25 +1,20 @@
 ---
 import '@styles/global.css';
 
-import { Image } from 'astro:assets';
-import { getCollection } from 'astro:content';
-
-import FormattedDate from '@components/layout/formatted-date.astro';
-import PostSummary from '@components/layout/post-summary.astro';
+import EntriesList from '@components/layout/entries-list.astro';
 import { createLog } from '@helpers/log';
 import {
-  getPostsSummary,
+  applyDateEntries,
+  filterEntriesByTag,
   getPostsTags,
-  getPublishedPosts
+  getPublishedContent
 } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
 
 const log = createLog('pages/tags/[...tag]');
 
 export const getStaticPaths = async () => {
-  const posts = await getPublishedPosts();
-
-  const tags = getPostsTags(posts);
+  const tags = await getPostsTags();
 
   return tags.map(tag => ({
     params: { tag },
@@ -27,22 +22,12 @@ export const getStaticPaths = async () => {
   }));
 };
 
-const posts = await getPublishedPosts();
-
-const postsWithTag = posts.filter(post =>
-  post.data.tags?.includes(Astro.params.tag ?? '')
-);
-
-const summaries = getPostsSummary(postsWithTag);
-
-// const tags = posts.flatMap(post => post.data.tags);
-// const uniqueTags = [...new Set(tags)];
-
-// log.debug('tags', tags);
-// log.debug('uniqueTags', uniqueTags);
+const entries = await getPublishedContent(true);
+const entriesWithTag = filterEntriesByTag(entries, Astro.params.tag);
+const entriesWithDates = applyDateEntries(entriesWithTag);
 ---
 
-<Layout>
+<Layout title={`Tag: ${Astro.params.tag} - ODGN`}>
   <main>
     <h1 class="text-4xl text-ring/80 font-['Nohemi'] font-light my-12">
       <a href="/tags" class="hover:underline hover:text-tags">tag</a> : <span
@@ -50,15 +35,7 @@ const summaries = getPostsSummary(postsWithTag);
       >
     </h1>
     <section>
-      <ul>
-        {
-          summaries.map(summary => (
-            <li>
-              <PostSummary summary={summary} />
-            </li>
-          ))
-        }
-      </ul>
+      <EntriesList entries={entriesWithDates} />
     </section>
   </main>
 </Layout>

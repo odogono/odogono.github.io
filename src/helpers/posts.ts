@@ -8,7 +8,8 @@ import type {
   NoteEntry,
   NotesPageEntry,
   PostEntry,
-  PostSummary
+  PostSummary,
+  TagSummary
 } from '@types';
 
 import { isSameDay } from './date';
@@ -30,10 +31,20 @@ export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
     .filter(note => !note.data.isDraft)
     .map(note => {
       note.data.isNote = true;
+      note.url = getEntryUrl(note);
       return note;
     });
 };
 
+/**
+ * Get published posts
+ *
+ * the includeNotes flag is neccesary because posts can
+ * also be tagged as being notes
+ *
+ * @param includeNotes - include notes in the result
+ * @returns published posts
+ */
 export const getPublishedPosts = async (
   includeNotes = false
 ): Promise<PostEntry[]> => {
@@ -49,6 +60,7 @@ export const getPublishedPosts = async (
     })
     .map(post => {
       post.data.isPost = true;
+      post.url = getEntryUrl(post);
       return post;
     });
 };
@@ -57,11 +69,6 @@ export const sortEntriesByDate = (entries: Entry[]): Entry[] =>
   entries.toSorted(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
-
-export const getPostsTags = (posts: PostEntry[]): string[] => {
-  const tags = posts.flatMap(post => post.data.tags ?? []);
-  return [...new Set(tags)];
-};
 
 export const getPublishedPostsPaths = async () => {
   const posts = await getPublishedPosts();
@@ -122,14 +129,10 @@ export const getEntryUrl = (entry: Entry) => {
   return `/posts/${slug}/`;
 };
 
-interface TagSummary {
-  count: number;
-  href: string;
-  tag: string;
-}
+export const getTagsSummaries = async (): Promise<TagSummary[]> => {
+  const entries = await getPublishedContent(true);
 
-export const getTagsSummaries = (posts: PostEntry[]): TagSummary[] => {
-  const tags = posts.flatMap(post => post.data.tags ?? []);
+  const tags = entries.flatMap(entry => entry.data.tags ?? []);
 
   const tagsCount = tags.reduce(
     (acc, tag) => {
@@ -144,25 +147,24 @@ export const getTagsSummaries = (posts: PostEntry[]): TagSummary[] => {
     a[0].toLowerCase().localeCompare(b[0].toLowerCase())
   );
 
-  log.debug('[getTagsSummaries] tags', posts.length, tagsSorted);
+  // log.debug('[getTagsSummaries] tags', posts.length, tagsSorted);
 
   return tagsSorted.map(([tag, count]) => ({
     count,
     href: `/tags/${tag}/`,
     tag
   }));
-
-  // return tags.map(tag => {
-  //   const posts = posts.filter(post => post.data.tags?.includes(tag));
-
-  //   return {
-  //     heroImage: posts[0].data.heroImage || '/posts/placeholder-1.jpg',
-  //     href: `/tags/${tag}/`,
-  //     pubDate: posts[0].data.pubDate,
-  //     title: tag
-  //   };
-  // });
 };
+
+export const getPostsTags = async (): Promise<string[]> => {
+  const entries = await getPublishedContent(true);
+
+  const tags = entries.flatMap(entry => entry.data.tags ?? []);
+  return [...new Set(tags)];
+};
+
+export const filterEntriesByTag = (entries: Entry[], tag: string): Entry[] =>
+  entries.filter(entry => entry.data.tags?.includes(tag));
 
 export const getNoteUrl = (note: NoteEntry) => {
   const { pubDate, title } = note.data;
@@ -174,13 +176,29 @@ export const getNoteUrl = (note: NoteEntry) => {
   return `${year}/${month}/${day}/${title ?? 'unknown'}`;
 };
 
-export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
+export const getPublishedContent = async (
+  sortByDate = true
+): Promise<Entry[]> => {
   const notes = await getPublishedNotes();
   const posts = await getPublishedPosts(true);
 
-  const sortedNotes = sortEntriesByDate([...notes, ...posts]);
+  const entries = [...notes, ...posts];
 
-  const [, entries] = sortedNotes.reduce<[Date, NotesPageEntry[]]>(
+  if (sortByDate) {
+    return sortEntriesByDate(entries);
+  }
+
+  return entries;
+};
+
+/**
+ * Returns an array of Entry interleaved with a date header
+ * suitable for display
+ *
+ * @returns
+ */
+export const applyDateEntries = (entries: Entry[]): NotesPageEntry[] => {
+  const [, pageEntries] = entries.reduce<[Date, NotesPageEntry[]]>(
     ([currentDate, acc], note) => {
       const date = note.data.pubDate;
 
@@ -188,16 +206,14 @@ export const getPaginatedNotes = async (): Promise<NotesPageEntry[]> => {
         acc.push({ date: date.toISOString() });
       }
 
-      const url = getEntryUrl(note);
-
-      acc.push({ ...note, url });
+      acc.push(note);
 
       return [date, acc];
     },
     [new Date(0), [] as NotesPageEntry[]]
   );
 
-  return entries;
+  return pageEntries;
 };
 
 export const getNotesPaths = async () => {

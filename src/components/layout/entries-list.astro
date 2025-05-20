@@ -1,0 +1,41 @@
+---
+import Note from '@components/layout/note.astro';
+import PostSummary from '@components/layout/post-summary.astro';
+import { toShortDate } from '@helpers/date';
+import { isDateEntry, isNoteEntry, isPostEntry } from '@helpers/posts';
+import type { NotesPageEntry, PostSummary as PostSummaryType } from '@types';
+
+interface Props {
+  entries: NotesPageEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<ul class="space-y-12 [&>article]:pb-12">
+  {
+    entries.map(entry => {
+      if (isDateEntry(entry)) {
+        return (
+          <div class="date text-lg font-bold mb-4 ml-[-2rem]">
+            {toShortDate(entry.date)}
+          </div>
+        );
+      }
+
+      if (isNoteEntry(entry)) {
+        return <Note note={entry} url={entry.url} />;
+      }
+
+      if (isPostEntry(entry)) {
+        return (
+          <PostSummary
+            summary={{ ...entry.data, url: entry.url } as PostSummaryType}
+          />
+        );
+      }
+
+      return null;
+    })
+  }
+</ul>

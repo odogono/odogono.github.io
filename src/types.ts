@@ -1,7 +1,11 @@
 import type { CollectionEntry } from 'astro:content';
 
-export type PostEntry = CollectionEntry<'posts'>;
-export type NoteEntry = CollectionEntry<'notes'>;
+export type PostEntry = CollectionEntry<'posts'> & {
+  url: string;
+};
+export type NoteEntry = CollectionEntry<'notes'> & {
+  url: string;
+};
 
 export type Entry = NoteEntry | PostEntry;
 
@@ -25,8 +29,10 @@ export interface DateEntry {
   date: string;
 }
 
-export type NotesPageEntry =
-  | DateEntry
-  | (Entry & {
-      url: string;
-    });
+export type NotesPageEntry = DateEntry | Entry;
+
+export interface TagSummary {
+  count: number;
+  href: string;
+  tag: string;
+}
