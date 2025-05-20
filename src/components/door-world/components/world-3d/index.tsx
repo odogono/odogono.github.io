@@ -23,6 +23,7 @@ export const World3D = ({ showMiniMap }: World3DProps) => {
 
   const handleMoveCameraTo = useCallback(
     async (props: IsometricCameraMoveToProps) => {
+      log.debug('handleMoveCameraTo', props);
       await cameraRef.current?.moveTo(props);
     },
     []
@@ -51,13 +52,20 @@ export const World3D = ({ showMiniMap }: World3DProps) => {
         <ambientLight intensity={0.1} />
         <directionalLight intensity={2} position={[10, 10, 5]} />
       </Canvas>
-      {showMiniMap && <DungeonMiniMap />}
+      <DungeonMiniMap skipRender={!showMiniMap} />
     </>
   );
 };
 
-const DungeonMiniMap = () => {
+interface DungeonMiniMapProps {
+  skipRender: boolean;
+}
+
+const DungeonMiniMap = ({ skipRender }: DungeonMiniMapProps) => {
   const { dungeon } = useDungeon();
 
-  return <MiniMap dungeon={dungeon} />;
+  // TODO for some reason hiding the minimap completely
+  // causes the initial 3d camera position to be incorrect
+  // meaning that it jumps on first interaction
+  return <MiniMap dungeon={dungeon} skipRender={skipRender} />;
 };

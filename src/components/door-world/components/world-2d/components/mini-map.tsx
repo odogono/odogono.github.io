@@ -9,9 +9,14 @@ import { renderDungeon } from '../helpers';
 interface MiniMapProps {
   dungeon: DungeonData | null;
   size?: number;
+  skipRender?: boolean;
 }
 
-export const MiniMap = ({ dungeon, size = 200 }: MiniMapProps) => {
+export const MiniMap = ({
+  dungeon,
+  size = 200,
+  skipRender = false
+}: MiniMapProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { theme } = useTheme();
   const { currentRoomId } = useDungeonJourney();
@@ -19,6 +24,10 @@ export const MiniMap = ({ dungeon, size = 200 }: MiniMapProps) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) {
+      return;
+    }
+
+    if (skipRender) {
       return;
     }
 
@@ -80,11 +89,13 @@ export const MiniMap = ({ dungeon, size = 200 }: MiniMapProps) => {
 
     // Restore the context state
     ctx.restore();
-  }, [dungeon, size, theme, currentRoomId]);
+  }, [dungeon, size, theme, currentRoomId, skipRender]);
 
   return (
     <canvas
-      className="absolute right-4 bottom-14 rounded-lg border border-gray-600"
+      className={`absolute right-4 bottom-14 rounded-lg border border-gray-600 ${
+        skipRender ? 'hidden' : ''
+      }`}
       height={size}
       ref={canvasRef}
       width={size}
