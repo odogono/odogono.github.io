@@ -14,6 +14,7 @@ interface GroundTextProps {
   color?: string;
   // Path to the font file relative to the public directory
   font?: string;
+  maxWidth?: number;
   mountDuration?: number;
   onEnterSpeed?: number;
   position: Vector3 | Vector3Tuple;
@@ -25,6 +26,7 @@ interface GroundTextProps {
 export const GroundText = ({
   color = '#555',
   font = '/fonts/Nohemi-Light-BF6438cc5702321.woff',
+  maxWidth = 3,
   mountDuration = 500,
   position,
   ref,
@@ -68,7 +70,7 @@ export const GroundText = ({
         color={color}
         font={font}
         fontSize={0.5}
-        maxWidth={3}
+        maxWidth={maxWidth}
         position={[pos.x, 0.1, pos.z]}
         rotation={[-Math.PI / 2, 0, Math.PI / 2]}
         textAlign="center"

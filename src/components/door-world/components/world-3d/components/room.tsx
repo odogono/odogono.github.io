@@ -1,4 +1,4 @@
-import { useMemo, useRef, type Ref } from 'react';
+import { useEffect, useMemo, useRef, useState, type Ref } from 'react';
 
 import { Vector3 } from 'three';
 
@@ -11,6 +11,7 @@ import {
   getContrastColor
 } from '@helpers/colour';
 import { createLog } from '@helpers/log';
+import { clearRunAfterMs, runAfterMs, type TimeoutId } from '@helpers/time';
 import { animated } from '@react-spring/three';
 import { Plane } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
@@ -48,13 +49,26 @@ export const Room = ({
 }: RoomProps) => {
   const { dungeon } = useDungeon();
   const textRef = useRef<GroundTextRef>(null);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const textTransitionTimeoutId = useRef<TimeoutId | null>(null);
+
+  const runTextTransition = () => {
+    setIsTransitioning(false);
+    clearRunAfterMs(textTransitionTimeoutId.current);
+    textTransitionTimeoutId.current = runAfterMs(3000, () =>
+      setIsTransitioning(true)
+    );
+  };
+
   const { springs } = useMounted({
     mountDuration,
-    onMount: async () =>
-      // log.debug('Mounted', room?.id);
+    onMount: async () => {
+      // Start the text cycling after initial mount
+      runTextTransition();
 
-      // runAfter(3000, () => textRef.current?.unmount());
-      true,
+      return true;
+    },
     onUnmount: () => {
       if (textRef.current) {
         return textRef.current.unmount();
@@ -92,14 +106,47 @@ export const Room = ({
 
   const { groundColor, groundOpacity, textColor } = useRoomColors(room);
 
+  // Handle text cycling
+  useEffect(() => {
+    if (!room || !isTransitioning) {
+      return;
+    }
+
+    const text = room.floorText ?? `Room ${room.id}`;
+    const textScript = [text, 'This is Message 1', 'This is Message 2'];
+
+    const cycleText = async () => {
+      // Unmount current text
+      if (textRef.current) {
+        await textRef.current.unmount();
+      }
+
+      // Update to next text index
+      // log.debug('Updating text index', {
+      //   currentTextIndex,
+      //   nextTextIndex: (currentTextIndex + 1) % textScript.length
+      // });
+      setCurrentTextIndex(prev => (prev + 1) % textScript.length);
+
+      // Mount new text
+      if (textRef.current) {
+        await textRef.current.mount();
+      }
+
+      // Schedule next transition
+      runTextTransition();
+    };
+
+    cycleText();
+  }, [isTransitioning, room]);
+
   if (!room || !position) {
     return null;
   }
 
   const { area, floorText, id } = room;
-
   const text = floorText ?? `Room ${id}`;
-
+  const textScript = [text, 'This is Message 1', 'This is Message 2'];
   const [width, height] = [area.width, area.height];
 
   return (
@@ -113,16 +160,17 @@ export const Room = ({
       >
         <animated.meshStandardMaterial
           color={groundColor}
-          opacity={groundOpacity}
+          opacity={groundOpacity ?? springs.opacity}
           transparent
         />
       </Plane>
       <GroundText
         color={textColor}
-        mountDuration={200}
+        maxWidth={Math.min(3, width * SCALE * 0.8)}
+        mountDuration={1000}
         position={position}
         ref={textRef}
-        text={text}
+        text={textScript[currentTextIndex]}
       />
     </group>
   );
