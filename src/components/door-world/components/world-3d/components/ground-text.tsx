@@ -5,7 +5,7 @@ import { Vector3, type Vector3Tuple } from 'three';
 import { animated } from '@react-spring/three';
 import { Text } from '@react-three/drei';
 
-import { useMounted } from './hooks/useMounted';
+import { useMounted } from './hooks/use-mounted';
 import { type EntityRef } from './types';
 
 export type GroundTextRef = EntityRef;

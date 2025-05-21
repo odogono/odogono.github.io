@@ -17,7 +17,7 @@ import { Plane } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
 
 import { GroundText, type GroundTextRef } from './ground-text';
-import { useMounted } from './hooks/useMounted';
+import { useMounted } from './hooks/use-mounted';
 import { type EntityRef } from './types';
 
 const log = createLog('Room');

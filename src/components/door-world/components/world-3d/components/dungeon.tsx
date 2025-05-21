@@ -1,18 +1,17 @@
-import { useCallback, useEffect, useRef } from 'react';
-
-import { Vector3 } from 'three';
+import { useCallback, useEffect } from 'react';
 
 import { useDungeonJourney } from '@door-world/contexts/dungeon/hooks/use-dungeon-journey';
 import {
   getRoomCenter,
   type Door as DoorModel
 } from '@door-world/model/dungeon';
-import type { Position } from '@door-world/model/dungeon/types';
 import { generateRandomColor } from '@helpers/colour';
 import { createLog } from '@helpers/log';
 import { djb2Hash } from '@helpers/random';
 
 import { Door as Door3d, type DoorRef } from './door';
+import { dungeonPositionToVector3 } from './helpers';
+import { useMoveToRoom } from './hooks/use-move-to-room';
 import type { IsometricCameraMoveToProps } from './isometric-camera';
 import { Room as Room3d, type RoomRef, type RoomTouchEvent } from './room';
 
@@ -22,85 +21,88 @@ interface DungeonProps {
   moveCameraTo: (props: IsometricCameraMoveToProps) => Promise<void>;
 }
 
-const SCALE = 0.06;
-
 export const Dungeon = ({ moveCameraTo }: DungeonProps) => {
+  const { doorRefs, moveThroughDoor, roomRefs } = useMoveToRoom({
+    moveCameraTo
+  });
+
   const { currentRoom, doors, dungeon, moveToRoom, rooms } =
     useDungeonJourney();
-  const isMoving = useRef(false);
+  // const isMoving = useRef(false);
 
   // Store refs for all doors and rooms
-  const doorRefs = useRef<Map<string, DoorRef>>(new Map());
-  const roomRefs = useRef<Map<number, RoomRef>>(new Map());
+  // const doorRefs = useRef<Map<string, DoorRef>>(new Map());
+  // const roomRefs = useRef<Map<number, RoomRef>>(new Map());
 
   const handleDoorTouch = useCallback(
     async (door: DoorModel) => {
       log.debug('Door clicked', door.id);
 
       // Get the refs we need
-      const doorRef = doorRefs.current.get(door.id);
+      // const doorRef = doorRefs.current.get(door.id);
 
-      if (!doorRef) {
-        log.error('Missing refs for door transition', { doorId: door.id });
-        return;
-      }
+      // if (!doorRef) {
+      //   log.error('Missing refs for door transition', { doorId: door.id });
+      //   return;
+      // }
 
-      if (isMoving.current) {
-        log.debug('Already moving');
-        return;
-      }
+      // if (isMoving.current) {
+      //   log.debug('Already moving');
+      //   return;
+      // }
 
-      isMoving.current = true;
+      // isMoving.current = true;
 
-      await moveToRoom({
-        doorAction: async (doorId: string, open: boolean) => {
-          const doorRef = doorRefs.current.get(doorId);
+      await moveThroughDoor(door.id);
+      // await moveToRoom({
+      //   doorAction: async (doorId: string, open: boolean) => {
+      //     const doorRef = doorRefs.current.get(doorId);
 
-          if (!doorRef) {
-            log.error('Missing refs for door transition', { doorId });
-            return false;
-          }
+      //     if (!doorRef) {
+      //       log.error('Missing refs for door transition', { doorId });
+      //       return false;
+      //     }
 
-          // log.debug('Setting door open', { doorId, open });
-          await doorRef.setOpen(open);
+      //     // log.debug('Setting door open', { doorId, open });
+      //     await doorRef.setOpen(open);
 
-          // log.debug('Door set open', { doorId, open });
-          return true;
-        },
-        doorId: door.id,
-        moveCameraAction: (position: Position | null) =>
-          moveCameraTo({
-            position: dungeonPositionToVector3(position)!
-          }),
-        unmountRoomAction: (roomId: number, doorIds: string[]) => {
-          const roomRef = roomRefs.current.get(roomId);
+      //     // log.debug('Door set open', { doorId, open });
+      //     return true;
+      //   },
+      //   doorId: door.id,
+      //   moveCameraAction: (position: Position | null) =>
+      //     moveCameraTo({
+      //       position: dungeonPositionToVector3(position)!
+      //     }),
+      //   unmountRoomAction: (roomId: number, doorIds: string[]) => {
+      //     const roomRef = roomRefs.current.get(roomId);
 
-          if (!roomRef) {
-            log.debug('[unmountRoomAction] Missing room ref', { roomId });
-            return Promise.resolve(false);
-          }
+      //     if (!roomRef) {
+      //       log.debug('[unmountRoomAction] Missing room ref', { roomId });
+      //       return Promise.resolve(false);
+      //     }
 
-          const refs = doorIds.map(id => doorRefs.current.get(id)) as DoorRef[];
+      //     const refs = doorIds.map(id => doorRefs.current.get(id)) as DoorRef[];
 
-          return Promise.all([
-            roomRef.unmount(),
-            ...refs.map(ref => ref.unmount())
-          ])
-            .then(() => true)
-            .catch(error => {
-              log.error('[unmountRoomAction] Error unmounting room', {
-                error,
-                roomId
-              });
-              return false;
-            });
-        }
-      });
-      log.debug('Moved to room', { roomId: door.id });
+      //     return Promise.all([
+      //       roomRef.unmount(),
+      //       ...refs.map(ref => ref.unmount())
+      //     ])
+      //       .then(() => true)
+      //       .catch(error => {
+      //         log.error('[unmountRoomAction] Error unmounting room', {
+      //           error,
+      //           roomId
+      //         });
+      //         return false;
+      //       });
+      //   }
+      // });
+      // log.debug('Moved to room', { roomId: door.id });
 
-      isMoving.current = false;
+      // isMoving.current = false;
     },
-    [moveToRoom, moveCameraTo]
+    [moveThroughDoor]
   );
 
   const handleRoomTouch = useCallback(
@@ -112,17 +114,6 @@ export const Dungeon = ({ moveCameraTo }: DungeonProps) => {
     },
     [moveCameraTo]
   );
-
-  // const rooms = [currentRoom!];
-  // const doors = getRoomDoors(dungeon, currentRoom);
-
-  // log.debug('render');
-  // useRenderingTrace('Dungeon', {
-  //   doors,
-  //   rooms
-  // });
-
-  // log.debug('currentRoom', currentRoom);
 
   useEffect(() => {
     if (!currentRoom) {
@@ -139,8 +130,6 @@ export const Dungeon = ({ moveCameraTo }: DungeonProps) => {
     // eslint-disable-next-line react-hooks/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentRoom?.id]);
-
-  // const doorColors = generateRandomColors(doors.length, currentRoom?.id ?? 0);
 
   return (
     <>
@@ -186,20 +175,6 @@ interface DoorContainerProps {
   onTouch: (door: DoorModel) => void;
   ref: React.Ref<DoorRef>;
 }
-
-const dungeonPositionToVector3 = (
-  position: Position | null
-): Vector3 | null => {
-  if (!position) {
-    return null;
-  }
-
-  const result = new Vector3(position.x, 0, position.y);
-
-  result.multiplyScalar(SCALE);
-
-  return result;
-};
 
 const DOOR_SIZE = 4;
 const DoorContainer = ({ color, door, onTouch, ref }: DoorContainerProps) => {
