@@ -21,12 +21,12 @@ const posts = sortEntriesByDate(await getPosts());
     <div class="space-y-16">
       <section>
         <h2 class="text-xl font-semibold mb-4">Notes Collection</h2>
-        <NotesTable client:load entries={notes} />
+        <NotesTable client:only="react" entries={notes} />
       </section>
 
       <section>
         <h2 class="text-xl font-semibold mb-4">Posts Collection</h2>
-        <PostsTable client:load entries={posts} />
+        <!-- <PostsTable client:only="react" entries={posts} /> -->
       </section>
     </div>
   </div>

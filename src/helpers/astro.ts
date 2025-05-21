@@ -41,6 +41,13 @@ export const getNotes = async (): Promise<NoteEntry[]> =>
 export const getPosts = async (): Promise<PostEntry[]> =>
   (await getEntries('posts')) as PostEntry[];
 
+export const getAllEntries = async (): Promise<Entry[]> => {
+  const notes = (await getEntries('notes')) as NoteEntry[];
+  const posts = (await getEntries('posts')) as PostEntry[];
+
+  return [...notes, ...posts];
+};
+
 export const getPublishedNotes = async (): Promise<NoteEntry[]> =>
   (await getNotes()).filter(note => !note.data.isDraft);
 
@@ -110,6 +117,8 @@ export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
       url
     };
   });
+
+export const slugify = (str: string) => githubSlug(str);
 
 export const getPostSlug = (post: Entry) => {
   const { data, id } = post;
