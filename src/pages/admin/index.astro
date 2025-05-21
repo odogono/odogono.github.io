@@ -33,7 +33,7 @@ const posts = sortEntriesByDate(await getPosts());
 
       <section>
         <h2 class="text-xl font-semibold mb-4">Posts Collection</h2>
-        <!-- <PostsTable client:only="react" entries={posts} /> -->
+        <PostsTable client:only="react" entries={posts} />
       </section>
     </div>
   </div>

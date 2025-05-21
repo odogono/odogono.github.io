@@ -22,3 +22,5 @@ export const dungeonCurrentRoomAtom = atomWithStorage<RoomId>('dungeonRoom', 1);
 
 export const dungeonVisibleRoomsAtom = atom<Room[]>([]);
 export const dungeonVisibleDoorsAtom = atom<Door[]>([]);
+
+export const dungeonVisitedRoomsAtom = atom<RoomId[]>([]);

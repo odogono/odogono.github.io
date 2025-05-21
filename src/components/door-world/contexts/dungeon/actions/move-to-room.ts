@@ -14,9 +14,10 @@ import type { Position } from '@door-world/model/dungeon/types';
 import { createLog } from '@helpers/log';
 
 import { dungeonAtom, dungeonCurrentRoomAtom } from '../atoms';
+import { addVisitedRoomAtom, hasVisitedRoomAtom } from './room-history';
 import { setDungeonVisibleAtom } from './set-visible';
 
-const log = createLog('moveToRoomAtom', ['debug']);
+const log = createLog('moveToRoomAtom');
 
 interface MoveToRoomProps {
   doorAction: (doorId: string, open: boolean) => Promise<boolean>;
@@ -70,10 +71,19 @@ export const moveToRoomAtom = atom(
       rooms: [nextRoom]
     });
 
+    const hasVisitedRoom = get(hasVisitedRoomAtom)(nextRoom.id);
+
+    if (hasVisitedRoom) {
+      log.debug('Room already visited', { roomId: nextRoom.id });
+    } else {
+      log.debug('Room not visited', { roomId: nextRoom.id });
+    }
+
     // 3. Enter the target room
     log.debug('Moving camera to room', { roomId: nextRoom.id });
     await moveCameraAction(getRoomCenter(get(dungeonAtom), nextRoom));
     set(dungeonCurrentRoomAtom, nextRoom.id);
+    set(addVisitedRoomAtom, nextRoom.id);
 
     // 4. close the door
     log.debug('Closing door', { doorId });
@@ -88,6 +98,7 @@ export const moveToRoomAtom = atom(
       currentRoomId,
       nextRoom.id
     ).map(door => door.id);
+
     await unmountRoomAction(currentRoomId, unmountDoorIds);
 
     // clear the old rooms and doors

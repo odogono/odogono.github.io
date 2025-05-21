@@ -7,6 +7,7 @@ import { getDungeonRoomById } from '@door-world/model/dungeon/helpers';
 import { createLog } from '@helpers/log';
 
 import { moveToRoomAtom } from '../actions/move-to-room';
+import { addVisitedRoomAtom } from '../actions/room-history';
 import {
   dungeonAtom,
   dungeonCurrentRoomAtom,
@@ -40,7 +41,7 @@ const initialiseDungeonJourneyAtom = atom(null, async (get, set) => {
 
   set(dungeonVisibleRoomsAtom, [currentRoom]);
   set(dungeonVisibleDoorsAtom, visibleDoors);
-
+  set(addVisitedRoomAtom, currentRoomId);
   set(isInitialisedAtom, true);
 
   log.debug('Dungeon journey initialised', { currentRoomId });

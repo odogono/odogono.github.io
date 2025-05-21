@@ -76,6 +76,7 @@ export const Dungeon = ({ moveCameraTo }: DungeonProps) => {
           const roomRef = roomRefs.current.get(roomId);
 
           if (!roomRef) {
+            log.debug('[unmountRoomAction] Missing room ref', { roomId });
             return Promise.resolve(false);
           }
 
@@ -84,7 +85,15 @@ export const Dungeon = ({ moveCameraTo }: DungeonProps) => {
           return Promise.all([
             roomRef.unmount(),
             ...refs.map(ref => ref.unmount())
-          ]).then(() => true);
+          ])
+            .then(() => true)
+            .catch(error => {
+              log.error('[unmountRoomAction] Error unmounting room', {
+                error,
+                roomId
+              });
+              return false;
+            });
         }
       });
       log.debug('Moved to room', { roomId: door.id });
