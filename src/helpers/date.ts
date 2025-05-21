@@ -12,3 +12,6 @@ export const toShortDate = (date: Date | string) =>
 
 export const toDateString = (date: Date | string) =>
   format(new Date(date), 'yyyy/MM/dd');
+
+export const toDateTimeString = (date: Date | string) =>
+  format(new Date(date), 'yyyy/MM/dd HH:mm');

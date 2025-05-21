@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 
 import { ContentTable } from '@components/admin/content-table';
+import { getNotes, getPosts, sortEntriesByDate } from '@helpers/posts';
 import Layout from '@layouts/main.astro';
 
 // Only allow access in dev mode
@@ -10,15 +11,15 @@ if (!import.meta.env.DEV) {
 }
 
 // Get all entries from both collections
-const notes = await getCollection('notes');
-const posts = await getCollection('posts');
+const notes = sortEntriesByDate(await getNotes());
+const posts = sortEntriesByDate(await getPosts());
 ---
 
 <Layout title="Admin" description="Admin">
   <div class="space-y-8">
     <h1 class="text-2xl font-bold mb-4">Content Collections Admin</h1>
 
-    <div class="space-y-6">
+    <div class="space-y-16">
       <section>
         <h2 class="text-xl font-semibold mb-4">Notes Collection</h2>
         <ContentTable client:load entries={notes} type="notes" />

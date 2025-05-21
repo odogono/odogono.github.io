@@ -25,16 +25,26 @@ export const isNoteEntry = (entry: Entry): entry is NoteEntry =>
 export const isDateEntry = (entry: object): entry is DateEntry =>
   'date' in entry;
 
-export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
+export const getNotes = async (): Promise<NoteEntry[]> => {
   const notes: NoteEntry[] = await getCollection('notes');
-  return notes
-    .filter(note => !note.data.isDraft)
-    .map(note => {
-      note.data.isNote = true;
-      note.url = getEntryUrl(note);
-      return note;
-    });
+  return notes.map(note => {
+    note.data.isNote = true;
+    note.url = getEntryUrl(note);
+    return note;
+  });
 };
+
+export const getPosts = async (): Promise<PostEntry[]> => {
+  const posts: PostEntry[] = await getCollection('posts');
+  return posts.map(post => {
+    post.data.isPost = true;
+    post.url = getEntryUrl(post);
+    return post;
+  });
+};
+
+export const getPublishedNotes = async (): Promise<NoteEntry[]> =>
+  (await getNotes()).filter(note => !note.data.isDraft);
 
 /**
  * Get published posts
@@ -47,9 +57,8 @@ export const getPublishedNotes = async (): Promise<NoteEntry[]> => {
  */
 export const getPublishedPosts = async (
   includeNotes = false
-): Promise<PostEntry[]> => {
-  const posts: PostEntry[] = await getCollection('posts');
-  return posts
+): Promise<PostEntry[]> =>
+  (await getPosts())
     .filter(post => !post.data.isDraft)
     .filter(post => {
       if (post.data.isNote && !includeNotes) {
@@ -57,13 +66,7 @@ export const getPublishedPosts = async (
       }
 
       return true;
-    })
-    .map(post => {
-      post.data.isPost = true;
-      post.url = getEntryUrl(post);
-      return post;
     });
-};
 
 export const sortEntriesByDate = (entries: Entry[]): Entry[] =>
   entries.toSorted(
