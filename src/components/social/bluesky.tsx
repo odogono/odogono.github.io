@@ -1,6 +1,6 @@
 export const Bluesky = () => (
   <a
-    className="text-foreground/80 hover:text-foreground/60"
+    className="text-foreground/40 hover:text-foreground/80"
     href="https://bsky.app/profile/alex.veenenda.al"
     rel="noreferrer"
     target="_blank"

@@ -1,7 +1,7 @@
 ---
 title: 'Working with PDF'
 pubDate: 'May 15 2025'
-isDraft: false
+isDraft: true
 weather: '19°C Mostly Cloudy'
 location: '50.79°N, 3.65°W'
 tags: ['react', 'astro', 'pdf']

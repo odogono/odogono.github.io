@@ -7,6 +7,15 @@ import { ThemeButton } from '@components/theme/theme-button';
 import { SITE_TITLE } from '@constants';
 
 import HeaderLink from './header-link.astro';
+
+const isDev = import.meta.env.DEV;
+
+// if (DEV) {
+//   const adminLink = document.createElement('a');
+//   adminLink.href = '/admin';
+//   adminLink.textContent = 'Admin';
+//   document.querySelector('.internal-links')?.appendChild(adminLink);
+// }
 ---
 
 <header class="m-0 px-4 shadow-[0_2px_8px_rgba(var(--black),0.05)]">
@@ -19,6 +28,7 @@ import HeaderLink from './header-link.astro';
       <HeaderLink href="/blog">Blog</HeaderLink>
       <HeaderLink href="/posts">Posts</HeaderLink>
       <HeaderLink href="/about">About</HeaderLink>
+      {isDev && <HeaderLink href="/admin">Admin</HeaderLink>}
     </div>
     <div class="social-links hidden md:flex gap-2">
       <!-- <Bluesky />

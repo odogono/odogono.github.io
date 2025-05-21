@@ -1,6 +1,6 @@
 export const LinkedIn = () => (
   <a
-    className="text-foreground/80 hover:text-foreground/60"
+    className="text-foreground/40 hover:text-foreground/80"
     href="https://www.linkedin.com/in/alexanderveenendaal"
     rel="noreferrer"
     target="_blank"
