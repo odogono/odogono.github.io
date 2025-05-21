@@ -1,6 +1,6 @@
 ---
+import { applyDateEntries, getPublishedContent } from '@/helpers/astro';
 import EntriesList from '@components/layout/entries-list.astro';
-import { applyDateEntries, getPublishedContent } from '@helpers/posts';
 import Layout from '@layouts/three-body.astro';
 
 const entries = await getPublishedContent(true);

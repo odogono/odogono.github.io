@@ -1,7 +1,7 @@
 ---
 title: 'Notes on moving to Astro'
 pubDate: 'May 14 2025'
-isDraft: false
+isDraft: true
 weather: '15°C Clear'
 location: '50.79°N, 3.65°W'
 tags: ['react', 'astro']

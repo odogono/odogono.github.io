@@ -1,8 +1,8 @@
 ---
+import { isDateEntry, isNoteEntry, isPostEntry } from '@/helpers/astro';
 import Note from '@components/layout/note.astro';
 import PostSummary from '@components/layout/post-summary.astro';
 import { toShortDate } from '@helpers/date';
-import { isDateEntry, isNoteEntry, isPostEntry } from '@helpers/posts';
 import type { NotesPageEntry, PostSummary as PostSummaryType } from '@types';
 
 interface Props {

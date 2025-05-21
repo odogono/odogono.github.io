@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 
+import { getNotes, getPosts, sortEntriesByDate } from '@/helpers/astro';
 import { ContentTable } from '@components/admin/content-table';
 import { NotesTable } from '@components/admin/notes-table';
-import { getNotes, getPosts, sortEntriesByDate } from '@helpers/posts';
 import Layout from '@layouts/main.astro';
 
 // Only allow access in dev mode

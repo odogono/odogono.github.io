@@ -1,13 +1,13 @@
 ---
 import '@styles/global.css';
 
-import PostSummary from '@components/layout/post-summary.astro';
-import { createLog } from '@helpers/log';
 import {
   getPostsSummary,
   getPublishedPosts,
   sortEntriesByDate
-} from '@helpers/posts';
+} from '@/helpers/astro';
+import PostSummary from '@components/layout/post-summary.astro';
+import { createLog } from '@helpers/log';
 import Layout from '@layouts/three-body.astro';
 import type { PostEntry } from '@types';
 

@@ -1,5 +1,5 @@
+import { getPublishedContent } from '@/helpers/astro';
 import rss from '@astrojs/rss';
-import { getPublishedContent } from '@helpers/posts';
 
 import { SITE_DESCRIPTION, SITE_TITLE } from '../constants';
 

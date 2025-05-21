@@ -3,8 +3,8 @@ import path from 'node:path';
 
 import type { APIRoute } from 'astro';
 
+import { getEntries } from '@/helpers/astro';
 import { createLog } from '@helpers/log';
-import { getEntries } from '@helpers/posts';
 
 const log = createLog('pages/api/toggle-draft');
 

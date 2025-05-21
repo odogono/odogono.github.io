@@ -1,14 +1,14 @@
 ---
 import '@styles/global.css';
 
-import EntriesList from '@components/layout/entries-list.astro';
-import { createLog } from '@helpers/log';
 import {
   applyDateEntries,
   filterEntriesByTag,
   getPostsTags,
   getPublishedContent
-} from '@helpers/posts';
+} from '@/helpers/astro';
+import EntriesList from '@components/layout/entries-list.astro';
+import { createLog } from '@helpers/log';
 import Layout from '@layouts/three-body.astro';
 
 const log = createLog('pages/tags/[...tag]');

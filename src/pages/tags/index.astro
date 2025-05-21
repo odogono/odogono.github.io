@@ -3,7 +3,7 @@ import '@styles/global.css';
 
 import { Tag } from 'lucide-react';
 
-import { getPublishedPosts, getTagsSummaries } from '@helpers/posts';
+import { getPublishedPosts, getTagsSummaries } from '@/helpers/astro';
 import Layout from '@layouts/three-body.astro';
 
 const summaries = await getTagsSummaries();
