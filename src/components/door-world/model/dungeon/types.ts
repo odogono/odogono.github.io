@@ -1,4 +1,5 @@
 export type RoomId = number;
+export type DoorId = string;
 
 export interface Position {
   x: number;
@@ -36,7 +37,7 @@ export interface Room {
   // text to display on the ground
   floorText?: string;
   floorType: FloorType;
-  id: number;
+  id: RoomId;
   isCentral?: boolean;
   parent?: Room;
   type: RoomType;
@@ -44,7 +45,7 @@ export interface Room {
 
 export interface Door {
   dir: CompassDirection;
-  id: string;
+  id: DoorId;
   isOpen?: boolean;
   position: Position;
   room1: RoomId;

@@ -67,19 +67,21 @@ export const updateDungeonDoorState = (
   };
 };
 
-// export const updateDungeonDoor = (
-//   dungeon: DungeonData | null,
-//   doorId: string,
-//   open: boolean
-// ) => {
-//   if (!dungeon) {
-//     return null;
-//   }
+/**
+ * Get all the rooms connected to a given room
+ * @param dungeon
+ * @param roomId
+ * @returns
+ */
+export const getDungeonConnectedRooms = (
+  dungeon: DungeonData | null,
+  roomId: RoomId
+): RoomId[] => {
+  if (!dungeon) {
+    return [];
+  }
 
-//   return {
-//     ...dungeon,
-//     doors: dungeon.doors.map(door =>
-//       door.id === doorId ? { ...door, isOpen: open } : door
-//     )
-//   } as DungeonData;
-// };
+  return dungeon.doors
+    .filter(door => door.room1 === roomId || door.room2 === roomId)
+    .map(door => (door.room1 === roomId ? door.room2 : door.room1));
+};

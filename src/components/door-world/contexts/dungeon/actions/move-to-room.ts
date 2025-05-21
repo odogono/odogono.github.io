@@ -5,6 +5,7 @@ import {
   getRoomDoorsExcluding
 } from '@door-world/model/dungeon/door';
 import {
+  getDungeonConnectedRooms,
   getDungeonConnectingRoom,
   getDungeonDoorById,
   updateDungeonDoorState
@@ -13,8 +14,17 @@ import { getRoomCenter } from '@door-world/model/dungeon/room';
 import type { Position } from '@door-world/model/dungeon/types';
 import { createLog } from '@helpers/log';
 
-import { dungeonAtom, dungeonCurrentRoomAtom } from '../atoms';
-import { addVisitedRoomAtom, hasVisitedRoomAtom } from './room-history';
+import {
+  dungeonAtom,
+  dungeonCurrentRoomAtom,
+  dungeonNextRoomAtom,
+  dungeonVisitedRoomsAtom
+} from '../atoms';
+import {
+  addVisitedRoomAtom,
+  applyNextRoomAtom,
+  hasVisitedRoomAtom
+} from './room-history';
 import { setDungeonVisibleAtom } from './set-visible';
 
 const log = createLog('moveToRoomAtom');
@@ -72,11 +82,18 @@ export const moveToRoomAtom = atom(
     });
 
     const hasVisitedRoom = get(hasVisitedRoomAtom)(nextRoom.id);
+    const visitedRooms = get(dungeonVisitedRoomsAtom);
 
     if (hasVisitedRoom) {
-      log.debug('Room already visited', { roomId: nextRoom.id });
+      log.debug('Room already visited', {
+        roomId: nextRoom.id,
+        visitedRooms
+      });
     } else {
-      log.debug('Room not visited', { roomId: nextRoom.id });
+      log.debug('Room not visited', {
+        roomId: nextRoom.id,
+        visitedRooms
+      });
     }
 
     // 3. Enter the target room
@@ -109,5 +126,13 @@ export const moveToRoomAtom = atom(
     });
 
     log.debug('Moved to room', { roomId: nextRoom.id });
+    log.debug('Connected rooms', {
+      connectedRooms: getDungeonConnectedRooms(get(dungeonAtom), nextRoom.id),
+      roomId: nextRoom.id
+    });
+
+    set(applyNextRoomAtom);
+
+    log.debug('Next room', { nextRoomId: get(dungeonNextRoomAtom) });
   }
 );

@@ -3,6 +3,7 @@ import { atomWithStorage } from 'jotai/utils';
 
 import {
   type Door,
+  type DoorId,
   type DungeonData,
   type Room,
   type RoomId,
@@ -24,3 +25,8 @@ export const dungeonVisibleRoomsAtom = atom<Room[]>([]);
 export const dungeonVisibleDoorsAtom = atom<Door[]>([]);
 
 export const dungeonVisitedRoomsAtom = atom<RoomId[]>([]);
+
+export const dungeonRoomHistoryAtom = atom<RoomId[]>([]);
+
+export const dungeonNextRoomAtom = atom<RoomId | null>(null);
+export const dungeonNextDoorAtom = atom<DoorId | null>(null);

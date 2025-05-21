@@ -4,6 +4,7 @@ import { useDungeonJourney } from '@door-world/contexts/dungeon/hooks/use-dungeo
 import type { DoorId } from '@door-world/model/dungeon';
 import type { Position } from '@door-world/model/dungeon/types';
 import { createLog } from '@helpers/log';
+import { timeoutPromise } from '@helpers/time';
 
 import type { DoorRef } from '../door';
 import { dungeonPositionToVector3 } from '../helpers';
@@ -17,7 +18,7 @@ interface UseMoveToRoomProps {
 }
 
 export const useMoveToRoom = ({ moveCameraTo }: UseMoveToRoomProps) => {
-  const { currentRoom, doors, dungeon, moveToRoom, rooms } =
+  const { currentRoom, doors, dungeon, moveToRoom, nextDoorId, rooms } =
     useDungeonJourney();
   const isMoving = useRef(false);
 
@@ -71,11 +72,18 @@ export const useMoveToRoom = ({ moveCameraTo }: UseMoveToRoomProps) => {
 
           const refs = doorIds.map(id => doorRefs.current.get(id)) as DoorRef[];
 
-          return Promise.all([
-            roomRef.unmount(),
+          const unmountPromises = [
+            timeoutPromise(roomRef.unmount(), 3000),
             ...refs.map(ref => ref.unmount())
-          ])
-            .then(() => true)
+          ];
+
+          log.debug('[unmountRoomAction] Unmounting room', unmountPromises);
+
+          return Promise.all(unmountPromises)
+            .then(() => {
+              log.debug('[unmountRoomAction] Unmounted room', { roomId });
+              return true;
+            })
             .catch(error => {
               log.error('[unmountRoomAction] Error unmounting room', {
                 error,
@@ -93,5 +101,14 @@ export const useMoveToRoom = ({ moveCameraTo }: UseMoveToRoomProps) => {
     [moveToRoom, moveCameraTo]
   );
 
-  return { doorRefs, moveThroughDoor, roomRefs };
+  return {
+    currentRoom,
+    doorRefs,
+    doors,
+    dungeon,
+    moveThroughDoor,
+    nextDoorId,
+    roomRefs,
+    rooms
+  };
 };

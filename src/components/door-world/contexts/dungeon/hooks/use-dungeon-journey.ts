@@ -7,10 +7,12 @@ import { getDungeonRoomById } from '@door-world/model/dungeon/helpers';
 import { createLog } from '@helpers/log';
 
 import { moveToRoomAtom } from '../actions/move-to-room';
-import { addVisitedRoomAtom } from '../actions/room-history';
+import { addVisitedRoomAtom, applyNextRoomAtom } from '../actions/room-history';
 import {
   dungeonAtom,
   dungeonCurrentRoomAtom,
+  dungeonNextDoorAtom,
+  dungeonNextRoomAtom,
   dungeonVisibleDoorsAtom,
   dungeonVisibleRoomsAtom
 } from '../atoms';
@@ -42,9 +44,12 @@ const initialiseDungeonJourneyAtom = atom(null, async (get, set) => {
   set(dungeonVisibleRoomsAtom, [currentRoom]);
   set(dungeonVisibleDoorsAtom, visibleDoors);
   set(addVisitedRoomAtom, currentRoomId);
+  set(applyNextRoomAtom);
   set(isInitialisedAtom, true);
 
-  log.debug('Dungeon journey initialised', { currentRoomId });
+  const nextRoomId = get(dungeonNextRoomAtom);
+
+  log.debug('Dungeon journey initialised', { currentRoomId, nextRoomId });
 });
 
 export const useDungeonJourney = () => {
@@ -58,6 +63,7 @@ export const useDungeonJourney = () => {
     () => getDungeonRoomById(dungeon, currentRoomId),
     [dungeon, currentRoomId]
   );
+  const nextDoorId = useAtomValue(dungeonNextDoorAtom);
 
   useEffect(() => {
     initialiseDungeonJourney();
@@ -69,6 +75,7 @@ export const useDungeonJourney = () => {
     doors,
     dungeon,
     moveToRoom,
+    nextDoorId,
     rooms
   };
 };

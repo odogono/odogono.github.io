@@ -1,4 +1,4 @@
-import { type TimeoutId } from '@helpers/time';
+export type TimeoutId = ReturnType<typeof setTimeout>;
 
 /**
  * Waits for a given number of milliseconds
@@ -11,8 +11,6 @@ export const waitMs = async (time: number = 1000): Promise<void> =>
       resolve();
     }, time);
   });
-
-export type TimeoutId = ReturnType<typeof setTimeout>;
 
 /**
  * Runs a function after a given number of milliseconds
@@ -65,3 +63,11 @@ export const debounce = <T extends (...args: Parameters<T>) => ReturnType<T>>(
     }
   };
 };
+
+export const timeoutPromise = <T>(promise: Promise<T>, timeoutMs: number) =>
+  Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error('Timeout')), timeoutMs)
+    )
+  ]);
