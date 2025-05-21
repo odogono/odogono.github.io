@@ -1,4 +1,4 @@
-import { format, isSameDay as isSameDayFn } from 'date-fns';
+import { format, isSameDay as isSameDayFn, parseISO } from 'date-fns';
 
 export const isSameDay = (date1: Date, date2: Date) =>
   isSameDayFn(date1, date2);
@@ -15,3 +15,10 @@ export const toDateString = (date: Date | string) =>
 
 export const toDateTimeString = (date: Date | string) =>
   format(new Date(date), 'yyyy/MM/dd HH:mm');
+
+export const toDate = (dateString?: Date | string | undefined): Date => {
+  if (!dateString) {
+    return new Date();
+  }
+  return typeof dateString === 'string' ? parseISO(dateString) : dateString;
+};

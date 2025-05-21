@@ -1,7 +1,7 @@
 import { getCollection } from 'astro:content';
-import { slug as githubSlug } from 'github-slugger';
 
 import { createLog } from '@helpers/log';
+import { slugify } from '@helpers/string';
 import type {
   DateEntry,
   Entry,
@@ -118,25 +118,25 @@ export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
     };
   });
 
-export const slugify = (str: string) => githubSlug(str);
-
 export const getPostSlug = (post: Entry) => {
   const { data, id } = post;
   const { pubDate, slug, title } = data;
-
-  if (slug) {
-    return slug;
-  }
 
   if (isNoteEntry(post)) {
     const year = pubDate.getFullYear();
     const month = pubDate.getMonth() + 1;
     const day = pubDate.getDate();
 
-    return `${year}/${month}/${day}/${githubSlug(title ?? id)}`;
+    const noteSlug = slug ?? slugify(title ?? id);
+
+    return `${year}/${month}/${day}/${noteSlug}`;
   }
 
-  return githubSlug(title ?? id);
+  if (slug) {
+    return slug;
+  }
+
+  return slugify(title ?? id);
 };
 
 export const getEntryUrl = (entry: Entry) => {

@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import Yaml from 'yaml';
+
 import { createLog } from '@helpers/log';
 import type { Entry } from '@types';
 
@@ -12,26 +14,27 @@ interface EntryEditorProps {
   entry: Entry;
 }
 
-export default function EntryEditor({ collection, entry }: EntryEditorProps) {
+const defaultFrontmatter = {
+  isDraft: true,
+  pubDate: new Date().toISOString(),
+  tags: []
+};
+
+const parseEntryText = (text: string) => {
+  const frontMatter = Yaml.parse(text.split('---')[1]);
+  const content = text.split('---')[2].trim();
+  return { content, frontMatter };
+};
+
+export const EntryEditor = ({ collection, entry }: EntryEditorProps) => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const frontMatter = Yaml.stringify(entry.data);
+
   // Combine frontmatter and content into a single string
   const initialContent = `---
-${Object.entries(entry.data)
-  .map(([key, value]) => {
-    if (Array.isArray(value)) {
-      return `${key}:\n${value.map(v => `  - ${v}`).join('\n')}`;
-    }
-    if (value && typeof value === 'object' && 'toISOString' in value) {
-      return `${key}: ${(value as Date).toISOString()}`;
-    }
-    if (typeof value === 'boolean') {
-      return `${key}: ${value}`;
-    }
-    return `${key}: ${value}`;
-  })
-  .join('\n')}
+${frontMatter}
 ---
 
 ${entry.body ?? ''}`;
@@ -43,53 +46,31 @@ ${entry.body ?? ''}`;
       setIsSaving(true);
       setError(null);
 
-      log.debug('content', content);
+      log.debug('entry', entry);
 
-      // Parse frontmatter and content from the markdown
-      // const [frontmatterStr, ...contentParts] = content.split('---\n');
-      // const contentStr = contentParts.join('---\n').trim();
+      const { content: contentText, frontMatter } = parseEntryText(content);
+      log.debug('frontMatter', frontMatter);
+      log.debug('content', contentText);
 
-      // Parse frontmatter
-      // const frontmatter: Record<string, unknown> = {};
-      // const frontmatterLines = frontmatterStr.trim().split('\n');
+      if (!contentText.length) {
+        setError('no content to save');
+        setIsSaving(false);
+        return;
+      }
 
-      // for (const line of frontmatterLines) {
-      //   if (line.startsWith('  - ')) {
-      //     // Handle array items
-      //     const lastKey = Object.keys(frontmatter).pop();
-      //     if (lastKey) {
-      //       const value = line.slice(4);
-      //       if (!Array.isArray(frontmatter[lastKey])) {
-      //         frontmatter[lastKey] = [value];
-      //       } else {
-      //         (frontmatter[lastKey] as string[]).push(value);
-      //       }
-      //     }
-      //   } else {
-      //     const [key, value] = line.split(': ');
-      //     if (key && value) {
-      //       // Try to parse the value
-      //       if (value === 'true') {
-      //         frontmatter[key] = true;
-      //       } else if (value === 'false') {
-      //         frontmatter[key] = false;
-      //       } else if (!Number.isNaN(Date.parse(value))) {
-      //         frontmatter[key] = new Date(value);
-      //       } else {
-      //         frontmatter[key] = value;
-      //       }
-      //     }
-      //   }
-      // }
+      const updatedFrontmatter = {
+        ...defaultFrontmatter,
+        ...frontMatter
+      };
 
-      // log.debug('content', content);
+      const updatedContent = `---\n${Yaml.stringify(updatedFrontmatter)}---\n\n${contentText}`;
 
       // Save content
       const contentResponse = await fetch('/api/save-entry', {
         body: JSON.stringify({
           collection,
-          content,
-          id: entry.id
+          content: updatedContent,
+          id: 'new'
         }),
         method: 'POST'
       });
@@ -97,6 +78,9 @@ ${entry.body ?? ''}`;
       if (!contentResponse.ok) {
         throw new Error('Failed to save content');
       }
+
+      // redirect to the admin page
+      window.location.href = '/admin';
     } catch (error_) {
       const message =
         error_ instanceof Error ? error_.message : 'Failed to save entry';
@@ -126,4 +110,4 @@ ${entry.body ?? ''}`;
       </div>
     </div>
   );
-}
+};

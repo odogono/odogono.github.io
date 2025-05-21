@@ -20,7 +20,14 @@ const posts = sortEntriesByDate(await getPosts());
 
     <div class="space-y-16">
       <section>
-        <h2 class="text-xl font-semibold mb-4">Notes Collection</h2>
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-xl font-semibold">Notes Collection</h2>
+          <a
+            href="/admin/entry/new"
+            class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+            >New Note</a
+          >
+        </div>
         <NotesTable client:only="react" entries={notes} />
       </section>
 

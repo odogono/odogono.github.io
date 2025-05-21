@@ -1,0 +1,37 @@
+---
+import { slug as slugify } from 'github-slugger';
+
+import { EntryEditor } from '@components/admin/entry-editor';
+import Layout from '@layouts/main.astro';
+import type { NoteEntry } from '@types';
+
+if (!import.meta.env.DEV) {
+  return Astro.redirect('/404');
+}
+
+// Create a new empty entry
+const entry: NoteEntry = {
+  id: '',
+  collection: 'notes',
+  url: '',
+  data: {
+    isDraft: true,
+    pubDate: new Date(),
+    tags: []
+  },
+  body: ''
+};
+---
+
+<Layout title="New Note">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-4xl text-ring/80 font-['Nohemi'] font-light my-12">
+      <a href="/admin" class="hover:underline hover:text-tags">Admin</a> : New Note
+    </h1>
+
+    <div class="mb-4">
+      <h2 class="text-lg font-semibold mb-2">Content</h2>
+      <EntryEditor client:load collection="notes" entry={entry} />
+    </div>
+  </div>
+</Layout>
