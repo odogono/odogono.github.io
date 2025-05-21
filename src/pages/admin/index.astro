@@ -1,9 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 
-import Layout from '@layouts/three-body.astro';
-
-import { collections } from '../../content.config';
+import { ContentTable } from '@components/admin/content-table';
+import Layout from '@layouts/main.astro';
 
 // Only allow access in dev mode
 if (!import.meta.env.DEV) {
@@ -13,15 +12,6 @@ if (!import.meta.env.DEV) {
 // Get all entries from both collections
 const notes = await getCollection('notes');
 const posts = await getCollection('posts');
-
-// Helper function to format date
-const formatDate = (date: Date) => date.toLocaleDateString();
-
-// Helper function to format array
-const formatArray = (arr: any[] | undefined) => arr?.join(', ') || '';
-
-// Helper function to format boolean
-const formatBoolean = (bool: boolean | undefined) => (bool ? '✓' : '✗');
 ---
 
 <Layout title="Admin" description="Admin">
@@ -31,102 +21,12 @@ const formatBoolean = (bool: boolean | undefined) => (bool ? '✓' : '✗');
     <div class="space-y-6">
       <section>
         <h2 class="text-xl font-semibold mb-4">Notes Collection</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full border-collapse border border-gray-300">
-            <thead>
-              <tr class="bg-gray-100">
-                <th class="border border-gray-300 p-2">Title</th>
-                <th class="border border-gray-300 p-2">Published Date</th>
-                <th class="border border-gray-300 p-2">Updated Date</th>
-                <th class="border border-gray-300 p-2">Draft</th>
-                <th class="border border-gray-300 p-2">Tags</th>
-                <th class="border border-gray-300 p-2">Slug</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                notes.map(note => (
-                  <tr class="hover:bg-gray-50">
-                    <td class="border border-gray-300 p-2">
-                      {note.data.title || '-'}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatDate(note.data.pubDate)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {note.data.updatedDate
-                        ? formatDate(note.data.updatedDate)
-                        : '-'}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatBoolean(note.data.isDraft)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatArray(note.data.tags)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {note.data.slug || '-'}
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
+        <ContentTable client:load entries={notes} type="notes" />
       </section>
 
       <section>
         <h2 class="text-xl font-semibold mb-4">Posts Collection</h2>
-        <div class="overflow-x-auto">
-          <table class="min-w-full border-collapse border border-gray-300">
-            <thead>
-              <tr class="bg-gray-100">
-                <th class="border border-gray-300 p-2">Title</th>
-                <th class="border border-gray-300 p-2">Description</th>
-                <th class="border border-gray-300 p-2">Published Date</th>
-                <th class="border border-gray-300 p-2">Updated Date</th>
-                <th class="border border-gray-300 p-2">Draft</th>
-                <th class="border border-gray-300 p-2">Tags</th>
-                <th class="border border-gray-300 p-2">Slug</th>
-                <th class="border border-gray-300 p-2">Hide Hero</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                posts.map(post => (
-                  <tr class="hover:bg-gray-50">
-                    <td class="border border-gray-300 p-2">
-                      {post.data.title}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {post.data.description || '-'}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatDate(post.data.pubDate)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {post.data.updatedDate
-                        ? formatDate(post.data.updatedDate)
-                        : '-'}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatBoolean(post.data.isDraft)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatArray(post.data.tags)}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {post.data.slug || '-'}
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                      {formatBoolean(post.data.hidePageHeroImage)}
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </div>
+        <ContentTable client:load entries={posts} type="posts" />
       </section>
     </div>
   </div>
