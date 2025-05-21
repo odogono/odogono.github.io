@@ -20,7 +20,7 @@ export default defineConfig({
     }
   },
 
-  site: 'https://dev.odgn.net',
+  site: 'https://opendoorgonorth.com',
 
   vite: {
     build: {
@@ -30,7 +30,6 @@ export default defineConfig({
             if (id.includes('three-') || id.includes('react-three')) {
               return 'rthree';
             }
-            // console.debug('🔥', id, id.includes('three-'));
             return null;
           }
           // manualChunks: {

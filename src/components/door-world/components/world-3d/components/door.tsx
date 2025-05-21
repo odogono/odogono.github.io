@@ -58,7 +58,7 @@ export const Door = ({
   rotationY = -Math.PI / 2,
   scale = [1, 1, 1]
 }: DoorProps) => {
-  const gltf = useGLTF('/vbasic.door.glb');
+  const gltf = useGLTF('/door-world/vbasic.door.glb');
 
   // clone the scene to avoid mutating the original
   const scene = useMemo(() => gltf.scene.clone(), [gltf.scene]);

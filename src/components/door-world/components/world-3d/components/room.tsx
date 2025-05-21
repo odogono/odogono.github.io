@@ -40,6 +40,9 @@ interface RoomProps {
 
 const SCALE = 0.06;
 
+const TEXT_CYCLE_INTERVAL = 6000;
+const TEXT_TRANSITION_DURATION = 1000;
+
 export const Room = ({
   mountDuration = 500,
   onTouch,
@@ -56,7 +59,7 @@ export const Room = ({
   const runTextTransition = () => {
     setIsTransitioning(false);
     clearRunAfterMs(textTransitionTimeoutId.current);
-    textTransitionTimeoutId.current = runAfterMs(3000, () =>
+    textTransitionTimeoutId.current = runAfterMs(TEXT_CYCLE_INTERVAL, () =>
       setIsTransitioning(true)
     );
   };
@@ -167,7 +170,7 @@ export const Room = ({
       <GroundText
         color={textColor}
         maxWidth={Math.min(3, width * SCALE * 0.8)}
-        mountDuration={1000}
+        mountDuration={TEXT_TRANSITION_DURATION}
         position={position}
         ref={textRef}
         text={textScript[currentTextIndex]}
