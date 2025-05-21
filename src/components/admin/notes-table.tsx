@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import type { CollectionEntry } from 'astro:content';
-
 import { DraftToggle } from '@components/admin/draft-toggle';
 import {
   Table,
@@ -12,11 +10,14 @@ import {
   TableRow
 } from '@components/ui/table';
 import { toDateString, toDateTimeString } from '@helpers/date';
+import { createLog } from '@helpers/log';
+import type { NoteEntry } from '@types';
 
-interface ContentTableProps {
-  entries: CollectionEntry<'notes' | 'posts'>[];
-  type: 'notes' | 'posts';
+interface NotesTableProps {
+  entries: NoteEntry[];
 }
+
+const log = createLog('components/admin/notes-table');
 
 // Helper function to format date
 const formatDate = (date: Date): string => toDateString(date);
@@ -39,17 +40,14 @@ const getFirstLine = (content: string | undefined): string => {
   return firstLine.length > 50 ? firstLine.slice(0, 47) + '...' : firstLine;
 };
 
-export const ContentTable = ({
-  entries: initialEntries,
-  type
-}: ContentTableProps) => {
+export const NotesTable = ({ entries: initialEntries }: NotesTableProps) => {
   const [entries, setEntries] = useState(initialEntries);
 
   const handleToggleDraft = async (id: string, newValue: boolean) => {
     try {
       const response = await fetch('/api/toggle-draft', {
         body: JSON.stringify({
-          collection: type,
+          collection: 'notes',
           id,
           isDraft: newValue
         }),
@@ -72,7 +70,7 @@ export const ContentTable = ({
         )
       );
     } catch (error) {
-      console.error('Failed to update draft status:', error);
+      log.error('Failed to update draft status:', error);
       throw error;
     }
   };
@@ -82,13 +80,11 @@ export const ContentTable = ({
       <TableHeader>
         <TableRow>
           <TableHead className="w-8">Draft</TableHead>
-          <TableHead>{type === 'notes' ? 'Content' : 'Title'}</TableHead>
-          {type === 'posts' && <TableHead>Description</TableHead>}
+          <TableHead>Content</TableHead>
           <TableHead>Published Date</TableHead>
           {/* <TableHead>Updated Date</TableHead> */}
           <TableHead>Tags</TableHead>
-          <TableHead>Slug</TableHead>
-          {type === 'posts' && <TableHead>Hide Hero</TableHead>}
+          <TableHead>url</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -101,35 +97,14 @@ export const ContentTable = ({
                 onToggle={handleToggleDraft}
               />
             </TableCell>
-            <TableCell>
-              {type === 'notes'
-                ? getFirstLine(entry.body)
-                : entry.data.title || '-'}
-            </TableCell>
-            {type === 'posts' && (
-              <TableCell>
-                {'description' in entry.data
-                  ? entry.data.description || '-'
-                  : '-'}
-              </TableCell>
-            )}
+            <TableCell>{getFirstLine(entry.body)}</TableCell>
             <TableCell>{formatDateTime(entry.data.pubDate)}</TableCell>
-            {/* <TableCell>
-              {entry.data.updatedDate
-                ? formatDateTime(entry.data.updatedDate)
-                : '-'}
-            </TableCell> */}
             <TableCell>{formatArray(entry.data.tags)}</TableCell>
-            <TableCell className="text-center">
-              {entry.data.slug || '-'}
+            <TableCell className="text-left">
+              <a href={entry.url} rel="noopener noreferrer" target="_blank">
+                {entry.url}
+              </a>
             </TableCell>
-            {type === 'posts' && (
-              <TableCell className="text-center">
-                {'hidePageHeroImage' in entry.data
-                  ? formatBoolean(entry.data.hidePageHeroImage)
-                  : '-'}
-              </TableCell>
-            )}
           </TableRow>
         ))}
       </TableBody>
