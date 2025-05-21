@@ -1,7 +1,4 @@
-import { createLog } from '@helpers/log';
 import { useTheme } from '@helpers/theme';
-
-const log = createLog('components/theme/theme-button');
 
 export const ThemeButton = () => {
   const { theme, toggleTheme } = useTheme();
@@ -48,7 +45,3 @@ export const ThemeButton = () => {
     </button>
   );
 };
-
-// export const ThemeTogglePortal = () => (
-//   <div>{createPortal(<ThemeToggle />, document.body)}</div>
-// );

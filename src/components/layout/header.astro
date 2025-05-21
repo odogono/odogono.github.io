@@ -25,7 +25,9 @@ import HeaderLink from './header-link.astro';
       <Github />
       <LinkedIn />
       <Twitter /> -->
-      <ThemeButton client:load />
+      <ThemeButton client:only="react">
+        <div slot="fallback" class="h-7 w-7"></div>
+      </ThemeButton>
     </div>
   </nav>
 </header>
