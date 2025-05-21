@@ -9,15 +9,15 @@ import {
 } from '@components/ui/table';
 import { toDateTimeString } from '@helpers/date';
 import { createLog } from '@helpers/log';
-import type { NoteEntry } from '@types';
+import type { PostEntry } from '@types';
 
 import { useEntryUpdate } from './hooks/use-entry-update';
 
-interface NotesTableProps {
-  entries: NoteEntry[];
+interface PostsTableProps {
+  entries: PostEntry[];
 }
 
-const log = createLog('components/admin/notes-table');
+const log = createLog('components/admin/posts-table');
 
 // Helper function to format date
 const formatDateTime = (date: Date): string => toDateTimeString(date);
@@ -26,16 +26,10 @@ const formatDateTime = (date: Date): string => toDateTimeString(date);
 const formatArray = (arr: string[] | undefined): string =>
   arr?.join(', ') || '';
 
-// Helper function to get first line of content
-const getFirstLine = (content: string | undefined): string => {
-  if (!content) {
-    return '-';
-  }
-  const firstLine = content.split('\n')[0].trim();
-  return firstLine.length > 50 ? firstLine.slice(0, 47) + '...' : firstLine;
-};
+// Helper function to format boolean
+const formatBoolean = (bool: boolean | undefined): string => (bool ? '✓' : '✗');
 
-export const NotesTable = ({ entries: initialEntries }: NotesTableProps) => {
+export const PostsTable = ({ entries: initialEntries }: PostsTableProps) => {
   const { entries, handleToggleDraft } = useEntryUpdate(initialEntries);
 
   return (
@@ -43,11 +37,13 @@ export const NotesTable = ({ entries: initialEntries }: NotesTableProps) => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-8">Live</TableHead>
-          <TableHead>Content</TableHead>
+          <TableHead>Title</TableHead>
+          <TableHead>Description</TableHead>
           <TableHead>Published Date</TableHead>
           {/* <TableHead>Updated Date</TableHead> */}
           <TableHead>Tags</TableHead>
-          <TableHead>url</TableHead>
+          <TableHead>Slug</TableHead>
+          <TableHead>Hide Hero</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -60,13 +56,26 @@ export const NotesTable = ({ entries: initialEntries }: NotesTableProps) => {
                 onToggle={handleToggleDraft}
               />
             </TableCell>
-            <TableCell>{getFirstLine(entry.body)}</TableCell>
+            <TableCell>{entry.data.title || '-'}</TableCell>
+            <TableCell>
+              {'description' in entry.data
+                ? entry.data.description || '-'
+                : '-'}
+            </TableCell>
             <TableCell>{formatDateTime(entry.data.pubDate)}</TableCell>
+            {/* <TableCell>
+              {entry.data.updatedDate
+                ? formatDateTime(entry.data.updatedDate)
+                : '-'}
+            </TableCell> */}
             <TableCell>{formatArray(entry.data.tags)}</TableCell>
-            <TableCell className="text-left">
-              <a href={entry.url} rel="noopener noreferrer" target="_blank">
-                {entry.url}
-              </a>
+            <TableCell className="text-center">
+              {entry.data.slug || '-'}
+            </TableCell>
+            <TableCell className="text-center">
+              {'hidePageHeroImage' in entry.data
+                ? formatBoolean(entry.data.hidePageHeroImage)
+                : '-'}
             </TableCell>
           </TableRow>
         ))}

@@ -14,13 +14,13 @@ import type {
 
 import { isSameDay } from './date';
 
-const log = createLog('helpers/posts');
+const log = createLog('helpers/astro');
 
 export const isPostEntry = (entry: Entry): entry is PostEntry =>
-  'data' in entry && !!entry.data.isPost;
+  entry.collection === 'posts' || entry.data?.isPost === true;
 
 export const isNoteEntry = (entry: Entry): entry is NoteEntry =>
-  'data' in entry && !!entry.data.isNote;
+  entry.collection === 'notes' || entry.data?.isNote === true;
 
 export const isDateEntry = (entry: object): entry is DateEntry =>
   'date' in entry;
@@ -30,11 +30,6 @@ export const getEntries = async (
 ): Promise<Entry[]> => {
   const entries: Entry[] = await getCollection(collection);
   return entries.map(entry => {
-    if (isPostEntry(entry)) {
-      entry.data.isPost = true;
-    } else if (isNoteEntry(entry)) {
-      entry.data.isNote = true;
-    }
     entry.url = getEntryUrl(entry);
     return entry;
   });
@@ -48,6 +43,16 @@ export const getPosts = async (): Promise<PostEntry[]> =>
 
 export const getPublishedNotes = async (): Promise<NoteEntry[]> =>
   (await getNotes()).filter(note => !note.data.isDraft);
+
+export const getCollectionFromEntry = (entry: Entry) => {
+  if (isNoteEntry(entry)) {
+    return 'notes';
+  }
+  if (isPostEntry(entry)) {
+    return 'posts';
+  }
+  throw new Error('Invalid entry');
+};
 
 /**
  * Get published posts

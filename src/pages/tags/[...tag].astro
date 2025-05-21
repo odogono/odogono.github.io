@@ -24,6 +24,9 @@ export const getStaticPaths = async () => {
 
 const entries = await getPublishedContent(true);
 const entriesWithTag = filterEntriesByTag(entries, Astro.params.tag);
+
+// log.debug('entriesWithTag', entriesWithTag);
+
 const entriesWithDates = applyDateEntries(entriesWithTag);
 ---
 

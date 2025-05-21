@@ -12,12 +12,15 @@ const log = createLog('components/admin/draft-toggle');
 
 export const DraftToggle = ({ id, isDraft, onToggle }: DraftToggleProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecked, setIsChecked] = useState(isDraft ?? false);
+  const [isChecked, setIsChecked] = useState(isDraft === false ? true : false);
+
+  // log.debug('DraftToggle', id, isDraft, isChecked);
 
   const handleClick = async () => {
     try {
+      // log.debug('handleClick', id, isChecked);
       setIsLoading(true);
-      const newValue = !isChecked;
+      const newValue = !isDraft;
       await onToggle(id, newValue);
       setIsChecked(newValue);
     } catch (error) {
@@ -32,14 +35,14 @@ export const DraftToggle = ({ id, isDraft, onToggle }: DraftToggleProps) => {
       className="flex h-6 w-6 items-center justify-center rounded transition-colors hover:font-bold disabled:cursor-not-allowed disabled:opacity-50"
       disabled={isLoading}
       onClick={handleClick}
-      title={isChecked ? 'Draft' : 'Published'}
+      title={isChecked ? 'Published' : 'Draft'}
     >
       {isLoading ? (
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-gray-400 border-t-transparent" />
       ) : isChecked ? (
-        '✗'
-      ) : (
         '✓'
+      ) : (
+        '✗'
       )}
     </button>
   );

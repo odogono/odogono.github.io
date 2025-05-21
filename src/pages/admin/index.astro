@@ -1,8 +1,6 @@
 ---
-import { getCollection } from 'astro:content';
-
+import { PostsTable } from '@/components/admin/posts-table';
 import { getNotes, getPosts, sortEntriesByDate } from '@/helpers/astro';
-import { ContentTable } from '@components/admin/content-table';
 import { NotesTable } from '@components/admin/notes-table';
 import Layout from '@layouts/main.astro';
 
@@ -28,7 +26,7 @@ const posts = sortEntriesByDate(await getPosts());
 
       <section>
         <h2 class="text-xl font-semibold mb-4">Posts Collection</h2>
-        <ContentTable client:load entries={posts} type="posts" />
+        <PostsTable client:load entries={posts} />
       </section>
     </div>
   </div>

@@ -2,12 +2,17 @@
 import { defineConfig } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
+  adapter: node({
+    mode: 'standalone'
+  }),
+
   integrations: [mdx(), react(), sitemap()],
 
   markdown: {
