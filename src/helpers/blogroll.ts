@@ -7,7 +7,7 @@ export interface BlogrollEntry {
 }
 
 export const getBlogroll = (): Record<string, BlogrollEntry> => {
-  const blogrollPath = join(process.cwd(), 'data', 'blogroll.toml');
+  const blogrollPath = join(process.cwd(), 'content', 'data', 'blogroll.toml');
   const content = readFileSync(blogrollPath, 'utf8');
   return Bun.TOML.parse(content) as Record<string, BlogrollEntry>;
 };

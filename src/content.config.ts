@@ -47,13 +47,13 @@ const postsSchema = ({ image }: SchemaContext) =>
 
 // shorter form ephemeral notes
 const notes = defineCollection({
-  loader: glob({ base: './notes', pattern: '**/*.{md,mdx}' }),
+  loader: glob({ base: './content/notes', pattern: '**/*.{md,mdx}' }),
   schema: notesSchema
 });
 
 // longer form posts about a specific topic
 const posts = defineCollection({
-  loader: glob({ base: './posts', pattern: '**/*.{md,mdx}' }),
+  loader: glob({ base: './content/posts', pattern: '**/*.{md,mdx}' }),
   schema: postsSchema
 });
 
