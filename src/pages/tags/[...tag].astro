@@ -1,13 +1,13 @@
 ---
 import '@styles/global.css';
 
+import EntriesList from '@components/layout/entries-list.astro';
 import {
   applyDateEntries,
   filterEntriesByTagSlug,
   getPostsTags,
-  getPublishedContent
-} from '@/helpers/astro';
-import EntriesList from '@components/layout/entries-list.astro';
+  getPublishedTaggedContent
+} from '@helpers/astro';
 import { createLog } from '@helpers/log';
 import Layout from '@layouts/three-body.astro';
 
@@ -22,7 +22,7 @@ export const getStaticPaths = async () => {
   }));
 };
 
-const entries = await getPublishedContent(true);
+const entries = await getPublishedTaggedContent(true);
 const entriesWithTag = filterEntriesByTagSlug(entries, Astro.params.tag);
 
 // log.debug('entriesWithTag', entriesWithTag);

@@ -6,9 +6,14 @@ tags: [ 'iOS', 'node.js', 'Backbone.js', 'MongoDB' ]
 client: Now2Now Ltd, London, UK
 pubDate: 2025-05-22
 heroImage: ./img/where-2.jpg
+hidePageHeroImage: true
 ---
 
-import AppImage from '/components/img_open';
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+
+import imageApp1 from './img/where-1.jpg';
+import imageApp2 from './img/where-2.jpg';
 
 Where Traveler is an American based publisher of travel guides. We implemented a mobile version 
 of their city guides based on, and using content from, the existing web site.
@@ -21,9 +26,9 @@ Initially two cities - London and Paris - were offered as separate apps. Eventua
 to download different cities into the app was added, and the number of cities was expanded to 
 over 100.
 
-<div className="app-screens">
-<AppImage className="app-screen" src="/media/where/where-1" alt="App Screen" />
-<AppImage className="app-screen" src="/media/where/where-2" alt="App Screen" />
+<div className="app-screens flex flex-row justify-evenly mb-8">
+<ImageModal src={imageApp1} alt="App Screen" width={140} height={300} fit="cover" />
+<ImageModal src={imageApp2} alt="App Screen" width={140} height={300} fit="cover" />
 </div>
 
 ## My Role

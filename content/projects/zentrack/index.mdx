@@ -6,10 +6,16 @@ tags: [ "iOS", "Android", "React Native", "node.js" ]
 client: ISB Ltd, Reigate, UK
 pubDate: 2025-05-22
 heroImage: ./img/app-4.jpg
+hidePageHeroImage: true
 ---
 
-import AppImage from '/components/img_open';
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
 
+import imageApp1 from './img/app-1.png';
+import imageApp2 from './img/app-2.png';
+import imageApp3 from './img/app-3.png';
+import imageApp4 from './img/app-4.jpg';
 
 The Zentrack system is a workforce management tool designed for businesses to track, control, 
 and report on their various workflows.
@@ -22,11 +28,11 @@ Much like the systems CMS, the app was designed to be white-labelled, allowing t
 and behaviour to be modified for a given company.
 
 
-<div className="app-screens">
-<AppImage className="app-screen" src="/media/zentrack/app-1.png" alt="App Screen" />
-<AppImage className="app-screen" src="/media/zentrack/app-2.png" alt="App Screen" />
-<AppImage className="app-screen" src="/media/zentrack/app-3.png" alt="App Screen" />
-<AppImage className="app-screen" src="/media/zentrack/app-4.jpg" alt="App Screen" />
+<div className="app-screens flex flex-row gap-2 mb-8">
+<ImageModal src={imageApp1} alt="App Screen" width={140} height={300} fit="cover" />
+<ImageModal src={imageApp2} alt="App Screen" width={140} height={300} fit="cover" />
+<ImageModal src={imageApp3} alt="App Screen" width={140} height={300} fit="cover" />
+<ImageModal src={imageApp4} alt="App Screen" width={140} height={300} fit="cover" />
 </div>
 
 ## My Role

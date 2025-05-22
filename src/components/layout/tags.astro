@@ -5,22 +5,30 @@ import type { Tag } from '@types';
 
 interface Props {
   tags: Tag[];
+  link?: boolean;
 }
 
-const { tags } = Astro.props;
+const { tags, link = true } = Astro.props;
 
 const sortedTags = tags.toSorted((a, b) => a.title.localeCompare(b.title));
 ---
 
 <div class="tags flex flex-wrap text-sm text-tags/80">
   {
-    sortedTags.map(tag => (
-      <a
-        href={`/tags/${tag.slug}`}
-        class="decoration-none flex items-center gap-1 hover:text-tags mr-4">
-        <TagIcon size={16} />
-        {tag.title}
-      </a>
-    ))
+    sortedTags.map(tag =>
+      link ? (
+        <a
+          href={`/tags/${tag.slug}`}
+          class="decoration-none flex items-center gap-1 hover:text-tags mr-4">
+          <TagIcon size={16} />
+          {tag.title}
+        </a>
+      ) : (
+        <span class="flex items-center gap-1 mr-4">
+          <TagIcon size={16} />
+          {tag.title}
+        </span>
+      )
+    )
   }
 </div>

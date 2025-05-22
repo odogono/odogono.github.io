@@ -148,9 +148,6 @@ export const getPublishedProjectsPaths = async () => {
   }));
 };
 
-// export const getUniquePostsTags = (posts: PostEntry[]): string[] =>
-// [...new Set(getPostsTags(posts))];
-
 export const getProjectsSummary = (
   projects: ProjectEntry[]
 ): ProjectSummary[] =>
@@ -218,7 +215,7 @@ export const getEntryUrl = (entry: Entry) => {
 };
 
 export const getTagsSummaries = async (): Promise<TagSummary[]> => {
-  const entries = await getPublishedContent(true);
+  const entries = await getPublishedTaggedContent(true);
 
   const tags = entries.flatMap(entry => entry.data.tags ?? []);
 
@@ -243,7 +240,7 @@ export const getTagsSummaries = async (): Promise<TagSummary[]> => {
 };
 
 export const getPostsTags = async (): Promise<Tag[]> => {
-  const entries = await getPublishedContent(true);
+  const entries = await getPublishedTaggedContent(true);
 
   const tags = entries.flatMap(entry => entry.data.tags ?? []);
   const seen = new Set();
@@ -274,6 +271,22 @@ export const getPublishedContent = async (
 ): Promise<Entry[]> => {
   const notes = await getPublishedNotes();
   const posts = await getPublishedPosts(true);
+
+  const entries = [...notes, ...posts];
+
+  if (sortByDate) {
+    return sortEntriesByDate(entries);
+  }
+
+  return entries;
+};
+
+export const getPublishedTaggedContent = async (
+  sortByDate = true
+): Promise<Entry[]> => {
+  const notes = await getPublishedNotes();
+  const posts = await getPublishedPosts(true);
+  // const projects = await getPublishedProjects();
 
   const entries = [...notes, ...posts];
 

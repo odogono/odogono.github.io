@@ -34,7 +34,7 @@ const heroImageSrc = heroImage || '/posts/placeholder-2.jpg';
       {
         tags && (
           <div class="relative z-10" onclick="event.stopPropagation()">
-            <Tags tags={tags} />
+            <Tags tags={tags} link={false} />
           </div>
         )
       }

@@ -1,9 +1,19 @@
 ---
-import { isDateEntry, isNoteEntry, isPostEntry } from '@/helpers/astro';
+import {
+  isDateEntry,
+  isNoteEntry,
+  isPostEntry,
+  isProjectEntry
+} from '@/helpers/astro';
 import Note from '@components/layout/note.astro';
 import PostSummary from '@components/layout/post-summary.astro';
+import ProjectSummary from '@components/layout/project-summary.astro';
 import { toShortDate } from '@helpers/date';
-import type { NotesPageEntry, PostSummary as PostSummaryType } from '@types';
+import type {
+  NotesPageEntry,
+  PostSummary as PostSummaryType,
+  ProjectSummary as ProjectSummaryType
+} from '@types';
 
 interface Props {
   entries: NotesPageEntry[];
@@ -25,6 +35,14 @@ const { entries } = Astro.props;
 
       if (isNoteEntry(entry)) {
         return <Note note={entry} url={entry.url} />;
+      }
+
+      if (isProjectEntry(entry)) {
+        return (
+          <ProjectSummary
+            summary={{ ...entry.data, url: entry.url } as ProjectSummaryType}
+          />
+        );
       }
 
       if (isPostEntry(entry)) {
