@@ -1,4 +1,4 @@
-import { format, isSameDay as isSameDayFn, parseISO } from 'date-fns';
+import { format, isSameDay as isSameDayFn } from 'date-fns';
 
 export const isSameDay = (date1: Date, date2: Date) =>
   isSameDayFn(date1, date2);
@@ -17,8 +17,21 @@ export const toDateTimeString = (date: Date | string) =>
   format(new Date(date), 'yyyy/MM/dd HH:mm');
 
 export const toDate = (dateString?: Date | string | undefined): Date => {
-  if (!dateString) {
+  if (!dateString || dateString === '-' || dateString === 'current') {
     return new Date();
   }
-  return typeof dateString === 'string' ? parseISO(dateString) : dateString;
+  return typeof dateString === 'string' ? new Date(dateString) : dateString;
 };
+
+export const isDate = (date: unknown | undefined): date is Date => {
+  if (!date) {
+    return false;
+  }
+
+  return (
+    Object.prototype.toString.call(date) === '[object Date]' &&
+    !Number.isNaN(date)
+  );
+};
+
+export const isToday = (date: Date) => isSameDay(date, new Date());

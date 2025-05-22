@@ -31,6 +31,7 @@ export interface PostSummary {
 export interface ProjectSummary {
   description?: string;
   heroImage: PostImage | string;
+  projectDates: Date[];
   pubDate: Date;
   tags?: Tag[];
   title: string;

@@ -1,6 +1,7 @@
 import { glob } from 'astro/loaders';
 import { defineCollection, z, type SchemaContext } from 'astro:content';
 
+import { toDate } from '@helpers/date';
 import { slugify } from '@helpers/string';
 import type { Tag } from '@types';
 
@@ -63,7 +64,15 @@ const postsSchema = ({ image }: SchemaContext) =>
 
 const projectsSchema = ({ image }: SchemaContext) =>
   postsSchema({ image }).extend({
-    projectDates: z.array(z.string()).optional()
+    projectDates: z
+      .array(z.string())
+      .optional()
+      .transform(dates => {
+        if (!dates) {
+          return [new Date(), new Date()];
+        }
+        return dates?.map(date => toDate(date));
+      })
   });
 
 // shorter form ephemeral notes

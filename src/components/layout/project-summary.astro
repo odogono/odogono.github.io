@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 
 import FormattedDate from '@components/layout/formatted-date.astro';
 import Tags from '@components/layout/tags.astro';
+import { isToday } from '@helpers/date';
 import type { ProjectSummary } from '@types';
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
 
 const { summary } = Astro.props;
 
-const { title, description, pubDate, tags, heroImage, url } = summary;
+const { title, description, projectDates, tags, heroImage, url } = summary;
 
 const heroImageSrc = heroImage || '/posts/placeholder-2.jpg';
 ---
@@ -28,7 +29,13 @@ const heroImageSrc = heroImage || '/posts/placeholder-2.jpg';
         <h2 class="title font-['Nohemi'] text-2xl">{title}</h2>
         <p class="description text-lg">{description}</p>
         <p class="date text-sm text-gray-500">
-          <FormattedDate date={pubDate} />
+          <time datetime={projectDates[0].toISOString()}>
+            {projectDates[0].getFullYear()}
+          </time>
+          -
+          <time datetime={projectDates[1].toISOString()}>
+            {isToday(projectDates[1]) ? '' : projectDates[1].getFullYear()}
+          </time>
         </p>
       </div>
       {

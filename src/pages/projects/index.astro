@@ -4,16 +4,16 @@ import '@styles/global.css';
 import {
   getProjectsSummary,
   getPublishedProjects,
-  sortEntriesByDate
+  sortEntriesByProjectDates
 } from '@/helpers/astro';
-import PostSummary from '@components/layout/post-summary.astro';
+import ProjectSummary from '@components/layout/project-summary.astro';
 import { createLog } from '@helpers/log';
 import Layout from '@layouts/three-body.astro';
 import type { ProjectEntry } from '@types';
 
 const projects = await getPublishedProjects();
 
-const sortedProjects = sortEntriesByDate(projects);
+const sortedProjects = sortEntriesByProjectDates(projects);
 
 const summaries = getProjectsSummary(sortedProjects);
 ---
@@ -27,7 +27,7 @@ const summaries = getProjectsSummary(sortedProjects);
       {
         summaries.map(summary => (
           <li class="mb-8">
-            <PostSummary summary={summary} />
+            <ProjectSummary summary={summary} />
           </li>
         ))
       }

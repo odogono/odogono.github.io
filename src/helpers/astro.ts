@@ -16,7 +16,7 @@ import type {
   TagSummary
 } from '@types';
 
-import { isSameDay } from './date';
+import { isDate, isSameDay } from './date';
 
 const log = createLog('helpers/astro');
 
@@ -102,12 +102,49 @@ export const sortEntriesByDate = <T extends Entry>(entries: T[]): T[] =>
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
 
+const isDateArray = (dates: unknown[] | undefined): dates is Date[] =>
+  dates !== undefined &&
+  Array.isArray(dates) &&
+  dates.length > 0 &&
+  dates.every(date => isDate(date));
+
+export const sortEntriesByProjectDates = <T extends ProjectEntry>(
+  entries: T[]
+): T[] =>
+  entries.toSorted((a, b) => {
+    const aDates = a.data.projectDates;
+    const bDates = b.data.projectDates;
+
+    if (!isDateArray(aDates) || !isDateArray(bDates)) {
+      return 0;
+    }
+
+    const aStart = aDates[0];
+    const aEnd = aDates.at(-1);
+    const bStart = bDates[0];
+    const bEnd = bDates.at(-1);
+
+    const adate = aEnd ?? aStart;
+    const bdate = bEnd ?? bStart;
+
+    return bdate.valueOf() - adate.valueOf();
+  });
+
 export const getPublishedPostsPaths = async () => {
   const posts = await getPublishedPosts();
 
   return posts.map(post => ({
     params: { slug: getPostSlug(post) },
     props: post
+  }));
+};
+
+export const getPublishedProjectsPaths = async () => {
+  const projects = await getPublishedProjects();
+
+  return projects.map(project => ({
+    params: { slug: getPostSlug(project) },
+    props: project
   }));
 };
 
@@ -119,10 +156,11 @@ export const getProjectsSummary = (
 ): ProjectSummary[] =>
   projects.map(project => {
     const { data, url } = project;
-    const { description, heroImage, pubDate, tags, title } = data;
+    const { description, heroImage, projectDates, pubDate, tags, title } = data;
     return {
       description,
       heroImage: heroImage || '/posts/placeholder-1.jpg',
+      projectDates,
       pubDate,
       tags,
       title,
@@ -170,6 +208,10 @@ export const getEntryUrl = (entry: Entry) => {
 
   if (isNoteEntry(entry)) {
     return `/blog/${slug}/`;
+  }
+
+  if (isProjectEntry(entry)) {
+    return `/projects/${slug}/`;
   }
 
   return `/posts/${slug}/`;
