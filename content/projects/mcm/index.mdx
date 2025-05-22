@@ -6,9 +6,15 @@ tags: [ 'iOS', 'ruby', 'couchdb', 'lua', 'Objective-C', 'xmpp' ]
 client: Big Head Games Ltd, London, UK
 pubDate: 2025-05-22
 heroImage: ./img/mcm.jpg
+hidePageHeroImage: true
 ---
 
-import AppImage from '/components/img_open';
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+
+import imageApp1 from './img/mcm.jpg';
+
+
 
 
 
@@ -26,7 +32,7 @@ web application. The server components we wrote would interface with the engine 
 a similar way.
 
 <div className="app-screens">
-    <AppImage className="app-screen" src="/media/mcm" alt="Mobile Club Manager" />
+    <ImageModal src={imageApp1} alt="Mobile Club Manager" width={600} height={180} fit="cover" />
 </div>
 
 ## My Role

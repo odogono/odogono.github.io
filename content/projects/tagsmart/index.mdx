@@ -6,17 +6,22 @@ tags: [ iOS, ibeacons ]
 client: Now2Now Ltd, London, UK
 pubDate: 2025-05-22
 heroImage: ./img/tagsmart-2.jpg
+hidePageHeroImage: true
 ---
-import AppImage from '/components/img_open';
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+
+import imageApp1 from './img/tagsmart-1.jpg';
+import imageApp2 from './img/tagsmart-2.jpg';
 
 The Tagsmart app was designed to be a used as a guide and browser for galleries. It 
 utilised iBeacons, GPS, and QR codes in order to determine the closest item of interest
 and then respond and display relevant content. 
 
 
-<div className="app-screens">
-    <AppImage className="app-screen" src="/media/tagsmart/tagsmart-1" alt="App Screen" />
-    <AppImage className="app-screen" src="/media/tagsmart/tagsmart-2" alt="App Screen" />
+<div className="app-screens flex flex-row justify-evenly mb-8">
+    <ImageModal src={imageApp1} alt="App Screen" width={140} height={300} fit="cover" />
+    <ImageModal src={imageApp2} alt="App Screen" width={140} height={300} fit="cover" />
 </div>
 
 ## My Role

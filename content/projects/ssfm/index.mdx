@@ -6,8 +6,16 @@ tags: [  Java, MMPOG ]
 company: HotGen Studios Ltd, Croydon, UK
 pubDate: 2025-05-22
 heroImage: ./img/ssfm.jpg
+hidePageHeroImage: true
 ---
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
 
+import imageApp1 from './img/ssfm.jpg';
+
+<div className="app-screens flex flex-row justify-evenly m-16">
+<ImageModal src={imageApp1} alt="You'll never play alone" width={600} height={240} fit="cover" />
+</div>
 
 SSFM was a massively multiplayer football management game. 
 Players could choose a club to manage in one of several ‘worlds’ competing against others to win the 
@@ -23,7 +31,7 @@ to choose a world to inhabit based on the availability of a team and the number 
 
 A companion web site supported the game with forums and the ability to view the state of worlds.
 
-![You'll never play alone](file:///media/ssfm)
+
 
 
 ## My Role
