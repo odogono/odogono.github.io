@@ -50,10 +50,10 @@ export const Room = ({
   renderOrder,
   room
 }: RoomProps) => {
-  const { dungeon } = useDungeon();
   const textRef = useRef<GroundTextRef>(null);
 
   const { runTextTransition, text: groundText } = useRoomText({
+    interval: TEXT_CYCLE_INTERVAL,
     room,
     textRef
   });
@@ -102,40 +102,6 @@ export const Room = ({
   };
 
   const { groundColor, groundOpacity, textColor } = useRoomColors(room);
-
-  // Handle text cycling
-  // useEffect(() => {
-  //   if (!room || !isTransitioning) {
-  //     return;
-  //   }
-
-  //   // const text = room.floorText ?? ``;
-  //   // const textScript = [text];
-
-  //   const cycleText = async () => {
-  //     // Unmount current text
-  //     if (textRef.current) {
-  //       await textRef.current.unmount();
-  //     }
-
-  //     // Update to next text index
-  //     // log.debug('Updating text index', {
-  //     //   currentTextIndex,
-  //     //   nextTextIndex: (currentTextIndex + 1) % textScript.length
-  //     // });
-  //     setCurrentTextIndex(prev => (prev + 1) % textScript.length);
-
-  //     // Mount new text
-  //     if (textRef.current) {
-  //       await textRef.current.mount();
-  //     }
-
-  //     // Schedule next transition
-  //     runTextTransition();
-  //   };
-
-  //   cycleText();
-  // }, [room, textScript.length, isTransitioning]);
 
   if (!room || !position) {
     return null;

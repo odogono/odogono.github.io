@@ -1,4 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefObject
+} from 'react';
 
 import { type Room as RoomModel } from '@door-world/model/dungeon';
 import { clearRunAfterMs, runAfterMs, type TimeoutId } from '@helpers/time';
@@ -6,14 +13,12 @@ import { clearRunAfterMs, runAfterMs, type TimeoutId } from '@helpers/time';
 import type { EntityRef } from '../types';
 
 interface RoomTextProps {
+  interval: number;
   room: RoomModel | undefined;
   textRef: RefObject<EntityRef | null>;
 }
 
-const TEXT_CYCLE_INTERVAL = 6000;
-const TEXT_TRANSITION_DURATION = 1000;
-
-export const useRoomText = ({ room, textRef }: RoomTextProps) => {
+export const useRoomText = ({ interval, room, textRef }: RoomTextProps) => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const textTransitionTimeoutId = useRef<TimeoutId | null>(null);
@@ -32,13 +37,13 @@ export const useRoomText = ({ room, textRef }: RoomTextProps) => {
     return [floorText];
   }, [room]);
 
-  const runTextTransition = () => {
+  const runTextTransition = useCallback(() => {
     setIsTransitioning(true);
     clearRunAfterMs(textTransitionTimeoutId.current);
-    textTransitionTimeoutId.current = runAfterMs(TEXT_CYCLE_INTERVAL, () =>
+    textTransitionTimeoutId.current = runAfterMs(interval, () =>
       setIsTransitioning(false)
     );
-  };
+  }, [interval]);
 
   // Handle text cycling
   useEffect(() => {
@@ -69,7 +74,7 @@ export const useRoomText = ({ room, textRef }: RoomTextProps) => {
     };
 
     cycleText();
-  }, [room, isTransitioning, textRef, textScript]);
+  }, [room, isTransitioning, textRef, textScript, runTextTransition]);
 
   return {
     runTextTransition,
