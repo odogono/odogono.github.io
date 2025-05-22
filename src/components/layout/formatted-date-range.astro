@@ -1,0 +1,19 @@
+---
+import { isToday } from '@helpers/date';
+
+interface Props {
+  dates: Date[];
+}
+
+const { dates } = Astro.props;
+---
+
+<>
+  <time datetime={dates[0].toISOString()}>
+    {dates[0].getFullYear()}
+  </time>
+  -
+  <time datetime={dates[1].toISOString()}>
+    {isToday(dates[1]) ? '' : dates[1].getFullYear()}
+  </time>
+</>
