@@ -16,7 +16,8 @@ const { title, description } = Astro.props;
 
   <body class="min-h-screen flex flex-col">
     <Header />
-    <main class="flex justify-center items-start max-w-full m-4 flex-grow">
+    <main
+      class="flex justify-center items-start max-w-full m-4 flex-grow mt-12">
       <aside class="hidden lg:block w-1/3">
         <slot name="sidebar-left" />
       </aside>

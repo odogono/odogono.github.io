@@ -5,13 +5,28 @@ import '@styles/blog-post.css';
 
 import FormattedDate from '@components/layout/formatted-date.astro';
 import Tags from '@components/layout/tags.astro';
+import type { Entry } from '@types';
 
 import ThreeBodyLayout from './three-body.astro';
 
 // type Props = CollectionEntry<'posts'>['data'];
 
-const { title, pubDate, updatedDate, heroImage, hidePageHeroImage, tags } =
-  Astro.props;
+type Props = Entry['data'] & {
+  title: string;
+  hidePageHeroImage?: boolean;
+  hideTitle?: boolean;
+  heroImage?: Asset;
+};
+
+const {
+  title,
+  pubDate,
+  updatedDate,
+  heroImage,
+  hidePageHeroImage,
+  tags,
+  hideTitle
+} = Astro.props;
 ---
 
 <ThreeBodyLayout {...Astro.props}>
@@ -25,20 +40,22 @@ const { title, pubDate, updatedDate, heroImage, hidePageHeroImage, tags } =
     )
   }
   <div class="prose mt-8">
-    <div class="title">
-      <h1>{title}</h1>
-      <div class="mb-4">
-        <FormattedDate date={pubDate} />
-        {
-          updatedDate && (
-            <div class="last-updated-on">
-              Last updated on <FormattedDate date={updatedDate} />
-            </div>
-          )
-        }
-      </div>
-      <hr />
-    </div>
+    {
+      !hideTitle && (
+        <div class="title">
+          <h1>{title}</h1>
+          <div class="mb-4">
+            <FormattedDate date={pubDate} />
+            {updatedDate && (
+              <div class="last-updated-on">
+                Last updated on <FormattedDate date={updatedDate} />
+              </div>
+            )}
+          </div>
+          <hr />
+        </div>
+      )
+    }
     <slot />
   </div>
   <div slot="article-footer">

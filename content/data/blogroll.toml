@@ -88,10 +88,6 @@ site = "https://gossipsweb.net"
 author = "Josh W. Comeau"
 site = "https://www.joshwcomeau.com/react/"
 
-[ryanflorence]
-author = "Ryan Florence"
-site = "https://ryanflorence.com/blog/"
-
 [simonwillison]
 author = "Simon Willison"
 site = "https://simonwillison.net/"

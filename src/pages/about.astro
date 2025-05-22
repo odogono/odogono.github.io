@@ -1,19 +1,49 @@
 ---
+import { Image } from 'astro:assets';
+
 import Layout from '@layouts/blog-post.astro';
 
+import imageProfile from './img/2023.07.sunset.jpg';
 import imageAbout from './img/about.jpg';
 ---
 
 <Layout
   title="About"
   description="All about the author"
-  pubDate={new Date('May 21 2025')}
-  heroImage={imageAbout}>
-  <p>Hello, I'm Alex Veenendaal.</p>
+  hideTitle
+  pubDate={new Date('May 21 2025')}>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 my-8">
+    <div class="md:col-span-2">
+      <h1 class="text-3xl font-bold mb-6">Hello, I'm Alex</h1>
 
-  <p></p>
+      <p class="mb-4 text-lg">
+        Versatile Full Stack Developer with over 25 years of experience in
+        software design and development across diverse technical domains.
+      </p>
 
-  <h2>About this site</h2>
+      <p class="mb-4 text-lg">
+        Involved professionally with the Web since before CSS, mobile app
+        development pre iPhone, led a team to develop a back-end for a MMPOG,
+        and published multiple apps to stores.
+      </p>
+
+      <p class="mb-4 text-lg">
+        Always passionate and curious about emerging technologies and applying
+        best practice software development.
+      </p>
+    </div>
+
+    <div class="md:sticky md:top-8">
+      <Image
+        src={imageProfile}
+        alt="A picture of me"
+        width={400}
+        height={400}
+        class="rounded-lg shadow-lg w-full h-auto object-cover"
+      />
+    </div>
+  </div>
+
   <div slot="sidebar-left"></div>
   <div slot="sidebar-right"></div>
 </Layout>
