@@ -5,10 +5,13 @@ import { slugify } from '@helpers/string';
 import type {
   DateEntry,
   Entry,
+  EntryTypes,
   NoteEntry,
   NotesPageEntry,
   PostEntry,
   PostSummary,
+  ProjectEntry,
+  ProjectSummary,
   TagSummary
 } from '@types';
 
@@ -22,12 +25,13 @@ export const isPostEntry = (entry: Entry): entry is PostEntry =>
 export const isNoteEntry = (entry: Entry): entry is NoteEntry =>
   entry.collection === 'notes' || entry.data?.isNote === true;
 
+export const isProjectEntry = (entry: Entry): entry is ProjectEntry =>
+  entry.collection === 'projects' || entry.data?.isProject === true;
+
 export const isDateEntry = (entry: object): entry is DateEntry =>
   'date' in entry;
 
-export const getEntries = async (
-  collection: 'posts' | 'notes'
-): Promise<Entry[]> => {
+export const getEntries = async (collection: EntryTypes): Promise<Entry[]> => {
   const entries: Entry[] = await getCollection(collection);
   return entries.map(entry => {
     entry.url = getEntryUrl(entry);
@@ -41,6 +45,9 @@ export const getNotes = async (): Promise<NoteEntry[]> =>
 export const getPosts = async (): Promise<PostEntry[]> =>
   (await getEntries('posts')) as PostEntry[];
 
+export const getProjects = async (): Promise<ProjectEntry[]> =>
+  (await getEntries('projects')) as ProjectEntry[];
+
 export const getAllEntries = async (): Promise<Entry[]> => {
   const notes = (await getEntries('notes')) as NoteEntry[];
   const posts = (await getEntries('posts')) as PostEntry[];
@@ -48,8 +55,14 @@ export const getAllEntries = async (): Promise<Entry[]> => {
   return [...notes, ...posts];
 };
 
+export const filterPublishedEntries = <T extends Entry>(entries: T[]): T[] =>
+  entries.filter(entry => !entry.data.isDraft);
+
 export const getPublishedNotes = async (): Promise<NoteEntry[]> =>
-  (await getNotes()).filter(note => !note.data.isDraft);
+  getNotes().then(notes => filterPublishedEntries(notes));
+
+export const getPublishedProjects = async (): Promise<ProjectEntry[]> =>
+  getProjects().then(projects => filterPublishedEntries(projects));
 
 export const getCollectionFromEntry = (entry: Entry) => {
   if (isNoteEntry(entry)) {
@@ -100,14 +113,26 @@ export const getPublishedPostsPaths = async () => {
 // export const getUniquePostsTags = (posts: PostEntry[]): string[] =>
 // [...new Set(getPostsTags(posts))];
 
+export const getProjectsSummary = (
+  projects: ProjectEntry[]
+): ProjectSummary[] =>
+  projects.map(project => {
+    const { data, url } = project;
+    const { description, heroImage, pubDate, tags, title } = data;
+    return {
+      description,
+      heroImage: heroImage || '/posts/placeholder-1.jpg',
+      pubDate,
+      tags,
+      title,
+      url
+    };
+  });
+
 export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
   posts.map(post => {
-    const { data } = post;
-
+    const { data, url } = post;
     const { description, heroImage, pubDate, tags, title } = data;
-
-    const url = getEntryUrl(post);
-
     return {
       description,
       heroImage: heroImage || '/posts/placeholder-1.jpg',

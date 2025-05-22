@@ -1,0 +1,33 @@
+---
+import '@styles/global.css';
+
+import {
+  getProjectsSummary,
+  getPublishedProjects,
+  sortEntriesByDate
+} from '@/helpers/astro';
+import PostSummary from '@components/layout/post-summary.astro';
+import { createLog } from '@helpers/log';
+import Layout from '@layouts/three-body.astro';
+import type { ProjectEntry } from '@types';
+
+const projects = await getPublishedProjects();
+
+const sortedProjects = sortEntriesByDate(projects);
+
+const summaries = getProjectsSummary(sortedProjects);
+---
+
+<Layout>
+  <section>
+    <ul>
+      {
+        summaries.map(summary => (
+          <li class="mb-8">
+            <PostSummary summary={summary} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Layout>

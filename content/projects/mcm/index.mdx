@@ -1,0 +1,49 @@
+---
+title: Mobile Club Manager
+summary: mobile online football management game
+projectDates: ['2009', '2009']
+tags: [ 'iOS', 'ruby', 'couchdb', 'lua', 'xmpp' ]
+client: Big Head Games Ltd, London, UK
+pubDate: 2025-05-22
+---
+
+import AppImage from '/components/img_open';
+
+
+
+MCM was an update of an existing game which ran on feature phones. The player manages 
+a chosen football team in a bid to win, whilst pitted against other teams controlled 
+by AI or other players.
+
+The iOS version of the game took the existing design and adapted it for the iphone. 
+Arcade style mini-games allowed the user to improve the fitness and skill of their 
+players. A messaging system allowed simple inter-player communication, and taking 
+advantage of Push notifications to alert players of upcoming matches.
+
+The match engine used was the same used on SSFM, but was already embedded in their 
+web application. The server components we wrote would interface with the engine in 
+a similar way.
+
+<div className="app-screens">
+    <AppImage className="app-screen" src="/media/mcm" alt="Mobile Club Manager" />
+</div>
+
+## My Role
+
+I was contracted to write the iOS app and the server. Other members of the team wrote 
+the mini-games which I then integrated into the application. 
+
+
+## Tech Stack
+
+The iOS application was a mixture of Objective-C, C++, and Lua. The scripting language 
+Lua was used for the logic of the app, while ObjC/C++ for platform tasks and 
+[XMPP](https://en.wikipedia.org/wiki/XMPP) networking.
+
+The server was built around the XMPP server [ejabberd](https://www.ejabberd.im/). 
+XMPP gave a solid foundation on which to implement game commands while getting 
+features such as presence and chat built in.
+
+The game server logic, and interfaces to mail and push notifications, were implemented 
+in Ruby. CouchDB was used as the database.
+

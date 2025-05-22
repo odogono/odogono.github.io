@@ -13,6 +13,8 @@ const baseSchema = ({ image }: SchemaContext) =>
 
     isPost: z.literal(true).optional(),
 
+    isProject: z.literal(true).optional(),
+
     // Transform string to Date object
     pubDate: z.coerce.date(),
 
@@ -45,6 +47,11 @@ const postsSchema = ({ image }: SchemaContext) =>
     title: z.string()
   });
 
+const projectsSchema = ({ image }: SchemaContext) =>
+  postsSchema({ image }).extend({
+    projectDates: z.array(z.string()).optional()
+  });
+
 // shorter form ephemeral notes
 const notes = defineCollection({
   loader: glob({ base: './content/notes', pattern: '**/*.{md,mdx}' }),
@@ -57,4 +64,9 @@ const posts = defineCollection({
   schema: postsSchema
 });
 
-export const collections = { notes, posts };
+const projects = defineCollection({
+  loader: glob({ base: './content/projects', pattern: '**/*.{md,mdx}' }),
+  schema: projectsSchema
+});
+
+export const collections = { notes, posts, projects };

@@ -1,0 +1,44 @@
+---
+title: Toothspace
+summary: Reactive Bluetooth based proximity platform
+projectDates: ['2004', '2005']
+tags: [ 'Location Based', bluetooth ]
+pubDate: 2025-05-22
+---
+
+Toothspace was a location based device which was able to track and react to bluetooth
+devices.
+
+The original concept was created in response to a competition entry. It detailed a reactive 
+space which would reflect the inhabitants personalities based on their phone.
+
+The system was developed soon after which allowed passing bluetooth devices 
+to be tracked, make a good guess at determining the handset type, and to send messages or 
+images to it. 
+
+Unsurprisingly, this got a good response from marketing firms that we demonstrated it to, 
+and we engaged in many on-site trials of the system.
+
+![Toothspace Wall](file:///media/toothspace.jpg)
+
+A successful example was when it was commissioned for a launch party. A whiteboard style 
+space was projected onto a wall, and participants could send images to the wall to display 
+to all.
+
+The intention was to productise the hardware and software into a router sized box which could 
+then be used by customers, linked to a server and control panel, to control their campaigns.
+
+
+## Tech Stack
+
+The core of the system was a C++ application which would interface with Linux’s bluetooth 
+stack and control querying and establishment of connections.
+
+A javascript runtime was embedded which allowed applications to be defined with differing 
+behaviours.
+
+For different demos, various interactive front-ends were built, communicating with the core 
+system using a text based protocol. Typically these would display the names of the devices 
+detected.
+
+

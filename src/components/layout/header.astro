@@ -1,8 +1,4 @@
 ---
-import { Bluesky } from '@components/social/bluesky';
-import { Github } from '@components/social/github';
-import { LinkedIn } from '@components/social/linkedin';
-import { Twitter } from '@components/social/twitter';
 import { ThemeButton } from '@components/theme/theme-button';
 import { SITE_TITLE } from '@constants';
 
@@ -20,6 +16,7 @@ const isDev = import.meta.env.DEV;
       <HeaderLink href="/">Home</HeaderLink>
       <HeaderLink href="/blog">Blog</HeaderLink>
       <HeaderLink href="/posts">Posts</HeaderLink>
+      <HeaderLink href="/projects">Work</HeaderLink>
       <HeaderLink href="/about">About</HeaderLink>
       {isDev && <HeaderLink href="/admin">Admin</HeaderLink>}
     </div>

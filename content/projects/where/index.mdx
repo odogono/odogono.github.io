@@ -1,0 +1,52 @@
+---
+title: Where Traveler Mobile
+summary: city guides for ios
+projectDates: ['2011', '2018']
+tags: [ 'iOS', 'node.js', 'Backbone.js', 'MongoDB' ]
+client: Now2Now Ltd, London, UK
+pubDate: 2025-05-22
+---
+
+import AppImage from '/components/img_open';
+
+Where Traveler is an American based publisher of travel guides. We implemented a mobile version 
+of their city guides based on, and using content from, the existing web site.
+
+The app allowed users to browse listings for various Points of Interest such as restaurants and 
+museums. Results could be ordered by proximity to the device, filtered by category, and then 
+saved as bookmarks against the users profile.
+
+Initially two cities - London and Paris - were offered as separate apps. Eventually, the ability 
+to download different cities into the app was added, and the number of cities was expanded to 
+over 100.
+
+<div className="app-screens">
+<AppImage className="app-screen" src="/media/where/where-1" alt="App Screen" />
+<AppImage className="app-screen" src="/media/where/where-2" alt="App Screen" />
+</div>
+
+## My Role
+
+I developed a CMS to support importing the data straight from the publishers feeds, and to 
+perform editing and filtering. Once ready, functionality for publishing the data to the app 
+made the entire process controllable by the client.
+
+
+## Tech Stack
+
+I developed the iOS app in ObjectiveC.
+
+The package server was responsible for serving the city content to the app. A versioning 
+system based on Git was developed to enable partial updates to be served, saving the amount 
+of data the app would download considerably.
+
+The CMS was a javascript Single Page App developed using BackboneJS, hosted by an 
+Express/NodeJS server. 
+
+As well as performing CRUD for the web app, the NodeJS server also interfaced with the 
+publishers CMS, downloading and parsing the content. The import process had to deal with 
+print quality sized images, which were queued and resized to a more app friendly format.
+
+Initially MongoDB was used as the primary database. This was replaced by Sqlite and Ecset 
+acting as the ORM.
+

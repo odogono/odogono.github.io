@@ -1,0 +1,52 @@
+---
+title: Zentrack
+summary: workforce management app
+projectDates: ['2016-05-01', '2020-12-30']
+tags: [ "iOS", "Android", "React Native", "node.js" ]
+client: ISB Ltd, Reigate, UK
+pubDate: 2025-05-22
+---
+
+import AppImage from '/components/img_open';
+
+
+The Zentrack system is a workforce management tool designed for businesses to track, control, 
+and report on their various workflows.
+
+The App offers a focussed, work ready, view for a given users assigned jobs and workflows, 
+allowing them to view and respond to upcoming events, and complete assessment forms which 
+are then submitted to the main system.
+
+Much like the systems CMS, the app was designed to be white-labelled, allowing the appearance 
+and behaviour to be modified for a given company.
+
+
+<div className="app-screens">
+<AppImage className="app-screen" src="/media/zentrack/app-1.png" alt="App Screen" />
+<AppImage className="app-screen" src="/media/zentrack/app-2.png" alt="App Screen" />
+<AppImage className="app-screen" src="/media/zentrack/app-3.png" alt="App Screen" />
+<AppImage className="app-screen" src="/media/zentrack/app-4.jpg" alt="App Screen" />
+</div>
+
+## My Role
+
+I implemented apps for iOS, Android, and web. The functionality centred around forms and the 
+entry of different types of information using various control types.
+
+Because the app was expected to function in areas where connectivity could be poor, it was 
+designed to be offline-first, and would submit jobs and forms when a network connection became 
+available.
+
+Sitting in-between the system and the apps, I developed a proxy server which condensed and 
+collated various data into a mobile sensitive format. It also handled incoming notifications 
+from the main system and forwarded them on to the relevant push systems for each OS.
+
+
+## Tech Stack
+
+The app was implemented using React Native, with the web version using React, but sharing a 
+lot of the non-presentational code.
+
+The server was written in NodeJS and also shared the same (Redux based) data model with 
+the app.
+

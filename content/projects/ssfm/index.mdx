@@ -1,0 +1,89 @@
+---
+title: Sky Sports Football Manager
+summary:  A massively multiplayer online football management sim
+projectDates: ['1999', '2002']
+tags: [  Java, MMPOG ]
+company: HotGen Studios Ltd, Croydon, UK
+pubDate: 2025-05-22
+---
+
+
+SSFM was a massively multiplayer football management game. 
+Players could choose a club to manage in one of several ‘worlds’ competing against others to win the 
+leagues and cups, and the chance to be promoted into silver and gold worlds. 
+
+Using a Windows PC client, players would connect to the servers to perform typical manager tasks 
+with their teams in preparation for matches. The Matches themselves were played in (sped-up) 
+realtime, scheduled for specific times of the day.
+
+To support large numbers of players, the concept of ‘worlds’ was used. This is similar to 
+how ‘shards’ work in other multiplayer games. A Meta-Game interface would allow the player 
+to choose a world to inhabit based on the availability of a team and the number of players in that world.
+
+A companion web site supported the game with forums and the ability to view the state of worlds.
+
+![You'll never play alone](file:///media/ssfm)
+
+
+## My Role
+
+As the lead online developer, my primary role was to develop the meta-game and support services. 
+This put me right in the centre of the development, and so worked with the design team from an 
+early stage as well as the other technical teams in order to get everything talking well.
+
+I was also involved with the selection of server hardware (Sun, later linux) to run the system, and 
+then in the lead-up to launch with the deployment and management.
+
+## Tech Stack
+
+The technology evolved from the previous [DOTN]('./dotn') project, which was Java based, 
+albeit a single running executable. 
+
+Because certain parts were written in different languages, 
+this led to employing what would now be considered a 
+[Microservices](https://martinfowler.com/articles/microservices.html) based approach. 
+Distinct processes were used for the game engine, authentication, and load balancing. 
+These were tied together using the Meta-game service which would ‘orchestrate’ the game engine 
+processes and work with the database.
+
+A benefit of this approach was being able to scale easily
+across multiple servers. The system in production used 4 servers - one for database (SQL Server), 
+two for game servers, and one for the website.
+
+
+The game engine was licensed from a 3rd party and was C++ based. Around this the team developed a 
+wrapper which would allow network communication.
+
+A ‘switching server’ was developed in C++ which allowed incoming packets from the client to be 
+directed to either the meta-game service or the game engine. It authenticated users with a separate 
+authentication service (Java).
+
+The Meta-game service was written in Java. It handled incoming commands from the client, match 
+result data from the game engine, the launching of game engine processes, marshalling of data to and 
+from the database, and a sort of peer to peer communication with other Meta-game services.
+
+Other Java based services were written to handle authentication (with the database), and also 
+load balancing and redirection.
+
+
+
+## What I learnt
+
+The scale of the project was an order of magnitude greater than my previous. The team was larger, 
+and I had some management responsibilities for other technical members. 
+
+The architecture of the system (the meta-game concept) was largely my contribution, although 
+it was with the benefit of a great team of smart people that it came to fruition.
+
+Despite being a long time fan of football management games, I largely had (and still have), an 
+indifference to football as a sport. The passion and tribal nature of football gave a couple 
+of headaches.
+My favourite was the ‘Man Utd’ problem - every player wants to manage their own team and we, as 
+a service they pay for, should be able to offer them want they want. This however would lead to 
+the problem of having a great number of worlds with only a single human player. Not great for 
+them, and not great for us in terms of cost. 
+Early design meetings would present this as an insurmountable problem. In the end, it turned out 
+that players would be more than willing to accept managing lesser teams, providing they had the 
+opportunity at some point to move up.
+
+

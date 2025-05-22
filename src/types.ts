@@ -1,13 +1,16 @@
 import type { CollectionEntry } from 'astro:content';
 
-export type PostEntry = CollectionEntry<'posts'> & {
+interface EntryProps {
   url: string;
-};
-export type NoteEntry = CollectionEntry<'notes'> & {
-  url: string;
-};
+}
 
-export type Entry = NoteEntry | PostEntry;
+export type EntryTypes = 'posts' | 'notes' | 'projects';
+
+export type PostEntry = CollectionEntry<'posts'> & EntryProps;
+export type NoteEntry = CollectionEntry<'notes'> & EntryProps;
+export type ProjectEntry = CollectionEntry<'projects'> & EntryProps;
+
+export type Entry = NoteEntry | PostEntry | ProjectEntry;
 
 export interface PostImage {
   format: 'png' | 'jpg' | 'jpeg' | 'tiff' | 'webp' | 'gif' | 'svg' | 'avif';
@@ -17,6 +20,15 @@ export interface PostImage {
 }
 
 export interface PostSummary {
+  description?: string;
+  heroImage: PostImage | string;
+  pubDate: Date;
+  tags?: string[];
+  title: string;
+  url: string;
+}
+
+export interface ProjectSummary {
   description?: string;
   heroImage: PostImage | string;
   pubDate: Date;
