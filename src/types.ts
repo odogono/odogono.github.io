@@ -23,7 +23,7 @@ export interface PostSummary {
   description?: string;
   heroImage: PostImage | string;
   pubDate: Date;
-  tags?: string[];
+  tags?: Tag[];
   title: string;
   url: string;
 }
@@ -32,7 +32,7 @@ export interface ProjectSummary {
   description?: string;
   heroImage: PostImage | string;
   pubDate: Date;
-  tags?: string[];
+  tags?: Tag[];
   title: string;
   url: string;
 }
@@ -43,8 +43,13 @@ export interface DateEntry {
 
 export type NotesPageEntry = DateEntry | Entry;
 
+export interface Tag {
+  slug: string;
+  title: string;
+}
+
 export interface TagSummary {
   count: number;
   href: string;
-  tag: string;
+  tag: Tag;
 }

@@ -12,6 +12,7 @@ import type {
   PostSummary,
   ProjectEntry,
   ProjectSummary,
+  Tag,
   TagSummary
 } from '@types';
 
@@ -181,35 +182,40 @@ export const getTagsSummaries = async (): Promise<TagSummary[]> => {
 
   const tagsCount = tags.reduce(
     (acc, tag) => {
-      acc[tag] = acc[tag] || 0;
-      acc[tag]++;
+      acc[tag.slug] = acc[tag.slug] ?? {
+        count: 0,
+        href: `/tags/${tag.slug}/`,
+        tag
+      };
+      acc[tag.slug].count++;
       return acc;
     },
-    {} as Record<string, number>
+    {} as Record<string, TagSummary>
   );
 
   const tagsSorted = Object.entries(tagsCount).sort((a, b) =>
     a[0].toLowerCase().localeCompare(b[0].toLowerCase())
   );
 
-  // log.debug('[getTagsSummaries] tags', posts.length, tagsSorted);
-
-  return tagsSorted.map(([tag, count]) => ({
-    count,
-    href: `/tags/${tag}/`,
-    tag
-  }));
+  return tagsSorted.map(([_, tag]) => tag);
 };
 
-export const getPostsTags = async (): Promise<string[]> => {
+export const getPostsTags = async (): Promise<Tag[]> => {
   const entries = await getPublishedContent(true);
 
   const tags = entries.flatMap(entry => entry.data.tags ?? []);
-  return [...new Set(tags)];
+  const seen = new Set();
+  return tags.filter(item => {
+    const slug = item.slug;
+    return seen.has(slug) ? false : (seen.add(slug), true);
+  });
 };
 
-export const filterEntriesByTag = (entries: Entry[], tag: string): Entry[] =>
-  entries.filter(entry => entry.data.tags?.includes(tag));
+export const filterEntriesByTagSlug = (
+  entries: Entry[],
+  slug: string
+): Entry[] =>
+  entries.filter(entry => entry.data.tags?.some(tag => tag.slug === slug));
 
 export const getNoteUrl = (note: NoteEntry) => {
   const { pubDate, title } = note.data;

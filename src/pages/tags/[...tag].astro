@@ -3,7 +3,7 @@ import '@styles/global.css';
 
 import {
   applyDateEntries,
-  filterEntriesByTag,
+  filterEntriesByTagSlug,
   getPostsTags,
   getPublishedContent
 } from '@/helpers/astro';
@@ -17,13 +17,13 @@ export const getStaticPaths = async () => {
   const tags = await getPostsTags();
 
   return tags.map(tag => ({
-    params: { tag },
+    params: { tag: tag.slug },
     props: tag
   }));
 };
 
 const entries = await getPublishedContent(true);
-const entriesWithTag = filterEntriesByTag(entries, Astro.params.tag);
+const entriesWithTag = filterEntriesByTagSlug(entries, Astro.params.tag);
 
 // log.debug('entriesWithTag', entriesWithTag);
 

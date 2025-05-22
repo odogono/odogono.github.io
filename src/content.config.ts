@@ -1,6 +1,9 @@
 import { glob } from 'astro/loaders';
 import { defineCollection, z, type SchemaContext } from 'astro:content';
 
+import { slugify } from '@helpers/string';
+import type { Tag } from '@types';
+
 // Base schema with shared attributes
 const baseSchema = ({ image }: SchemaContext) =>
   z.object({
@@ -21,7 +24,18 @@ const baseSchema = ({ image }: SchemaContext) =>
     // by default the title is used to produce a slug for
     // the post url, but it can be overriden with a custom slug
     slug: z.string().optional(),
-    tags: z.array(z.string()).optional(),
+    tags: z
+      .array(z.string())
+      .optional()
+      .transform(tags =>
+        tags?.map(
+          tag =>
+            ({
+              slug: slugify(tag),
+              title: tag
+            }) as Tag
+        )
+      ),
 
     updatedDate: z.coerce.date().optional()
   });
