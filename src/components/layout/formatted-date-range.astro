@@ -6,14 +6,27 @@ interface Props {
 }
 
 const { dates } = Astro.props;
+
+const [ start, end ] = dates;
+
+const startYear = start.getFullYear();
+
+const endLabel = isToday(end) ? '' : end.getFullYear();
+
+const isSameYear = startYear === end.getFullYear() && !isToday(end);
+
 ---
 
 <>
-  <time datetime={dates[0].toISOString()}>
-    {dates[0].getFullYear()}
+  <time datetime={start.toISOString()}>
+    {startYear}
   </time>
-  -
-  <time datetime={dates[1].toISOString()}>
-    {isToday(dates[1]) ? '' : dates[1].getFullYear()}
+  {!isSameYear && (
+    <>
+      -
+    </>
+  <time datetime={end.toISOString()}>
+    {isToday(end) ? '' : end.getFullYear()}
   </time>
+    )}
 </>
