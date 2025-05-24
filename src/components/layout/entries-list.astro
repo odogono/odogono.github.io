@@ -22,12 +22,12 @@ interface Props {
 const { entries } = Astro.props;
 ---
 
-<ul class="space-y-12 [&>article]:pb-12">
+<ul class="space-y-12 [&>article]:mb-32 [&>.post-summary]:mb-32">
   {
     entries.map(entry => {
       if (isDateEntry(entry)) {
         return (
-          <div class="date text-lg font-bold mb-4 ml-[-2rem]">
+          <div class="date text-lg font-bold mb-4">
             {toShortDate(entry.date)}
           </div>
         );

@@ -1,0 +1,62 @@
+---
+title: 'Mapping GPS data to roads'
+pubDate: 'May 24 2025'
+isDraft: false
+weather: '11°C Cloudy'
+location: '50.79°N, 3.65°W'
+tags: ['strix', 'geo']
+description: 'Mapping GPS data to roads'
+---
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+import imageRoads from './img/road-segments.png';
+import { RouteMap } from '@components/route-map';
+
+As part of my ongoing work on [Strix](/projects/strix), I've been working on a way to map GPS data to roads.
+
+GPS data is what you get back from the Location APIs on your phone. It is a list of latitude and longitude coordinates, along with a timestamp and sometimes other bits of metadata like speed and altitude.
+
+Accuracy isn't always guaranteed. Lots of things can affect it. As a result, the data can be somewhat noisy.
+
+For the majority of uses, this is fine - showing an approximate path on a map is good enough. Strava and plenty of other apps do this.
+
+But for Strix, I am very much interested in what roads have been walked on. Therefore, I undertook to figure out how do to this.
+
+I assume this is already a well studied problem in the GIS world. But my requirements were that I needed to do this in a typescript environment. And I though it would be fun to do this myself.
+
+
+
+## Some definitions
+
+I'll start by defining what data I have to work with.
+
+First of all is the GPS data. Represented in GeoJSON as a LineString - a joined list of Lon/Lat points.
+
+Next is the road data. I source all of this from the [OpenStreetMap](https://www.openstreetmap.org/) project. 
+Roads (or paths) are also represented as LineStrings. But they are split into segments. So that when a road meets another road, you get a junction.
+
+You can see this in the image below. Two roads, split into segments where other roads meet.
+
+<Image src={imageRoads} alt="road segments" width={640} height={300} fit="cover" />
+<br/>
+<br/>
+
+So the function we are after is:
+
+GPS LineString + Road data = Mapped GPS LineString
+
+
+
+
+## First scenario
+
+
+Let's start with an easy one. A simple road - just two points. 
+
+<RouteMap scenarioId="scenario-one" client:only="react" />
+
+
+
+
+
+

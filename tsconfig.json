@@ -40,6 +40,9 @@
       "@pages/*": [
         "./src/pages/*"
       ],
+      "@route-map/*": [
+        "./src/components/route-map/*"
+      ],
       "@types": [
         "./src/types.ts"
       ],
