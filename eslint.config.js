@@ -4,7 +4,7 @@ import nkzw from '@nkzw/eslint-config';
 
 export default [
   {
-    ignores: ['**/dist/*', 'src/components/ui/*']
+    ignores: ['**/dist/*', '.astro/*', 'src/components/ui/*']
   },
   ...nkzw,
   {
@@ -22,7 +22,7 @@ export default [
     settings: {
       'import/resolver': {
         typescript: {
-          project: resolve(process.cwd(), './tsconfig.app.json')
+          project: resolve(process.cwd(), './tsconfig.json')
         }
       }
     }
