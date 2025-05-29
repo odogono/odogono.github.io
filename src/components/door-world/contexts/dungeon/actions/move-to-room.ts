@@ -27,7 +27,7 @@ import {
 } from './room-history';
 import { setDungeonVisibleAtom } from './set-visible';
 
-const log = createLog('moveToRoomAtom');
+const log = createLog('moveToRoomAtom', ['debug']);
 
 interface MoveToRoomProps {
   doorAction: (doorId: string, open: boolean) => Promise<boolean>;

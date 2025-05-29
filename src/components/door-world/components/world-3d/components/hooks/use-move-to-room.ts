@@ -11,7 +11,7 @@ import { dungeonPositionToVector3 } from '../helpers';
 import type { IsometricCameraMoveToProps } from '../isometric-camera';
 import type { RoomRef } from '../room';
 
-const log = createLog('useMoveToRoom');
+const log = createLog('useMoveToRoom', ['debug']);
 
 interface UseMoveToRoomProps {
   moveCameraTo: (props: IsometricCameraMoveToProps) => Promise<void>;

@@ -83,6 +83,7 @@ export const Door = ({
   }));
 
   const [mountingSpring, mountingApi] = useSpring(() => ({
+    opacity: isMounted.current ? 1 : 0,
     position: [position.x, isMounted.current ? 0 : -1.1, position.z]
   }));
 
@@ -95,16 +96,17 @@ export const Door = ({
         }
 
         const targetY = isMounted.current ? -1.1 : 0;
+        const targetOpacity = isMounted.current ? 0 : 1;
 
         const duration = enter ? mountDuration : mountDuration / 2;
 
-        // isMounting.current = true;
         mountingApi.start({
           config: { duration, easing: easings.easeInOutSine },
           onRest: () => {
             isMounted.current = enter;
             resolve(isMounted.current);
           },
+          opacity: targetOpacity,
           position: [position.x, targetY, position.z]
         });
       }),
@@ -183,10 +185,19 @@ export const Door = ({
   return (
     <animated.group position={mountingSpring.position}>
       <group position={[0, 0.5, 0]} rotation={[0, rotationY, 0]} scale={scale}>
-        {frameObject && <primitive dispose={null} object={frameObject} />}
+        {frameObject && (
+          <animated.primitive
+            dispose={null}
+            material-opacity={mountingSpring.opacity}
+            material-transparent={true}
+            object={frameObject}
+          />
+        )}
         {doorObject && (
           <animated.primitive
             dispose={null}
+            material-opacity={mountingSpring.opacity}
+            material-transparent={true}
             object={doorObject}
             rotation={openDoorSpring.rotation}
           />

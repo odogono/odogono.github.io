@@ -8,7 +8,8 @@ import { FloorType, type Room as RoomModel } from '@door-world/model/dungeon';
 import {
   darkenColor,
   getComputedColor,
-  getContrastColor
+  getContrastColor,
+  lightenColor
 } from '@helpers/colour';
 import { createLog } from '@helpers/log';
 import { animated } from '@react-spring/three';
@@ -86,8 +87,6 @@ export const Room = ({
       -0.001,
       y * SCALE + (height * SCALE) / 2
     );
-
-    // return new Vector3(room.area.x, 0, room.area.y);
   }, [room]);
 
   const handleTouch = (event: ThreeEvent<MouseEvent>) => {
@@ -151,9 +150,13 @@ const useRoomColors = (room: RoomModel | undefined) => {
     if (floorType === FloorType.TRANSPARENT) {
       return getComputedColor('--background');
     }
-    const baseColor = theme === 'dark' ? '#e0e0e0' : '#8A8782';
+    const baseColor = theme === 'dark' ? '#e0e0e0' : '#d6d5d3';
     const depth = roomDepth || 0;
     const colourIncrement = 1 / maxDepth;
+
+    if (theme === 'light') {
+      return lightenColor(baseColor, depth * colourIncrement);
+    }
     return darkenColor(baseColor, depth * colourIncrement);
   }, [floorType, roomDepth, maxDepth, theme]);
 
