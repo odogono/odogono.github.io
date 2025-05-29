@@ -18,6 +18,8 @@ import type {
 
 import { isDate, isSameDay } from './date';
 
+const isDev = import.meta.env.DEV;
+
 const log = createLog('helpers/astro');
 
 export const isPostEntry = (entry: Entry): entry is PostEntry =>
@@ -34,10 +36,12 @@ export const isDateEntry = (entry: object): entry is DateEntry =>
 
 export const getEntries = async (collection: EntryTypes): Promise<Entry[]> => {
   const entries: Entry[] = await getCollection(collection);
-  return entries.map(entry => {
-    entry.url = getEntryUrl(entry);
-    return entry;
-  });
+  return entries
+    .map(entry => {
+      entry.url = getEntryUrl(entry);
+      return entry;
+    })
+    .map(entry => applyDraftTag(entry));
 };
 
 export const getNotes = async (): Promise<NoteEntry[]> =>
@@ -56,8 +60,32 @@ export const getAllEntries = async (): Promise<Entry[]> => {
   return [...notes, ...posts];
 };
 
+export const applyDraftTag = (entry: Entry): Entry => {
+  if (!isDev) {
+    return entry;
+  }
+
+  if (!entry.data.isDraft) {
+    return entry;
+  }
+
+  // if the entry already has a draft tag, don't add another one
+  if (entry.data.tags?.some(tag => tag.slug === 'draft')) {
+    return entry;
+  }
+
+  // otherwise, add a draft tag
+  return {
+    ...entry,
+    data: {
+      ...entry.data,
+      tags: [...(entry.data.tags || []), { slug: 'draft', title: 'draft' }]
+    }
+  } as Entry;
+};
+
 export const filterPublishedEntries = <T extends Entry>(entries: T[]): T[] =>
-  entries.filter(entry => !entry.data.isDraft);
+  entries.filter(entry => (isDev ? true : !entry.data.isDraft));
 
 export const getPublishedNotes = async (): Promise<NoteEntry[]> =>
   getNotes().then(notes => filterPublishedEntries(notes));
@@ -87,15 +115,17 @@ export const getCollectionFromEntry = (entry: Entry) => {
 export const getPublishedPosts = async (
   includeNotes = false
 ): Promise<PostEntry[]> =>
-  (await getPosts())
-    .filter(post => !post.data.isDraft)
-    .filter(post => {
-      if (post.data.isNote && !includeNotes) {
-        return false;
-      }
+  getPosts()
+    .then(posts => filterPublishedEntries(posts))
+    .then(posts =>
+      posts.filter(post => {
+        if (post.data.isNote && !includeNotes) {
+          return false;
+        }
 
-      return true;
-    });
+        return true;
+      })
+    );
 
 export const sortEntriesByDate = <T extends Entry>(entries: T[]): T[] =>
   entries.toSorted(
@@ -168,10 +198,12 @@ export const getProjectsSummary = (
 export const getPostsSummary = (posts: PostEntry[]): PostSummary[] =>
   posts.map(post => {
     const { data, url } = post;
-    const { description, heroImage, pubDate, tags, title } = data;
+    const { description, heroImage, isDraft, pubDate, tags, title } = data;
+
     return {
       description,
       heroImage: heroImage || '/posts/placeholder-1.jpg',
+      isDraft: isDraft ?? false,
       pubDate,
       tags,
       title,

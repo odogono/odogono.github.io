@@ -22,6 +22,7 @@ export interface PostImage {
 export interface PostSummary {
   description?: string;
   heroImage: PostImage | string;
+  isDraft?: boolean;
   pubDate: Date;
   tags?: Tag[];
   title: string;
