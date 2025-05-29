@@ -14,3 +14,5 @@ Why? Hugo is great at what it does, but one thing I found lacking was the abilit
 
 The conversion hasn't been that straightforward. Astro is no-where near as batteries included as Hugo.
 
+Tags? Had to roll that myself. Pagination? Not quite implemented yet, but again custom code.
+

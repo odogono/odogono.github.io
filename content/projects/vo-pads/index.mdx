@@ -14,21 +14,34 @@ heroImage: ./img/title.png
 
 Each of the sixteen pads on screen can be assigned either a YouTube video, or a local mp4 file.
 
+Once a video source is assigned to a pad, it's start time and duration can be adjusted. Further controls allow the speed and volume to be adjusted.
+
+A pad can be set to loop, play once, or play only when the pad is held down.
+
+Pads may be triggered by tapping with a pointer, via keyboard, or with incoming MIDI messages.
+
+It features two types of sequencer - a step sequencer (like a drum machine) and a linear sequencer (like a traditional video editor).
+
 Projects can be shared by copying a URL link, which contains the entire project data.
-
-This means that nothing is stored on the server, it is all local to the browser.
-
-
-
 
 
 
 ## Tech Stack
 
-When I first started thinking about this project, it was originally going to be a native mobile app.
+VO Pads is a fairly typical SPA - [React](https://react.dev/), [Typescript](https://www.typescriptlang.org/), and [Tailwind](https://tailwindcss.com/).
 
 
-React, NextJS, Typescript, Tailwind
+One of my aims was to avoid any kind of server requirement. 
+
+Because the entire state of a project can be stored in the URL, I can avoid server side databases. Collections of projects can be published to social media, or even regular html pages.
+
+The one part where this fell down was generating the social media thumbnail for a given project. This has to be done on the server.
+
+I began playing around with CloudFlare workers to fulfill this function, and while this worked, the free tier was a bit too limiting.
+
+So instead, I used NextJS's ability to handle server side rendering.
+
+
 
 
 
