@@ -1,7 +1,7 @@
 ---
 title: 'Mapping GPS data to roads'
 pubDate: 'May 24 2025'
-isDraft: false
+isDraft: true
 weather: '11°C Cloudy'
 location: '50.79°N, 3.65°W'
 tags: ['strix', 'geo']
@@ -53,10 +53,17 @@ GPS LineString + Road data = Mapped GPS LineString
 
 Let's start with an easy one. A simple road - just two points. 
 
-<RouteMap scenarioId="scenario-one" client:only="react" />
+<RouteMap scenarioId="scenario-one" client:only="react" height={500}  />
+
+
+Nothing complex here. Mapping the points on to the road, and then using the first and last points for the basis of the result.
 
 
 
+## Second scenario
+
+
+<RouteMap scenarioId="scenario-two" client:only="react" height={300} />
 
 
 

@@ -95,3 +95,7 @@ site = "https://simonwillison.net/"
 [petafloptimism]
 author = "Matt Jones"
 site = "https://petafloptimism.com/"
+
+[slab]
+author = "Alex McLean"
+site = "https://slab.org/"
