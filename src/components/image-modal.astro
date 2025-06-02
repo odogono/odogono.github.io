@@ -9,9 +9,10 @@ interface Props {
   width?: number;
   height?: number;
   fit?: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+  class?: string;
 }
 
-const { src, alt, width, height, fit } = Astro.props;
+const { src, alt, width, height, fit, class: className } = Astro.props;
 ---
 
 <ImageDialog src={src.src} alt={alt} client:load>
@@ -21,6 +22,6 @@ const { src, alt, width, height, fit } = Astro.props;
     width={width}
     height={height}
     fit={fit}
-    class="transition-transform duration-200 ease-in-out hover:scale-102"
+    class={`transition-transform duration-200 ease-in-out hover:scale-102 ${className}`}
   />
 </ImageDialog>

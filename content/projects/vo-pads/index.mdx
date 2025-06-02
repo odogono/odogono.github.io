@@ -2,7 +2,7 @@
 title: VO Pads
 description: pad based video player
 projectDates: ['2024-12', '2025-03']
-tags: [ 'react', 'typescript', 'tailwind' ]
+tags: [ 'react', 'typescript', 'tailwind', 'vo-pads' ]
 client: me
 pubDate: 2025-05-22
 isDraft: false
@@ -11,6 +11,7 @@ heroImage: ./img/title.png
 
 import { Image } from 'astro:assets';
 import ImageModal from '@components/image-modal.astro';
+import { LinkPreview } from '@components/link-preview';
 
 import imageBarA from './img/vo-bar-a.jpg';
 import imageBarB from './img/vo-bar-b.jpg';
@@ -24,7 +25,7 @@ import imageBarD from './img/vo-bar-d.jpg';
 Each of the sixteen pads on screen can be assigned either a YouTube video, or a local mp4 file.
 
 
-<ImageModal src={imageBarA} alt="App Screen" width={800} height={200} fit="cover" />
+<ImageModal src={imageBarA} alt="App Screen" width={800} height={200} fit="cover" class="mb-8" />
 
 Once a video source is assigned to a pad, it's start time and duration can be adjusted. Further controls allow the speed and volume to be adjusted.
 
@@ -32,15 +33,14 @@ A pad can be set to loop, play once, or play only when the pad is held down.
 
 Pads may be triggered by tapping with a pointer, via keyboard, or with incoming MIDI messages.
 
-<ImageModal src={imageBarB} alt="App Screen" width={800} height={200} fit="cover" />
+<ImageModal src={imageBarB} alt="App Screen" width={800} height={200} fit="cover" class="mb-8" />
 
 It features two types of sequencer - a step sequencer (like a drum machine) and a linear sequencer (like a traditional video editor).
 
-<ImageModal src={imageBarC} alt="App Screen" width={800} height={200} fit="cover" />
+<ImageModal src={imageBarC} alt="App Screen" width={800} height={200} fit="cover" class="mb-8" />
 
 
 Projects can be shared by copying a URL link, which contains the entire project data.
-
 
 
 
@@ -60,6 +60,23 @@ I began playing around with CloudFlare workers to fulfill this function, and whi
 So instead, I used NextJS's ability to handle server side rendering.
 
 
-<ImageModal src={imageBarD} alt="App Screen" width={800} height={200} fit="cover" />
+<ImageModal src={imageBarD} alt="App Screen" width={800} height={200} fit="cover" class="mb-8" />
 
+
+
+
+## Examples
+
+<LinkPreview class="mb-8"
+  url="https://vo.odgn.net/player?p=f66d6b50d7&d=4%7CeJx1kVtvGjEQRv8Kjytta%2ByxPfaOlIemFBIkqoRbAvtQeVkgIdy0mEQbrfrbKxMQkUpefGZknxlZ3wwxx0zz3FQ3rsinxbfa9dT7wKbbHdjzxWY9nxa177WGm%2Fna3X79Uj15v91Rve6f1%2BW%2BWLLJZlXPcjdZ2VdbCSMTmSguQqmsRa2NrJxIM%2Bq1muW4NSzjHf0tyzL%2F3bR%2BP1wNYk%2FImYZwWoPxlgRxoshBmtH9asjzLyTBlDQBFvXZkmlG3VXz%2FSsLmFIywHJ1tlSa0UB2ywz0evx4e3XJlAwsBliAgymCqdOMhpCUDpb7C5aVTHITYASc92GaUf%2BhWbgHdWmXVQy4DDDcni0T%2FtZKttn86qKlGSgIQCnPlj3uGj92lp3F9XDydtlGBlwEoPy0MwkpQLIb9QZl51f7Nb%2Fp7sYf9dNo%2FfIxafbckMlio0cbFXviZJmQEC%2BJR07wT9m3%2B%2B1Gu3%2F7dor11J8CO%2FX%2FRTH%2FseiqPz%2Bzu%2B197Ak4U0YTgKyQpyLlKfLUiUgxAE0hYYwdRMhQY3gsYicjw7SRxJlEQZZp1Mc6YRrUsRacaXG8qMRhpgSDlhxEAqVV5GRkRQLkVKR4gv8AZvzyCw%3D%3D"
+  client:load
+/>
+
+
+
+<LinkPreview 
+class="mb-8"
+  url="https://vo.odgn.net/player?p=cf49b1cd03&d=4%7CeJx1kVtPwkAQhf9Ok4Zl75dJeCAoBhRDBdJqn3bbaIGC1RawpvG3mxLBmODjJHO%2BOedM8syNI0mKWTO1ycZum6yqihK63Wq5rXfvOUpeN91dpqti95w0RDHDDOGCNURxraUSWDWWxA7m4bBwy0U9uc72jpY9v4SvOp0lb3wqXra871fABTJSg8CISu7vAQNG1C8cEM%2FS2MFDOMSjoPePlEl9JAh1kkrPstjBgub1U8gvybREkmrQChnD%2FBzwj5Qzz%2FLYwSwU%2BCkaVza6%2F7Sh2V1AmPam1mAEQfT39tE3Rsp4VsQOAprtXdTPLgAERkYKEAwpJf6k9ot2AGiNeVa2Ddzk%2BbmBzsDV%2FTWbbc2ojSIQ5bKNQpQ5xVCeJccKboaruwXJjg8YZIFjaZ4sSWDDj3I8Hx3mYc5vT9z16voq6tCJCtZnBxUIiqhUQDn3LOFxu1hHj2kZrahLD34FhCMtgBjEmD5XSZrmG3qNpwc%3D"
+  client:load
+/>
 
