@@ -9,10 +9,22 @@ isDraft: false
 heroImage: ./img/title.png
 ---
 
+import { Image } from 'astro:assets';
+import ImageModal from '@components/image-modal.astro';
+
+import imageBarA from './img/vo-bar-a.jpg';
+import imageBarB from './img/vo-bar-b.jpg';
+import imageBarC from './img/vo-bar-c.jpg';
+import imageBarD from './img/vo-bar-d.jpg';
+
+
 
 [VO Pads](https://vo.odgn.net) is a web-based video player that lets you trigger and control video clips using a pad-based interface, keyboard, or MIDI controller.
 
 Each of the sixteen pads on screen can be assigned either a YouTube video, or a local mp4 file.
+
+
+<ImageModal src={imageBarA} alt="App Screen" width={800} height={200} fit="cover" />
 
 Once a video source is assigned to a pad, it's start time and duration can be adjusted. Further controls allow the speed and volume to be adjusted.
 
@@ -20,9 +32,15 @@ A pad can be set to loop, play once, or play only when the pad is held down.
 
 Pads may be triggered by tapping with a pointer, via keyboard, or with incoming MIDI messages.
 
+<ImageModal src={imageBarB} alt="App Screen" width={800} height={200} fit="cover" />
+
 It features two types of sequencer - a step sequencer (like a drum machine) and a linear sequencer (like a traditional video editor).
 
+<ImageModal src={imageBarC} alt="App Screen" width={800} height={200} fit="cover" />
+
+
 Projects can be shared by copying a URL link, which contains the entire project data.
+
 
 
 
@@ -42,6 +60,6 @@ I began playing around with CloudFlare workers to fulfill this function, and whi
 So instead, I used NextJS's ability to handle server side rendering.
 
 
-
+<ImageModal src={imageBarD} alt="App Screen" width={800} height={200} fit="cover" />
 
 
