@@ -6,55 +6,79 @@ import {
   type Ref
 } from 'react';
 
+import { createLog } from '@helpers/log';
 import { easings, useSpring } from '@react-spring/three';
 
 import type { EntityRef } from '../types';
 
+const log = createLog('useMounted');
+
+type TargetValueFn = (isMounted: boolean) => {
+  duration?: number;
+  opacity?: number;
+};
+
 export interface UseMountedProps {
-  mountDuration?: number;
+  initialValues?: TargetValueFn;
   mountOnEnter?: boolean;
   onMount?: () => Promise<boolean>;
   onUnmount?: () => Promise<boolean>;
   ref?: Ref<EntityRef>;
+  targetValues?: TargetValueFn;
 }
 
 export const useMounted = ({
-  mountDuration = 500,
+  initialValues,
   mountOnEnter = true,
   onMount,
   onUnmount,
-  ref
+  ref,
+  targetValues
 }: UseMountedProps) => {
   const isMounted = useRef(false);
+  const isMounting = useRef(false);
 
   const [springs, api] = useSpring(() => ({
-    opacity: isMounted.current ? 1 : 0
+    ...(initialValues?.(isMounted.current) ?? {})
   }));
+
+  const runCallback = useCallback(
+    (enter: boolean) => Promise.resolve(enter ? onMount?.() : onUnmount?.()),
+    [onMount, onUnmount]
+  );
 
   const startTransitionAnimation = useCallback(
     (enter: boolean) =>
       Promise.all([
-        enter ? onMount?.() : onUnmount?.(),
         new Promise<boolean>(resolve => {
           if (isMounted.current === enter) {
-            resolve(isMounted.current);
+            runCallback(enter).then(() => resolve(isMounted.current));
             return;
           }
 
-          const duration = enter ? mountDuration : mountDuration / 2;
+          if (isMounting.current) {
+            return;
+          }
+
+          isMounting.current = true;
+
+          const duration = targetValues?.(isMounted.current)?.duration ?? 500;
+          const values = targetValues?.(isMounted.current);
 
           api.start({
             config: { duration, easing: easings.easeInOutSine },
             onRest: async () => {
               isMounted.current = enter;
+              isMounting.current = false;
 
-              resolve(true);
+              runCallback(enter).then(() => resolve(enter));
             },
-            opacity: enter ? 1 : 0
+            ...values
+            // opacity
           });
         })
       ]).then(() => true),
-    [api, isMounted, mountDuration, onMount, onUnmount]
+    [api, isMounted, runCallback, targetValues]
   );
 
   useImperativeHandle(ref, () => ({
@@ -68,5 +92,5 @@ export const useMounted = ({
     }
   }, [startTransitionAnimation, mountOnEnter]);
 
-  return { isMounted, springs };
+  return { isMounted, springs, startTransitionAnimation };
 };

@@ -60,8 +60,11 @@ export const Room = ({
   });
 
   const { springs } = useMounted({
-    mountDuration,
+    initialValues: (isMounted: boolean) => ({
+      opacity: isMounted ? 1 : 0
+    }),
     onMount: async () => {
+      log.debug('Room mounted', room?.id);
       // Start the text cycling after initial mount
       runTextTransition();
 
@@ -73,7 +76,11 @@ export const Room = ({
       }
       return Promise.resolve(true);
     },
-    ref
+    ref,
+    targetValues: (isMounted: boolean) => ({
+      duration: isMounted ? mountDuration / 2 : mountDuration,
+      opacity: isMounted ? 0 : 1
+    })
   });
 
   const position = useMemo(() => {

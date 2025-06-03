@@ -57,11 +57,6 @@ export const useRoomText = ({ interval, room, textRef }: RoomTextProps) => {
         await textRef.current.unmount();
       }
 
-      // Update to next text index
-      // log.debug('Updating text index', {
-      //   currentTextIndex,
-      //   nextTextIndex: (currentTextIndex + 1) % textScript.length
-      // });
       setCurrentTextIndex(prev => (prev + 1) % textScript.length);
 
       // Mount new text
@@ -74,7 +69,14 @@ export const useRoomText = ({ interval, room, textRef }: RoomTextProps) => {
     };
 
     cycleText();
-  }, [room, isTransitioning, textRef, textScript, runTextTransition]);
+  }, [
+    room,
+    isTransitioning,
+    textRef,
+    textScript,
+    runTextTransition,
+    currentTextIndex
+  ]);
 
   return {
     runTextTransition,

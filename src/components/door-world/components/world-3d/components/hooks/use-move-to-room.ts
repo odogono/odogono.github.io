@@ -68,6 +68,11 @@ export const useMoveToRoom = ({ moveCameraTo }: UseMoveToRoomProps) => {
 
           const refs = doorIds.map(id => doorRefs.current.get(id)) as DoorRef[];
 
+          log.debug('[unmountRoomAction] Unmounting room', {
+            roomRef,
+            unmount: roomRef.unmount
+          });
+
           const unmountPromises = [
             timeoutPromise(roomRef.unmount(), 3000),
             ...refs.map(ref => ref.unmount())

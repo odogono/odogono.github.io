@@ -18,6 +18,7 @@ import { animated, easings, useSpring } from '@react-spring/three';
 import { useGLTF } from '@react-three/drei';
 import type { ThreeEvent } from '@react-three/fiber';
 
+import { useMounted } from './hooks/use-mounted';
 import type { EntityRef } from './types';
 
 interface DoorProps {
@@ -39,7 +40,6 @@ export type DoorRef = EntityRef & {
   open: () => Promise<boolean>;
   setOpen: (open: boolean) => Promise<boolean>;
   toggleOpen: () => Promise<boolean>;
-  unmount: () => Promise<boolean>;
 };
 
 const log = createLog('Door');
@@ -74,50 +74,23 @@ export const Door = ({
   );
 
   const isOpen = useRef(isOpenProp);
-  const isMounted = useRef(isMountedProp);
 
   const [openDoorSpring, openDoorApi] = useSpring(() => ({
-    // config: { duration: 16_000, easing: easings.easeInOutSine },
-    // config: { duration: 8000, friction: 14, tension: 120 },
     rotation: [0, isOpen.current ? Math.PI / 2 : 0, 0]
   }));
 
-  const [mountingSpring, mountingApi] = useSpring(() => ({
-    opacity: isMounted.current ? 1 : 0,
-    position: [position.x, isMounted.current ? 0 : -1.1, position.z]
-  }));
-
-  const startTransitionAnimation = useCallback(
-    (enter: boolean) =>
-      new Promise<boolean>(resolve => {
-        if (isMounted.current === enter) {
-          resolve(isMounted.current);
-          return;
-        }
-
-        const targetY = isMounted.current ? -1.1 : 0;
-        const targetOpacity = isMounted.current ? 0 : 1;
-
-        const duration = enter ? mountDuration : mountDuration / 2;
-
-        mountingApi.start({
-          config: { duration, easing: easings.easeInOutSine },
-          onRest: () => {
-            isMounted.current = enter;
-            resolve(isMounted.current);
-          },
-          opacity: targetOpacity,
-          position: [position.x, targetY, position.z]
-        });
-      }),
-    [mountDuration, position, mountingApi]
-  );
-
-  useEffect(() => {
-    if (!isMounted.current) {
-      startTransitionAnimation(true);
-    }
-  }, [startTransitionAnimation]);
+  const { springs: mountingSpring, startTransitionAnimation } = useMounted({
+    initialValues: (isMounted: boolean) => ({
+      opacity: isMounted ? 1 : 0,
+      position: [position.x, isMounted ? 0 : -1.1, position.z]
+    }),
+    ref,
+    targetValues: (isMounted: boolean) => ({
+      duration: isMounted ? mountDuration / 2 : mountDuration,
+      opacity: isMounted ? 0 : 1,
+      position: [position.x, isMounted ? -1.1 : 0, position.z]
+    })
+  });
 
   const startDoorAnimation = useCallback(
     (open: boolean) =>
@@ -145,6 +118,7 @@ export const Door = ({
 
   useImperativeHandle(ref, () => ({
     close: () => startDoorAnimation(false),
+    // annoying that the mount/unmount methods have to be redefined here
     mount: () => startTransitionAnimation(true),
     open: () => startDoorAnimation(true),
     setOpen: (isOpen: boolean) => startDoorAnimation(isOpen),

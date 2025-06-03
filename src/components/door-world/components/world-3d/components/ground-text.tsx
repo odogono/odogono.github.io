@@ -33,8 +33,14 @@ export const GroundText = ({
   text
 }: GroundTextProps) => {
   const { springs } = useMounted({
-    mountDuration,
-    ref
+    initialValues: (isMounted: boolean) => ({
+      opacity: isMounted ? 1 : 0
+    }),
+    ref,
+    targetValues: (isMounted: boolean) => ({
+      duration: isMounted ? mountDuration / 2 : mountDuration,
+      opacity: isMounted ? 0 : 1
+    })
   });
 
   const pos = useMemo(
@@ -44,23 +50,6 @@ export const GroundText = ({
         : position,
     [position]
   );
-  // const posRef = useRef(pos);
-
-  // const [opacity, setOpacity] = useState(0);
-  // const materialRef = useRef<MeshStandardMaterial>(null);
-
-  // useEffect(() => {
-  //   if (!posRef.current.equals(pos)) {
-  //     setOpacity(0);
-  //     posRef.current.copy(pos);
-  //   }
-  // }, [pos]);
-
-  // useFrame(() => {
-  //   if (opacity < 1) {
-  //     setOpacity(prev => Math.min(prev + onEnterSpeed, 1));
-  //   }
-  // });
 
   return (
     <Suspense fallback={null}>
