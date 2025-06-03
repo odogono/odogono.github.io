@@ -49,35 +49,33 @@ export const useMounted = ({
 
   const startTransitionAnimation = useCallback(
     (enter: boolean) =>
-      Promise.all([
-        new Promise<boolean>(resolve => {
-          if (isMounted.current === enter) {
-            runCallback(enter).then(() => resolve(isMounted.current));
-            return;
-          }
+      new Promise<boolean>(resolve => {
+        if (isMounted.current === enter) {
+          runCallback(enter).then(() => resolve(isMounted.current));
+          return;
+        }
 
-          if (isMounting.current) {
-            return;
-          }
+        if (isMounting.current) {
+          return;
+        }
 
-          isMounting.current = true;
+        isMounting.current = true;
 
-          const duration = targetValues?.(isMounted.current)?.duration ?? 500;
-          const values = targetValues?.(isMounted.current);
+        const duration = targetValues?.(isMounted.current)?.duration ?? 500;
+        const values = targetValues?.(isMounted.current);
 
-          api.start({
-            config: { duration, easing: easings.easeInOutSine },
-            onRest: async () => {
-              isMounted.current = enter;
-              isMounting.current = false;
+        api.start({
+          config: { duration, easing: easings.easeInOutSine },
+          onRest: async () => {
+            isMounted.current = enter;
+            isMounting.current = false;
 
-              runCallback(enter).then(() => resolve(enter));
-            },
-            ...values
-            // opacity
-          });
-        })
-      ]).then(() => true),
+            runCallback(enter).then(() => resolve(enter));
+          },
+          ...values
+          // opacity
+        });
+      }),
     [api, isMounted, runCallback, targetValues]
   );
 
