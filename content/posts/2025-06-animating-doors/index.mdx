@@ -1,0 +1,187 @@
+---
+title: 'Animating Doors'
+pubDate: 2025-06-03T15:18:00+01:00
+isDraft: true
+isPost: true
+weather: '14°C Drizzle'
+location: '50.79°N, 3.65°W'
+tags: ['react-three-fiber', 'react', 'jotai']
+description: 'Animating doors in a 3D dungeon'
+hidePageHeroImage: true
+heroImage: './img/doors.jpg'
+---
+
+
+import ImageModal from '@components/image-modal.astro';
+import imageAtoms from './img/atoms.svg';
+import imageMovie from './img/door.world.mp4';
+
+<video src={imageMovie} width={640} height={200} controls autoPlay loop muted style={{ objectFit: 'cover' }} />
+
+
+Door world sits happily on the front page of my site. It is a procedurally generated world of rooms and doors. And pretty much nothing else at the moment. Although I plan to add a lot more "furniture" in future.
+
+The only interactivity it has currently is being able to move from room to room. Not too complicated, but I am quite proud of how it animates. In this post, I am going to give an overview of how this part of the system functions - in particular, how the state and animation systems are tied together.
+
+To give a technical overview, it is a React Three Fiber app, using Jotai for state, and React-Spring for animation.
+
+
+## Animating in React
+
+React and animation can present challenges due to React's core principle: a function transforms data into a view \(Function(Data) = View\). This paradigm works well for static UIs. However, smooth animations often involve directly manipulating elements without altering the underlying data.
+
+In Door World, my data defines the geometry and properties of rooms and doors. The initial render creates a component tree analogous to a webpage, but using 3D elements like cameras, geometry, and materials instead of divs, images, and text.
+
+Animation occurs on two levels.
+
+To make a door appear or change colour (abruptly), I can change the Data to remove it from the React component tree, triggering a re-render.
+
+To animate a door opening or changing color (gradually), I directly modify the properties of the corresponding component. This avoids a full React re-render - which would be bad.
+
+In Door World, the first case is dealt with by the state management system i am using - Jotai.
+
+The second, fine grained animation, is handled by React Spring.
+
+
+
+## The animation
+
+Lets break down the animation. When a door is touched, the following happens:
+
+- the camera moves to the touched door
+- the door opens
+- the new room is brought into view
+- the camera moves into the centre of the new room
+- the opened door closes
+- the old room fades out from view
+
+
+This is what React (and React Three Fiber) are doing in this scenario:
+
+- handling user interaction
+- rendering the room component tree to screen
+- the infrastructure to create all of this - hooks, components, etc.
+
+This is what React Spring is handling:
+
+- camera movement
+- door opening and closing
+- room transitioning in and out of view
+
+And this is what Jotai brings to the party:
+
+- the world definition
+- where doors are positioned
+- whether doors are open or shut
+- how a door links from room to room
+- orchestrating the animation process
+
+
+
+Lets take a look at that last point, how Jotai orchestrates the animation.
+
+Jotai uses an atomic approach to state management. Each atom is contains a piece of data.
+
+You can also create derived atoms - read-only atoms, write-only atoms, and a mix of the two.
+
+
+This is a diagram of the atoms used
+
+<ImageModal src={imageAtoms} alt="Atoms" width={640} height={200} fit="cover" />
+
+
+
+
+Each entity (door, room, ...) is defined with the following super type:
+
+```typescript
+export interface EntityRef {
+  mount: () => Promise<boolean>;
+  unmount: () => Promise<boolean>;
+}
+```
+
+The functions, when called, animate the entity into the scene.
+
+In the case of a Door, it rises up from the ground when mounted, and sinks back down when unmounted.
+
+I structured the code so that the promise only fulfills when the animation is complete.
+
+
+
+
+
+It all starts here
+
+```
+const handleDoorTouch = useCallback(
+async (door: DoorModel) => {
+log.debug('Door clicked', door.id);
+
+  clearInactivityTimeout();
+
+  await moveThroughDoor(door.id);
+
+  resetInactivityTimeout();
+},
+[clearInactivityTimeout, moveThroughDoor, resetInactivityTimeout]
+);
+```
+
+moveThroughDoor
+
+moveToRoom is provided with three actions:
+
+- doorAction - takes a door id, finds the door component ref, then sets its open state
+- moveCameraAction - moves the camera to a specified position
+- unmountRoomAction - calls unmount on all the components in the room - doors and the room itself
+
+
+all of the behaviour is done within the moveToRoomAtom
+
+1. open the door and move the camera to the door
+
+- the current room id is fetched from the dungeonCurrentRoomAtom
+
+- the door (model) is fetched from the dungeonCurrentRoomAtom
+
+- the door is opened. two things happen at once here:
+  - moveCameraAction is called - this moves the camera to the door location
+  - the doorAction is called - this begins the door animation
+
+2. update the door status
+
+- once that is done, the state of the door is updated in the dungeon model (dungeonAtom)
+
+- the destination room is fetched with a combination of the current room and the door
+
+3. enter the target room
+
+- the camera is moved to the center of the target room
+- the state is updated so that this room now becomes the current
+
+4. close the door
+
+- doorAction is called, which animates the door closing
+- the door state is updated in the model
+
+5. unmount the old room
+
+- unmountRoomAction is called - this unmounts all the components in the room
+
+- the visible state of the previous room and doors is cleared with setDungeonVisibleAtom
+
+
+
+
+atoms used
+
+- dungeonCurrentRoomAtom - stores the id of the current room
+- dungeonAtom - stores the dungeon state object
+- setDungeonVisibleAtom - setter atom - updates:
+    - dungeonVisibleRoomsAtom - an array of Room ids which are visible
+    - dungeonVisibleDoorsAtom - an array of Door ids which are setDungeonVisibleAtom
+
+- hasVisitedRoomAtom - a getter atom which returns whether a given roomId has been hasVisitedRoomAtom
+- dungeonVisitedRoomsAtom - an array of room ids which have been visited
+- addVisitedRoomAtom - a setter atom which updates dungeonVisitedRoomsAtom and dungeonRoomHistoryAtom
