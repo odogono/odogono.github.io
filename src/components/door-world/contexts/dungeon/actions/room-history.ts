@@ -4,30 +4,30 @@ import type { Door, DungeonData, RoomId } from '@door-world/model/dungeon';
 import { prngIntRange } from '@helpers/random';
 
 import {
+  currentRoomAtom,
   dungeonAtom,
-  dungeonCurrentRoomAtom,
-  dungeonNextDoorAtom,
-  dungeonNextRoomAtom,
-  dungeonRoomHistoryAtom,
-  dungeonSeedAtom,
-  dungeonVisitedRoomsAtom
+  nextDoorAtom,
+  nextRoomAtom,
+  roomHistoryAtom,
+  seedAtom,
+  visitedRoomsAtom
 } from '../atoms';
 
 /**
  * Adds a room to the visited rooms list
  */
 export const addVisitedRoomAtom = atom(null, (get, set, roomId: RoomId) => {
-  const visitedRooms = get(dungeonVisitedRoomsAtom);
-  const roomHistory = get(dungeonRoomHistoryAtom);
+  const visitedRooms = get(visitedRoomsAtom);
+  const roomHistory = get(roomHistoryAtom);
 
   const newVisitedRooms = new Set([...visitedRooms, roomId]);
 
-  set(dungeonVisitedRoomsAtom, Array.from(newVisitedRooms));
-  set(dungeonRoomHistoryAtom, [...roomHistory, roomId]);
+  set(visitedRoomsAtom, Array.from(newVisitedRooms));
+  set(roomHistoryAtom, [...roomHistory, roomId]);
 });
 
 export const hasVisitedRoomAtom = atom(get => {
-  const visitedRooms = get(dungeonVisitedRoomsAtom);
+  const visitedRooms = get(visitedRoomsAtom);
 
   return (roomId: RoomId) => visitedRooms.includes(roomId);
 });
@@ -69,7 +69,7 @@ export const dungeonConnectedDoorsAtom = atom(get => {
  *
  */
 export const getUnvisitedRoomsAtom = atom(get => {
-  const visitedRooms = get(dungeonVisitedRoomsAtom);
+  const visitedRooms = get(visitedRoomsAtom);
   const getConnectedRooms = get(dungeonConnectedRoomsAtom);
 
   return (roomId: RoomId) => {
@@ -79,7 +79,7 @@ export const getUnvisitedRoomsAtom = atom(get => {
 });
 
 export const getUnvisitedDoorsAtom = atom(get => {
-  const visitedRooms = get(dungeonVisitedRoomsAtom);
+  const visitedRooms = get(visitedRoomsAtom);
   const getConnectedDoors = get(dungeonConnectedDoorsAtom);
 
   return (roomId: RoomId) => {
@@ -95,8 +95,8 @@ export const getUnvisitedDoorsAtom = atom(get => {
  * Calculates the connecting door id and room id of the next room to visit
  */
 export const applyNextRoomAtom = atom(null, (get, set) => {
-  const seed = get(dungeonSeedAtom);
-  const currentRoomId = get(dungeonCurrentRoomAtom);
+  const seed = get(seedAtom);
+  const currentRoomId = get(currentRoomAtom);
   // const unvisitedRooms = get(getUnvisitedRoomsAtom)(currentRoomId);
   const unvisitedDoors = get(getUnvisitedDoorsAtom)(currentRoomId);
 
@@ -107,18 +107,18 @@ export const applyNextRoomAtom = atom(null, (get, set) => {
       unvisitedDoors.length - 1
     );
     const nextDoor = unvisitedDoors[nextDoorIndex];
-    set(dungeonSeedAtom, nextSeed);
+    set(seedAtom, nextSeed);
     set(
-      dungeonNextRoomAtom,
+      nextRoomAtom,
       nextDoor.room1 === currentRoomId ? nextDoor.room2 : nextDoor.room1
     );
-    set(dungeonNextDoorAtom, nextDoor.id);
+    set(nextDoorAtom, nextDoor.id);
 
     return;
   }
 
   // no unvisited rooms, so we need to go back to the last room
-  const roomHistory = get(dungeonRoomHistoryAtom);
+  const roomHistory = get(roomHistoryAtom);
   const lastRoomId = roomHistory.at(-1);
 
   if (lastRoomId) {
@@ -128,15 +128,15 @@ export const applyNextRoomAtom = atom(null, (get, set) => {
     );
     if (lastDoor) {
       set(
-        dungeonNextRoomAtom,
+        nextRoomAtom,
         lastDoor.room1 === currentRoomId ? lastDoor.room2 : lastDoor.room1
       );
-      set(dungeonNextDoorAtom, lastDoor.id);
+      set(nextDoorAtom, lastDoor.id);
     }
     return;
   }
 
   // no next room found
-  set(dungeonNextDoorAtom, null);
-  set(dungeonNextRoomAtom, null);
+  set(nextDoorAtom, null);
+  set(nextRoomAtom, null);
 });

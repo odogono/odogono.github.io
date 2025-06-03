@@ -15,17 +15,17 @@ import type { Position } from '@door-world/model/dungeon/types';
 import { createLog } from '@helpers/log';
 
 import {
+  currentRoomAtom,
   dungeonAtom,
-  dungeonCurrentRoomAtom,
-  dungeonNextRoomAtom,
-  dungeonVisitedRoomsAtom
+  nextRoomAtom,
+  visitedRoomsAtom
 } from '../atoms';
 import {
   addVisitedRoomAtom,
   applyNextRoomAtom,
   hasVisitedRoomAtom
 } from './room-history';
-import { setDungeonVisibleAtom } from './set-visible';
+import { setVisibleEntitiesAtom } from './set-visible';
 
 const log = createLog('moveToRoomAtom', ['debug']);
 
@@ -41,7 +41,7 @@ export const moveToRoomAtom = atom(
   async (get, set, props: MoveToRoomProps) => {
     const { doorAction, doorId, moveCameraAction, unmountRoomAction } = props;
 
-    const currentRoomId = get(dungeonCurrentRoomAtom);
+    const currentRoomId = get(currentRoomAtom);
 
     const door = getDungeonDoorById(get(dungeonAtom), props.doorId);
 
@@ -76,13 +76,13 @@ export const moveToRoomAtom = atom(
     }
 
     // set both rooms and doors are showing
-    set(setDungeonVisibleAtom, {
+    set(setVisibleEntitiesAtom, {
       doors: getRoomDoors(get(dungeonAtom), nextRoom),
       rooms: [nextRoom]
     });
 
     const hasVisitedRoom = get(hasVisitedRoomAtom)(nextRoom.id);
-    const visitedRooms = get(dungeonVisitedRoomsAtom);
+    const visitedRooms = get(visitedRoomsAtom);
 
     if (hasVisitedRoom) {
       log.debug('Room already visited', {
@@ -99,7 +99,7 @@ export const moveToRoomAtom = atom(
     // 3. Enter the target room
     log.debug('Moving camera to room', { roomId: nextRoom.id });
     await moveCameraAction(getRoomCenter(get(dungeonAtom), nextRoom));
-    set(dungeonCurrentRoomAtom, nextRoom.id);
+    set(currentRoomAtom, nextRoom.id);
     set(addVisitedRoomAtom, nextRoom.id);
 
     // 4. close the door
@@ -119,7 +119,7 @@ export const moveToRoomAtom = atom(
     await unmountRoomAction(currentRoomId, unmountDoorIds);
 
     // clear the old rooms and doors
-    set(setDungeonVisibleAtom, {
+    set(setVisibleEntitiesAtom, {
       clear: true,
       doors: getRoomDoors(get(dungeonAtom), nextRoom),
       rooms: [nextRoom]
@@ -133,6 +133,6 @@ export const moveToRoomAtom = atom(
 
     set(applyNextRoomAtom);
 
-    log.debug('Next room', { nextRoomId: get(dungeonNextRoomAtom) });
+    log.debug('Next room', { nextRoomId: get(nextRoomAtom) });
   }
 );

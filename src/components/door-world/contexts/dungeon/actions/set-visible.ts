@@ -2,11 +2,7 @@ import { atom } from 'jotai';
 
 import type { Door, DoorId, Room, RoomId } from '@door-world/model/dungeon';
 
-import {
-  dungeonAtom,
-  dungeonVisibleDoorsAtom,
-  dungeonVisibleRoomsAtom
-} from '../atoms';
+import { dungeonAtom, visibleDoorsAtom, visibleRoomsAtom } from '../atoms';
 
 const mergeUniqueById = <T extends string | number>(
   arr1: T[],
@@ -22,7 +18,7 @@ interface SetDungeonVisibleProps {
   rooms: Room[];
 }
 
-export const setDungeonVisibleAtom = atom(
+export const setVisibleEntitiesAtom = atom(
   null,
   (get, set, props: SetDungeonVisibleProps) => {
     const { clear = false, doors, rooms } = props;
@@ -31,23 +27,23 @@ export const setDungeonVisibleAtom = atom(
     const doorIds: DoorId[] = doors.map(door => door.id);
 
     if (clear) {
-      set(dungeonVisibleRoomsAtom, roomIds);
-      set(dungeonVisibleDoorsAtom, doorIds);
+      set(visibleRoomsAtom, roomIds);
+      set(visibleDoorsAtom, doorIds);
     }
 
-    const newRooms = mergeUniqueById(get(dungeonVisibleRoomsAtom), roomIds);
-    set(dungeonVisibleRoomsAtom, newRooms);
+    const newRooms = mergeUniqueById(get(visibleRoomsAtom), roomIds);
+    set(visibleRoomsAtom, newRooms);
 
-    const newDoors = mergeUniqueById(get(dungeonVisibleDoorsAtom), doorIds);
-    set(dungeonVisibleDoorsAtom, newDoors);
+    const newDoors = mergeUniqueById(get(visibleDoorsAtom), doorIds);
+    set(visibleDoorsAtom, newDoors);
   }
 );
 
 /**
  * Returns a list of Room objects that are currently visible in the dungeon
  */
-export const getDungeonVisibleRoomsAtom = atom(get => {
-  const roomIds = get(dungeonVisibleRoomsAtom);
+export const getVisibleRoomsAtom = atom(get => {
+  const roomIds = get(visibleRoomsAtom);
   const dungeon = get(dungeonAtom);
   if (!dungeon) {
     return [];
@@ -58,8 +54,8 @@ export const getDungeonVisibleRoomsAtom = atom(get => {
 /**
  * Returns a list of Door objects that are currently visible in the dungeon
  */
-export const getDungeonVisibleDoorsAtom = atom(get => {
-  const doorIds = get(dungeonVisibleDoorsAtom);
+export const getVisibleDoorsAtom = atom(get => {
+  const doorIds = get(visibleDoorsAtom);
   const dungeon = get(dungeonAtom);
   if (!dungeon) {
     return [];

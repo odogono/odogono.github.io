@@ -18,9 +18,7 @@ export const DungeonProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
   const { dungeon, setDungeon } = useDungeonAtom();
-  // const [dungeon, setDungeon] = useState<DungeonData | null>(null);
   const [generationProgress, setGenerationProgress] = useState(100);
-  // const setCurrentRoomId = useSetAtom(dungeonCurrentRoomAtom);
 
   const { seed, setSeed } = useDungeonSeed();
 
