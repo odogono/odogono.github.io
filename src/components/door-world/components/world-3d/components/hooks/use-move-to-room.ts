@@ -50,11 +50,7 @@ export const useMoveToRoom = ({ moveCameraTo }: UseMoveToRoomProps) => {
             log.error('Missing refs for door transition', { doorId });
             return false;
           }
-
-          // log.debug('Setting door open', { doorId, open });
           await doorRef.setOpen(open);
-
-          // log.debug('Door set open', { doorId, open });
           return true;
         },
         doorId,

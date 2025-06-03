@@ -50,7 +50,7 @@ export const moveToRoomAtom = atom(
       return;
     }
 
-    // TODO determine whether the door can be opened
+    // TODO determine whether the door can be opened - it could be locked!
 
     // 1. open the door and move the camera to the door
     log.debug('Opening door', { doorId });
