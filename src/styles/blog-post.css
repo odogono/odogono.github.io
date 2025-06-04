@@ -138,6 +138,10 @@
     font-size: 1.1em;
   }
 
+  ul li p {
+    margin-bottom: 0;
+  }
+
   /* Fallback for browsers that do not support ::marker */
   @supports not (selector(::marker)) {
     ul li::before {

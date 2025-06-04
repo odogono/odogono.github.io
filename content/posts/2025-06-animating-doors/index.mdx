@@ -6,7 +6,7 @@ isPost: true
 weather: '14°C Drizzle'
 location: '50.79°N, 3.65°W'
 tags: ['react-three-fiber', 'react', 'jotai']
-description: 'Animating doors in a 3D dungeon'
+description: 'Animating with Jotai and React-Spring in a 3D dungeon'
 hidePageHeroImage: true
 heroImage: './img/doors.jpg'
 ---
@@ -28,7 +28,8 @@ To give a technical overview, it is a React Three Fiber app, using Jotai for sta
 
 ## Animating in React
 
-React and animation can present challenges due to React's core principle: a function transforms data into a view \(Function(Data) = View\). This paradigm works well for static UIs. However, smooth animations often involve directly manipulating elements without altering the underlying data.
+React and animation can present challenges due to React's core principle: a function transforms data into a view \(Function(Data) = View\). This paradigm works well for static UIs.
+However, smooth animations necessitate directly manipulating elements without altering the underlying data.
 
 In Door World, my data defines the geometry and properties of rooms and doors. The initial render creates a component tree analogous to a webpage, but using 3D elements like cameras, geometry, and materials instead of divs, images, and text.
 
@@ -77,19 +78,7 @@ And this is what Jotai brings to the party:
 - orchestrating the animation process
 
 
-
-Lets take a look at that last point, how Jotai orchestrates the animation.
-
-Jotai uses an atomic approach to state management. Each atom is contains a piece of data.
-
-You can also create derived atoms - read-only atoms, write-only atoms, and a mix of the two.
-
-
-This is a diagram of the atoms used
-
-<ImageModal src={imageAtoms} alt="Atoms" width={640} height={200} fit="cover" />
-
-
+## Springing Entities
 
 
 Each entity (door, room, ...) is defined with the following super type:
@@ -110,78 +99,71 @@ I structured the code so that the promise only fulfills when the animation is co
 
 
 
+## Atoms everywhere
 
-It all starts here
+Lets take a look at that last point, how Jotai orchestrates the animation.
 
-```
-const handleDoorTouch = useCallback(
-async (door: DoorModel) => {
-log.debug('Door clicked', door.id);
+Jotai uses an atomic approach to state management. Each atom contains a piece of data, which you can read and write to.
 
-  clearInactivityTimeout();
+You can also create derived atoms - atoms which don't contain data themselves, but which can read or write to other atoms
 
-  await moveThroughDoor(door.id);
+With this approach you can create a graph of atoms, each with their own concerns.
 
-  resetInactivityTimeout();
-},
-[clearInactivityTimeout, moveThroughDoor, resetInactivityTimeout]
-);
-```
+In Door World, i have an atom called moveToRoomAtom. It contains the logic for the animation process. As well as using other atoms to retrieve or update the state of the world, it uses actions which are tied to the React-Spring animation process.
 
-moveThroughDoor
+Here is an overview of the atom graph used:
 
-moveToRoom is provided with three actions:
+<ImageModal src={imageAtoms} alt="Atoms" width={640} height={200} fit="cover" />
+
+
+a description of what these atoms do:
+
+- currentRoomAtom - stores the id of the current room
+- dungeonAtom - stores the dungeon state object
+- setVisibleEntitiesAtom - setter atom - updates:
+- visibleRoomsAtom - an array of Room ids which are visible
+- visibleDoorsAtom - an array of Door ids which are setDungeonVisibleAtom
+- hasVisitedRoomAtom - a getter atom which returns whether a given roomId has been hasVisitedRoomAtom
+- visitedRoomsAtom - an array of room ids which have been visited
+- addVisitedRoomAtom - a setter atom which updates dungeonVisitedRoomsAtom and dungeonRoomHistoryAtom
+
+
+
+As well as references to other atoms, the moveToRoomAtom is supplied with these callback actions:
 
 - doorAction - takes a door id, finds the door component ref, then sets its open state
 - moveCameraAction - moves the camera to a specified position
 - unmountRoomAction - calls unmount on all the components in the room - doors and the room itself
 
+each of these actions return promises which eventually trigger the React-Spring animation behaviour.
 
-all of the behaviour is done within the moveToRoomAtom
 
-1. open the door and move the camera to the door
+```typescript
+// 1. open the door and move the camera to the door
+log.debug('Opening door', { doorId });
+await Promise.all([
+  doorAction(doorId, true),
+  moveCameraAction(door.position)
+]);
 
-- the current room id is fetched from the dungeonCurrentRoomAtom
-
-- the door (model) is fetched from the dungeonCurrentRoomAtom
-
-- the door is opened. two things happen at once here:
-  - moveCameraAction is called - this moves the camera to the door location
-  - the doorAction is called - this begins the door animation
-
-2. update the door status
-
-- once that is done, the state of the door is updated in the dungeon model (dungeonAtom)
-
-- the destination room is fetched with a combination of the current room and the door
-
-3. enter the target room
-
-- the camera is moved to the center of the target room
-- the state is updated so that this room now becomes the current
-
-4. close the door
-
-- doorAction is called, which animates the door closing
-- the door state is updated in the model
-
-5. unmount the old room
-
-- unmountRoomAction is called - this unmounts all the components in the room
-
-- the visible state of the previous room and doors is cleared with setDungeonVisibleAtom
+// 2. update the door status
+log.debug('Updating door status', { doorId });
+set(dungeonAtom, dungeon => updateDungeonDoorState(dungeon, doorId, true));
+```
 
 
 
 
-atoms used
 
-- dungeonCurrentRoomAtom - stores the id of the current room
-- dungeonAtom - stores the dungeon state object
-- setDungeonVisibleAtom - setter atom - updates:
-    - dungeonVisibleRoomsAtom - an array of Room ids which are visible
-    - dungeonVisibleDoorsAtom - an array of Door ids which are setDungeonVisibleAtom
+## Wrapping up
 
-- hasVisitedRoomAtom - a getter atom which returns whether a given roomId has been hasVisitedRoomAtom
-- dungeonVisitedRoomsAtom - an array of room ids which have been visited
-- addVisitedRoomAtom - a setter atom which updates dungeonVisitedRoomsAtom and dungeonRoomHistoryAtom
+In this article, we've explored how to create smooth, complex animations in a React Three Fiber application by combining Jotai for state management and React Spring for animations. 
+
+The key insight is separating concerns: using React for component rendering and user interaction, React Spring for fine-grained animations, and Jotai for orchestrating the overall state and animation flow. 
+
+This architecture allows us to maintain React's declarative nature while still achieving performant, fluid animations. 
+
+The atomic approach of Jotai makes it easy to manage complex state relationships, while React Spring provides the tools to create natural-feeling transitions. 
+
+Together, they create a powerful system for building interactive 3D experiences.
+
