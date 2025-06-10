@@ -1,0 +1,51 @@
+---
+isDraft: false
+pubDate: 2025-06-10T13:18:05.541Z
+tags: [ 'strix', 'osm' ]
+slug: the-george-hill-incident
+description: Overcoming assumptions about OSM data
+---
+
+import ImageModal from '@components/image-modal.astro';
+import imageOSM from './img/george-hill.jpg';
+
+Todays fun has been discovering that my assumptions about [OSM](https://www.openstreetmap.org/) data are once again lacking.
+
+
+<ImageModal src={imageOSM} alt="Map of George Hill" width={640} height={400} fit="cover" />
+
+
+This is a map of George Hill. 
+
+There are two nodes (green and red marker), and there are two edges (or ways) - [one straight](https://www.openstreetmap.org/way/29406442), and [one which curves around](https://www.openstreetmap.org/way/29406453). 
+
+Both start and end at the same nodes.
+
+
+
+### First problem
+
+
+Up to this point, i have been happily generating hashes of edges/ways using their start and end coordinates.
+
+I do this by [Geohashing](https://www.geohash.es/) each coordinate pair and then concatenating them into a single string.
+
+So the first edge has a hash of `gcj2uwcjs.gcj2ux08n` and the second, yep `gcj2uwcjs.gcj2ux08n`.
+
+And there is the issue - both edges have the same hash despite being different. And since these get placed in a DB, I was getting missing edges.
+
+What I should probably do is hash all the coordinates in the edge into a single value. But I like the characteristics of my hash - it can be broken apart and reversed into two coordinate pairs. Useful for debugging and indexing!
+
+Solution - I have appended the number of coordinates in the edge. So they now become `gcj2uwcjs.gcj2ux08n.3` and `gcj2uwcjs.gcj2ux08n.18`. 
+
+
+
+### Second problem
+
+There's a larger context to be understood, but essentially I am trying to pick out Cycles from map data. Where a cycle is a closed loop of edges, which doesn't contain any other cycles.
+
+The algorithm is a little clunky, but one thing it does not like is being fed two edges which have the same start and end coordinates.
+
+The solution is pretty straightforward - subdivide the edges, so that extra nodes are created. Feed that into the algorithm, and then replace the subdivided edges with the original ones.
+
+
