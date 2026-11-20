@@ -14,8 +14,8 @@
     "outdated": "bunx npm-check-updates --interactive --format group",
     "preview": "bunx --bun astro preview",
     "unused": "knip",
-    "coverage": "vitest run --coverage",
-    "test": "vitest"
+    "coverage": "vitest run --coverage --passWithNoTests",
+    "test": "vitest --passWithNoTests"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
@@ -26,10 +26,10 @@
     "@codemirror/lang-markdown": "^6.3.2",
     "@codemirror/theme-one-dark": "^6.1.2",
     "@codemirror/view": "^6.37.1",
+    "@odogono/door-world": "github:odogono/door-world#v1.0.0",
     "@radix-ui/react-dialog": "^1.1.14",
-    "@react-spring/three": "9.7.5",
-    "@react-three/drei": "^10.1.2",
-    "@react-three/fiber": "^9.1.2",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
     "@tailwindcss/vite": "^4.1.8",
     "@turf/bbox": "^7.2.0",
     "@turf/nearest-point-on-line": "^7.2.0",
@@ -37,7 +37,6 @@
     "@uiw/react-codemirror": "^4.23.12",
     "accessible-astro-components": "^4.1.1",
     "astro": "^5.9.2",
-    "chroma-js": "^3.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -48,7 +47,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "tailwind-merge": "^3.3.0",
-    "three": "^0.177.0",
+    "three": "^0.187.0",
     "toml": "^3.0.0",
     "yaml": "^2.8.0"
   },
