@@ -28,9 +28,6 @@
       "@contexts/*": [
         "./src/contexts/*"
       ],
-      "@door-world/*": [
-        "./src/components/door-world/*"
-      ],
       "@helpers/*": [
         "./src/helpers/*"
       ],
